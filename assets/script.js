@@ -53,10 +53,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'block' ? 'none' : 'block';
-            hamburger.setAttribute('aria-expanded', navLinks.style.display === 'block');
-        });
+       hamburger.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    hamburger.classList.toggle('active', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+});
     }
 
     // Sync Flatpickr pickers
@@ -187,7 +188,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         const roomsOfType = Object.entries(ROOMS_CONFIG).filter(([num, cfg]) => cfg.type === roomType);
         let hasAvailableRooms = false;
         roomsOfType.forEach(([num, cfg]) => {
-            const availability = window.availabilityData ? window.availabilityData[num] : 'Available';
+            const availability = (window.availabilityData && window.availabilityData[num] !== undefined)
+    ? window.availabilityData[num]
+    : 'Available';
             if (availability === 'Maintenance') {
                 return;
             }

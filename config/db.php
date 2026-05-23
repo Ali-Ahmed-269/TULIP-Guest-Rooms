@@ -1,8 +1,8 @@
 <?php
-$host = '127.0.0.1';
-$db   = 'tulip_guest_rooms';
-$user = 'root';
-$pass = '';
+$host = 'sql300.byetcluster.com';
+$db   = 'if0_42004159_guestrooms';
+$user = 'if0_42004159';
+$pass = '4257432Ali';
 $charset = 'utf8mb4';
 
 // Security: disable display errors in production by default
