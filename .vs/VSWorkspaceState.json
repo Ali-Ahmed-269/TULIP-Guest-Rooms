@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\config"
+    "\\config",
+    "\\php"
   ],
-  "SelectedNode": "\\config\\email.php",
+  "SelectedNode": "\\index.html",
   "PreviewInSolutionExplorer": false
 }

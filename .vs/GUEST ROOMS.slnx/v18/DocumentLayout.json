@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "D:\\PROJECTS\\GUEST ROOMS\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECTS\\GUEST ROOMS\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECTS\\GUEST ROOMS\\php\\get_site_settings.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:php\\get_site_settings.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\PROJECTS\\GUEST ROOMS\\config\\email.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:config\\email.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
     }
@@ -19,12 +27,38 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "index.html",
+              "DocumentMoniker": "D:\\PROJECTS\\GUEST ROOMS\\index.html",
+              "RelativeDocumentMoniker": "index.html",
+              "ToolTip": "D:\\PROJECTS\\GUEST ROOMS\\index.html",
+              "RelativeToolTip": "index.html",
+              "ViewState": "AgIAACUCAAAAAAAAAAAAADoCAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-05-23T11:13:57.539Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "get_site_settings.php",
+              "DocumentMoniker": "D:\\PROJECTS\\GUEST ROOMS\\php\\get_site_settings.php",
+              "RelativeDocumentMoniker": "php\\get_site_settings.php",
+              "ToolTip": "D:\\PROJECTS\\GUEST ROOMS\\php\\get_site_settings.php",
+              "RelativeToolTip": "php\\get_site_settings.php",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
+              "WhenOpened": "2026-05-23T11:10:50.27Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "email.php",
               "DocumentMoniker": "D:\\PROJECTS\\GUEST ROOMS\\config\\email.php",
               "RelativeDocumentMoniker": "config\\email.php",
               "ToolTip": "D:\\PROJECTS\\GUEST ROOMS\\config\\email.php",
               "RelativeToolTip": "config\\email.php",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAA0AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002338|",
               "WhenOpened": "2026-05-22T20:54:51.108Z",
               "EditorCaption": ""
