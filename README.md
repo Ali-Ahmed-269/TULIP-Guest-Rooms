@@ -1,63 +1,49 @@
 # Tulip Guest Rooms
 
-Local development and deployment notes for Tulip Guest Rooms.
+This repository now uses the Next.js + Supabase app in `src/` as the active implementation.
 
-## Quick local setup (XAMPP on Windows)
+## Current Structure
 
-1. Install XAMPP and start Apache + MySQL.
-2. Create database `tulip_guest_rooms` and import `database.sql`:
+- `src/` - Active Next.js app
+- `public/` - Public assets used by the Next.js app
+- `.env.local` - Local secrets for development only
+- `.env.example` - Required environment variable template
 
-```sql
--- from XAMPP MySQL shell or phpMyAdmin
-SOURCE path/to/project/database.sql;
+## Legacy Cleanup Status
+
+The following folders and files are legacy or generated and should be removed after final validation:
+
+- `legacy-php/`
+- `.vs/`
+- `.next/`
+
+These folders are no longer required by the active Next.js + Supabase app.
+
+## Development
+
+```bash
+npm install
+npm run dev
 ```
 
-3. Place this project folder inside your Apache `htdocs` or configure a virtual host pointing to the project root.
-4. Ensure `uploads/` is writable by the webserver.
-5. Install Composer dependencies:
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-```powershell
-composer install
+## Production Build
+
+```bash
+npm run build
+npm run start
 ```
 
-6. Start PHP built-in server for quick testing (from project root):
+## Deploy on Vercel
 
-```powershell
-# optional: use built-in server
-php -S localhost:8080 -t .
-```
+1. Import the GitHub repository into Vercel.
+2. Add your Supabase and Resend environment variables in the Vercel dashboard.
+3. Use the default Next.js build settings.
+4. Deploy the active app from `src/`.
 
-## Composer
-This project uses PHPMailer and Dompdf. Install with:
+## Notes
 
-```powershell
-composer require phpmailer/phpmailer
-composer require dompdf/dompdf
-```
-
-## Default admin user
-- Username: `admin`
-- Password: `admin123`
-
-Change the password after first login. To create a new hash locally:
-
-```powershell
-php -r "echo password_hash('YOUR_NEW_PASSWORD', PASSWORD_DEFAULT).PHP_EOL;"
-```
-Then update `admin_users.password_hash` via MySQL.
-
-## Production checklist
--- Set `site_settings` values via `admin/settings.php` (SMTP creds, phone numbers).
-- Ensure Apache `.htaccess` is enabled (for HTTPS redirect and directory protections).
-- Set correct file permissions for `uploads/` and ensure `uploads/payments/.htaccess` exists.
-- Populate SMTP in settings and test email sending.
-- Replace default admin password and remove example accounts.
-- Disable display_errors in `php.ini` (this app sets it off by default in `config/db.php`).
-
-## Security notes
-- CSRF tokens are enforced on all forms.
-- Booking endpoint rate-limits by IP (5 attempts per hour) and validates uploaded files by MIME bytes.
-- Session cookies are set with `HttpOnly` and `Secure` flags when HTTPS is detected.
-- Direct access to `config/` and `uploads/payments/` is blocked with `.htaccess`.
-
-If you need me to run tests or finish a full security audit across all templates, allow terminal access or run the test commands and paste outputs.
+- Keep `.env.local` out of version control.
+- Keep `legacy-php/` only until you are completely satisfied that no traffic or shared data still depends on it.
+- After final validation, remove `legacy-php/`, `.vs/`, and any generated build artifacts from the repository.

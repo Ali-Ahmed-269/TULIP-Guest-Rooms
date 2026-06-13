@@ -1,0 +1,12 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#FDF6F0"/>
+  <circle cx="1020" cy="120" r="200" fill="#B4161B" fill-opacity="0.08"/>
+  <circle cx="160" cy="520" r="180" fill="#D4A853" fill-opacity="0.12"/>
+  <rect x="72" y="72" width="1056" height="486" rx="36" fill="#FFFFFF" stroke="#E8D9CC"/>
+  <text x="120" y="200" fill="#111111" font-size="64" font-family="Georgia, serif" font-weight="700">Tulip Guest Rooms</text>
+  <text x="120" y="268" fill="#6D5A4B" font-size="30" font-family="Arial, sans-serif">Comfortable stays, warm hospitality, and simple booking.</text>
+  <rect x="120" y="330" width="220" height="54" rx="27" fill="#B4161B"/>
+  <text x="152" y="365" fill="#FFFFFF" font-size="24" font-family="Arial, sans-serif" font-weight="700">Book a Room</text>
+  <rect x="360" y="330" width="260" height="54" rx="27" fill="#FFF7F2" stroke="#B4161B"/>
+  <text x="398" y="365" fill="#B4161B" font-size="24" font-family="Arial, sans-serif" font-weight="700">View Rooms</text>
+</svg>
