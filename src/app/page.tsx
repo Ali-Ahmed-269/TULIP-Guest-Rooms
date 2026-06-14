@@ -10,6 +10,7 @@ async function getPageData() {
     supabase
       .from('rooms')
       .select('id, room_number, room_type, price_per_night, max_guests, status')
+      .eq('status', 'Available')
       .order('room_number', { ascending: true }),
     supabase.from('site_settings').select('setting_key, setting_value'),
   ]);
@@ -101,7 +102,7 @@ export default async function HomePage() {
               rate with a confirmed booking reference.
             </p>
           </div>
-          <BookingForm rooms={rooms} />
+          <BookingForm rooms={rooms ?? []} />
         </div>
       </section>
 
