@@ -226,27 +226,35 @@ export async function POST(request: Request) {
     if (paymentMethod !== 'pay_at_hotel' && paymentProof) {
       const fileExt = paymentProof.name.split('.').pop() || 'png';
       const storagePath = `screenshot_${createdBookingId}_${Date.now()}.${fileExt}`;
-      const fileBuffer = Buffer.from(await paymentProof.arrayBuffer());
+      const fileBytes = new Uint8Array(await paymentProof.arrayBuffer());
 
       const { data: uploadData, error: uploadErr } = await supabase.storage
         .from('payments-proofs')
-        .upload(storagePath, fileBuffer, {
+        .upload(storagePath, fileBytes, {
           contentType: paymentProof.type,
           upsert: true,
         });
 
       if (uploadErr) {
         console.error('[API Book] Storage upload error:', uploadErr);
-        // Rollback inserted booking
         await supabase.from('bookings').delete().eq('id', createdBookingId);
-        return NextResponse.json({ success: false, message: 'Failed to upload payment screenshot. Booking rolled back.' }, { status: 500 });
+        return NextResponse.json({
+          success: false,
+          message: `Failed to upload payment screenshot: ${uploadErr.message || 'Unknown error'}. Booking rolled back.`,
+        }, { status: 500 });
       }
 
       // Get Public URL
-      const { data: publicUrlData } = supabase.storage
+      const { data: publicUrlData, error: publicUrlError } = supabase.storage
         .from('payments-proofs')
         .getPublicUrl(storagePath);
-      
+
+      if (publicUrlError) {
+        console.error('[API Book] Public URL error:', publicUrlError);
+        await supabase.from('bookings').delete().eq('id', createdBookingId);
+        return NextResponse.json({ success: false, message: 'Failed to generate screenshot URL. Booking rolled back.' }, { status: 500 });
+      }
+
       uploadedProofUrl = publicUrlData.publicUrl;
 
       // Update booking row with reference and screenshot URL
