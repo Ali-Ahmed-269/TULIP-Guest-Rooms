@@ -284,7 +284,17 @@ export async function POST(request: Request) {
       .eq('id', room.id);
 
     if (roomUpdateErr) {
-      console.warn('[API Book] Warning: room status update failed:', roomUpdateErr);
+      console.error('[API Book] Room status update failed:', roomUpdateErr);
+      if (createdBookingId) {
+        await supabase.from('bookings').delete().eq('id', createdBookingId);
+      }
+      if (uploadedProofUrl) {
+        const proofFile = uploadedProofUrl.split('/').pop();
+        if (proofFile) {
+          await supabase.storage.from('payments-proofs').remove([proofFile]);
+        }
+      }
+      return NextResponse.json({ success: false, message: 'Failed to update room status after booking. Please try again.' }, { status: 500 });
     }
 
     // 10. Fire Email Triggers

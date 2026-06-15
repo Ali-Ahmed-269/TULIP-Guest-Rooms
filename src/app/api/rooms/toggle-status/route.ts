@@ -15,11 +15,11 @@ export async function POST(request: Request) {
     const roomNumber = (formData.get('room_number') as string) || '';
     const status = (formData.get('status') as string) || '';
 
-    const allowed = ['Available', 'Maintenance', 'Reserved'];
+    const allowed = ['Available', 'Maintenance', 'Reserved', 'Booked'];
     if (!roomNumber || !allowed.includes(status)) {
       return NextResponse.json({
         success: false,
-        message: 'Invalid room or status. Allowed: Available, Maintenance, Reserved.',
+        message: 'Invalid room or status. Allowed: Available, Maintenance, Reserved, Booked.',
       }, { status: 400 });
     }
 

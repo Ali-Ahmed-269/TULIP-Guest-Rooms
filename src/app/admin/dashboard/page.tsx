@@ -8,16 +8,49 @@ async function getAdminOverview() {
   const [bookingsRes, roomsRes] = await Promise.all([
     supabase
       .from('bookings')
-      .select('id, booking_reference, guest_name, guest_phone, check_in_date, check_out_date, booking_status, payment_status, total_amount, created_at, rooms(room_number)')
+      .select('id, room_id, booking_reference, guest_name, guest_phone, check_in_date, check_out_date, booking_status, payment_status, payment_method, total_amount, created_at, rooms(room_number)')
       .order('created_at', { ascending: false }),
     supabase
       .from('rooms')
-      .select('room_number, status')
+      .select('id, room_number, status')
       .order('room_number', { ascending: true }),
   ]);
 
   const bookings = bookingsRes.data || [];
   const rooms = roomsRes.data || [];
+  const today = new Date().toISOString().split('T')[0];
+
+  const bookingsByRoom = bookings.reduce((map: Record<number, any[]>, booking) => {
+    if (!map[booking.room_id]) map[booking.room_id] = [];
+    map[booking.room_id].push(booking);
+    return map;
+  }, {} as Record<number, any[]>);
+
+  const deriveRoomStatus = (room: any) => {
+    if (room.status === 'Maintenance') {
+      return 'Maintenance';
+    }
+
+    const roomBookings = bookingsByRoom[room.id] || [];
+    const activeBookings = roomBookings.filter((booking) => booking.booking_status !== 'Cancelled' && booking.check_out_date >= today);
+
+    const hasConfirmed = activeBookings.some((booking) =>
+      booking.booking_status === 'Confirmed' || booking.payment_status === 'Paid' || booking.payment_method === 'pay_at_hotel'
+    );
+    if (hasConfirmed) return 'Booked';
+
+    const hasPending = activeBookings.some((booking) =>
+      booking.booking_status === 'Pending' || booking.payment_status === 'Pending Verification'
+    );
+    if (hasPending) return 'Reserved';
+
+    return room.status;
+  };
+
+  const enrichedRooms = rooms.map((room) => ({
+    ...room,
+    status: deriveRoomStatus(room),
+  }));
 
   // Compute stats
   const totalBookings = bookings.length;
@@ -38,7 +71,7 @@ async function getAdminOverview() {
     pendingPayments,
     totalRevenue,
     recentBookings,
-    rooms,
+    rooms: enrichedRooms,
   };
 }
 

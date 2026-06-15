@@ -105,7 +105,7 @@ export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
                     </td>
                     <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
                       <div className="flex gap-2">
-                        {['Available', 'Maintenance', 'Reserved'].map((status) => {
+                        {['Available', 'Maintenance', 'Reserved', 'Booked'].map((status) => {
                           const isCurrent = room.status === status;
                           return (
                             <button
