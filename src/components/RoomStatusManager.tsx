@@ -14,6 +14,12 @@ interface RoomStatusManagerProps {
   rooms: RoomRow[];
 }
 
+const ROOM_DISPLAY_NAMES: Record<string, string> = {
+  'Standard':     'Standard Room',
+  'Premium':      'Premium Room',
+  'Comfort Plus': 'Comfort Plus',
+};
+
 export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
   const [activeRooms, setActiveRooms] = useState(rooms);
   const [message, setMessage] = useState<string | null>(null);
@@ -89,7 +95,7 @@ export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
                       Room {room.room_number}
                     </td>
                     <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      {room.room_type}
+                      {ROOM_DISPLAY_NAMES[room.room_type] || room.room_type}
                     </td>
                     <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
                       PKR {room.price_per_night}

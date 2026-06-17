@@ -13,6 +13,12 @@ interface BookingSummary {
   room_type: string;
 }
 
+const ROOM_DISPLAY_NAMES: Record<string, string> = {
+  'Standard':     'Standard Room',
+  'Premium':      'Premium Room',
+  'Comfort Plus': 'Comfort Plus',
+};
+
 export default function LookupPage() {
   const [phone, setPhone] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -100,7 +106,7 @@ export default function LookupPage() {
                     </div>
                     <div>
                       <p style={{ fontWeight: 700 }}>Room</p>
-                      <p>{booking.room_number} - {booking.room_type}</p>
+                      <p>{booking.room_number} - {ROOM_DISPLAY_NAMES[booking.room_type] || booking.room_type}</p>
                     </div>
                     <div>
                       <p style={{ fontWeight: 700 }}>Status</p>

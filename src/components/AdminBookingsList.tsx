@@ -31,6 +31,12 @@ interface Booking {
   } | null;
 }
 
+const ROOM_DISPLAY_NAMES: Record<string, string> = {
+  'Standard':     'Standard Room',
+  'Premium':      'Premium Room',
+  'Comfort Plus': 'Comfort Plus',
+};
+
 interface AdminBookingsListProps {
   initialBookings: Booking[];
 }
@@ -173,7 +179,7 @@ export default function AdminBookingsList({ initialBookings }: AdminBookingsList
                     <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">{b.guest_name}</td>
                     <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">{b.guest_phone}</td>
                     <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      {getRoom(b) ? `Room ${getRoom(b)?.room_number} (${getRoom(b)?.room_type})` : 'N/A'}
+                      {getRoom(b) ? `Room ${getRoom(b)?.room_number} (${ROOM_DISPLAY_NAMES[getRoom(b)?.room_type || ''] || getRoom(b)?.room_type})` : 'N/A'}
                     </td>
                     <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">{b.check_in_date}</td>
                     <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">{b.check_out_date}</td>
@@ -265,7 +271,7 @@ export default function AdminBookingsList({ initialBookings }: AdminBookingsList
                 <p className="my-1"><strong>Address:</strong> {selectedBooking.guest_address}</p>
               </div>
               <div>
-                <p className="my-1"><strong>Room:</strong> {getRoom(selectedBooking) ? `Room ${getRoom(selectedBooking)?.room_number} (${getRoom(selectedBooking)?.room_type})` : 'N/A'}</p>
+                <p className="my-1"><strong>Room:</strong> {getRoom(selectedBooking) ? `Room ${getRoom(selectedBooking)?.room_number} (${ROOM_DISPLAY_NAMES[getRoom(selectedBooking)?.room_type || ''] || getRoom(selectedBooking)?.room_type})` : 'N/A'}</p>
                 <p className="my-1"><strong>Check-in:</strong> {selectedBooking.check_in_date}</p>
                 <p className="my-1"><strong>Check-out:</strong> {selectedBooking.check_out_date}</p>
                 <p className="my-1"><strong>Guests:</strong> {selectedBooking.guests_count}</p>

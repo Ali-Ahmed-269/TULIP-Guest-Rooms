@@ -16,15 +16,21 @@ interface HomeRoomsSectionProps {
 }
 
 const ROOM_FEATURES: Record<string, string[]> = {
-  'Standard Room': ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV'],
-  'Deluxe Room':   ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV', 'Mini Fridge', 'City View'],
-  'Suite':         ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV', 'Mini Fridge', 'King Bed', 'Living Area'],
+  'Standard':     ['Free WiFi', 'Hot Water', 'TV'],
+  'Premium':      ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV', 'Mini Fridge', 'City View'],
+  'Comfort Plus': ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV', 'Mini Fridge', 'King Bed', 'Living Area'],
 };
 
 const ROOM_IMAGES: Record<string, string> = {
-  'Standard Room': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600',
-  'Deluxe Room':   'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600',
-  'Suite':         'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600',
+  'Standard':     'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600',
+  'Premium':      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600',
+  'Comfort Plus': 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600',
+};
+
+const ROOM_DISPLAY_NAMES: Record<string, string> = {
+  'Standard':     'Standard Room',
+  'Premium':      'Premium Room',
+  'Comfort Plus': 'Comfort Plus',
 };
 
 /** Returns a CSS class name — no arbitrary hex in JSX */
@@ -170,7 +176,9 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
             <div className="p-6 flex flex-col flex-1">
               {/* Title + Price */}
               <div className="flex items-start justify-between gap-2 mb-1">
-                <h3 className="font-heading text-[1.35rem] leading-tight">{card.type}</h3>
+                <h3 className="font-heading text-[1.35rem] leading-tight">
+                  {ROOM_DISPLAY_NAMES[card.type] ?? card.type}
+                </h3>
                 <span className="font-bold text-primary text-[1.05rem] whitespace-nowrap">
                   PKR {card.price}<span className="text-muted text-[0.8rem] font-normal">/night</span>
                 </span>
@@ -214,6 +222,11 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
                     );
                   })}
                 </div>
+                {card.type === 'Standard' && card.rooms.includes('108') && (
+                  <p className="text-[0.82rem] text-muted italic mb-4">
+                    (Room 108 includes AC — additional charges apply)
+                  </p>
+                )}
 
                 <button
                   type="button"

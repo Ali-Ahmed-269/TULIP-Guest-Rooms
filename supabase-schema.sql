@@ -64,19 +64,19 @@ CREATE TABLE site_settings (
 );
 
 -- Seed Rooms
-INSERT INTO rooms (room_number, room_type, price_per_night, max_guests, status) VALUES 
-('101', 'Standard Room', 50.00, 2, 'Available'),
-('102', 'Standard Room', 50.00, 2, 'Available'),
-('103', 'Standard Room', 50.00, 2, 'Available'),
-('104', 'Standard Room', 50.00, 2, 'Available'),
-('105', 'Deluxe Room', 80.00, 3, 'Available'),
-('106', 'Deluxe Room', 80.00, 3, 'Available'),
-('107', 'Deluxe Room', 80.00, 3, 'Available'),
-('108', 'Deluxe Room', 80.00, 3, 'Available'),
-('109', 'Suite', 120.00, 4, 'Available'),
-('110', 'Suite', 120.00, 4, 'Available'),
-('111', 'Suite', 120.00, 4, 'Available'),
-('112', 'Suite', 120.00, 4, 'Available');
+INSERT INTO rooms (room_number, room_type, price_per_night, max_guests, status) VALUES
+('101', 'Standard', 3000, 2, 'Available'),
+('102', 'Standard', 3000, 2, 'Available'),
+('106', 'Standard', 3000, 2, 'Available'),
+('107', 'Standard', 3000, 2, 'Available'),
+('108', 'Standard', 3000, 2, 'Available'),
+('103', 'Premium', 4000, 3, 'Available'),
+('104', 'Premium', 4000, 3, 'Available'),
+('105', 'Premium', 4000, 3, 'Available'),
+('109', 'Premium', 4000, 3, 'Available'),
+('110', 'Premium', 4000, 3, 'Available'),
+('111', 'Comfort Plus', 7500, 4, 'Available'),
+('112', 'Comfort Plus', 7500, 4, 'Available');
 
 -- Seed Site Settings
 INSERT INTO site_settings (setting_key, setting_value) VALUES

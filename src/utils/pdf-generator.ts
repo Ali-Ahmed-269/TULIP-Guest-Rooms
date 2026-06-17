@@ -1,5 +1,15 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
+const ROOM_DISPLAY_NAMES: Record<string, string> = {
+  'Standard':     'Standard Room',
+  'Premium':      'Premium Room',
+  'Comfort Plus': 'Comfort Plus',
+};
+
+function getRoomTypeDisplayName(type: string): string {
+  return ROOM_DISPLAY_NAMES[type] || type;
+}
+
 export async function generateInvoicePdf(booking: any, settings: any) {
   const pdfDoc = await PDFDocument.create();
   
@@ -124,7 +134,7 @@ export async function generateInvoicePdf(booking: any, settings: any) {
   const nights = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
   drawRow('Room Number', booking.rooms?.room_number || booking.room_number || 'N/A');
-  drawRow('Room Type', booking.rooms?.room_type || booking.room_type || 'N/A');
+  drawRow('Room Type', getRoomTypeDisplayName(booking.rooms?.room_type || booking.room_type || 'N/A'));
   drawRow('Check-In Date', booking.check_in_date);
   drawRow('Check-Out Date', booking.check_out_date);
   drawRow('Nights of Stay', `${nights} night${nights === 1 ? '' : 's'}`);
@@ -158,7 +168,7 @@ export async function generateInvoicePdf(booking: any, settings: any) {
   const rate = Number(booking.rooms?.price_per_night || booking.price_per_night || 0);
   const totalVal = Number(booking.total_amount || 0);
   const roomNum = booking.rooms?.room_number || booking.room_number || 'N/A';
-  const roomType = booking.rooms?.room_type || booking.room_type || 'N/A';
+  const roomType = getRoomTypeDisplayName(booking.rooms?.room_type || booking.room_type || 'N/A');
 
   page.drawRectangle({
     x: 40,

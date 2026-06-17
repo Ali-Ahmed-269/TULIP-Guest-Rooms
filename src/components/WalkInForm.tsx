@@ -15,6 +15,12 @@ interface WalkInFormProps {
   rooms: RoomOption[];
 }
 
+const ROOM_DISPLAY_NAMES: Record<string, string> = {
+  'Standard':     'Standard Room',
+  'Premium':      'Premium Room',
+  'Comfort Plus': 'Comfort Plus',
+};
+
 export default function WalkInForm({ rooms }: WalkInFormProps) {
   const router = useRouter();
   const [fullname, setFullname] = useState('');
@@ -129,7 +135,7 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
             <option value="">Select a room</option>
             {availableRooms.map((room) => (
               <option key={room.id} value={room.room_number}>
-                {room.room_number} – {room.room_type} – PKR {room.price_per_night}
+                {room.room_number} – {ROOM_DISPLAY_NAMES[room.room_type] || room.room_type} – PKR {room.price_per_night}
               </option>
             ))}
           </select>

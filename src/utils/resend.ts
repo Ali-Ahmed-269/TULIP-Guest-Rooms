@@ -11,6 +11,16 @@ const getResendClient = () => {
   return new Resend(apiKey);
 };
 
+const ROOM_DISPLAY_NAMES: Record<string, string> = {
+  'Standard':     'Standard Room',
+  'Premium':      'Premium Room',
+  'Comfort Plus': 'Comfort Plus',
+};
+
+function getRoomTypeDisplayName(type: string): string {
+  return ROOM_DISPLAY_NAMES[type] || type;
+}
+
 // Formats amount to PKR currency format
 const formatMoney = (amount: number) => {
   return 'PKR ' + amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -54,7 +64,7 @@ function getBookingSummaryHtml(b: any): string {
   };
   const payMethod = paymentLabelMap[b.payment_method] || b.payment_method || 'N/A';
   const roomNum = b.rooms?.room_number || b.room_number || 'N/A';
-  const roomType = b.rooms?.room_type || b.room_type || 'N/A';
+  const roomType = getRoomTypeDisplayName(b.rooms?.room_type || b.room_type || 'N/A');
 
   return `
 <ul style="padding-left: 18px; line-height: 1.6;">

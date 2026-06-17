@@ -22,7 +22,7 @@ export default function Footer({ settings }: FooterProps) {
         <div className="flex flex-col gap-4">
           <h3 className="text-2xl text-gold font-heading">{ghName}</h3>
           <p className="text-[#ccc] text-[0.95rem]">
-            Experience comfort, elegance, and warm hospitality. Located centrally, offering standard, deluxe, and suite rooms for individuals and families.
+            Experience comfort, elegance, and warm hospitality. Located centrally, offering Standard Room, Premium Room, and Comfort Plus options for individuals and families.
           </p>
         </div>
 
