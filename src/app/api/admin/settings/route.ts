@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: Request) {
   try {
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Database update failed.' }, { status: 500 });
     }
 
+    revalidatePath('/admin', 'layout');
     return NextResponse.json({
       success: true,
       message: 'Settings updated successfully.',

@@ -8,6 +8,7 @@ async function getPendingPayments() {
     .from('bookings')
     .select('id, booking_reference, guest_name, guest_phone, guest_email, check_in_date, check_out_date, payment_status, payment_method, total_amount, payment_proof, rooms(id, room_number, room_type)')
     .eq('payment_status', 'Pending Verification')
+    .neq('payment_method', 'pay_at_hotel')
     .order('created_at', { ascending: true });
 
   return bookings || [];

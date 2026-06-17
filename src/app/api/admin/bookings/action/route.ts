@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: Request) {
   try {
@@ -51,6 +52,7 @@ export async function POST(request: Request) {
         .update({ status: 'Booked' })
         .eq('id', booking.room_id);
 
+      revalidatePath('/admin', 'layout');
       return NextResponse.json({ success: true, message: 'Booking verified successfully.' });
     }
 
@@ -74,6 +76,7 @@ export async function POST(request: Request) {
         .update({ status: 'Available' })
         .eq('id', booking.room_id);
 
+      revalidatePath('/admin', 'layout');
       return NextResponse.json({ success: true, message: 'Booking rejected and cancelled.' });
     }
 
@@ -96,6 +99,7 @@ export async function POST(request: Request) {
         .update({ status: 'Available' })
         .eq('id', booking.room_id);
 
+      revalidatePath('/admin', 'layout');
       return NextResponse.json({ success: true, message: 'Booking cancelled successfully.' });
     }
 
