@@ -18,6 +18,7 @@ function getClientIp(request: Request) {
 
 export async function POST(request: Request) {
   let createdBookingId: number | null = null;
+  let uploadedStoragePath: string | null = null;
   const supabase = createServiceRoleClient();
 
   try {
@@ -162,7 +163,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: `Room ${roomNumber} is already booked for the selected dates. Please choose different dates.` }, { status: 400 });
     }
 
-    // 6. Screenshot validation (online payment only)
+    // 6. Screenshot validation and upload (online payment only)
     let uploadedProofUrl = null;
     let paymentStatus = 'Unpaid';
     let bookingStatus = 'Pending';
@@ -187,11 +188,49 @@ export async function POST(request: Request) {
       if (!validTypes.includes(paymentProof.type)) {
         return NextResponse.json({ success: false, message: 'Only JPG and PNG images are accepted.' }, { status: 400 });
       }
+
+      // Upload file to storage BEFORE database insertion to make transaction robust
+      const rawExt = paymentProof.name.split('.').pop() || 'png';
+      // Sanitize extension: lowercase and alphanumeric only
+      const fileExt = rawExt.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const uniqueSuffix = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+      uploadedStoragePath = `screenshot_${uniqueSuffix}.${fileExt}`;
+      
+      const fileBytes = new Uint8Array(await paymentProof.arrayBuffer());
+
+      const { data: uploadData, error: uploadErr } = await supabase.storage
+        .from('payment-proofs')
+        .upload(uploadedStoragePath, fileBytes, {
+          contentType: paymentProof.type,
+          upsert: true,
+        });
+
+      if (uploadErr) {
+        console.error('[API Book] Storage upload error:', uploadErr);
+        return NextResponse.json({
+          success: false,
+          message: `Failed to upload payment screenshot: ${uploadErr.message || 'Unknown error'}.`,
+        }, { status: 500 });
+      }
+
+      // Get Public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('payment-proofs')
+        .getPublicUrl(uploadedStoragePath);
+
+      if (!publicUrlData || !publicUrlData.publicUrl) {
+        console.error('[API Book] Failed to get public URL for screenshot');
+        // Clean up uploaded file
+        await supabase.storage.from('payment-proofs').remove([uploadedStoragePath]);
+        return NextResponse.json({ success: false, message: 'Failed to generate screenshot URL.' }, { status: 500 });
+      }
+
+      uploadedProofUrl = publicUrlData.publicUrl;
     }
 
     const totalAmount = nights * Number(room.price_per_night);
 
-    // 7. Insert booking row (initial entry without reference)
+    // 7. Insert booking row (initial entry with payment proof if available)
     const { data: newBooking, error: insertErr } = await supabase
       .from('bookings')
       .insert({
@@ -209,12 +248,16 @@ export async function POST(request: Request) {
         payment_status: paymentStatus as any,
         booking_status: bookingStatus as any,
         special_requests: specialRequests || null,
+        payment_proof: uploadedProofUrl,
       })
       .select('id')
       .single();
 
     if (insertErr || !newBooking) {
       console.error('[API Book] Booking insertion failed:', insertErr);
+      if (uploadedStoragePath) {
+        await supabase.storage.from('payment-proofs').remove([uploadedStoragePath]);
+      }
       return NextResponse.json({ success: false, message: 'Failed to create booking in database.' }, { status: 500 });
     }
 
@@ -222,67 +265,19 @@ export async function POST(request: Request) {
     const currentYear = new Date().getFullYear();
     const bookingRef = `TGR-${currentYear}-${String(createdBookingId).padStart(4, '0')}`;
 
-    // 8. Upload payment proof to storage bucket & update booking row
-    if (paymentMethod !== 'pay_at_hotel' && paymentProof) {
-      const fileExt = paymentProof.name.split('.').pop() || 'png';
-      const storagePath = `screenshot_${createdBookingId}_${Date.now()}.${fileExt}`;
-      const fileBytes = new Uint8Array(await paymentProof.arrayBuffer());
+    // 8. Update booking row with booking reference
+    const { error: updateErr } = await supabase
+      .from('bookings')
+      .update({ booking_reference: bookingRef })
+      .eq('id', createdBookingId);
 
-      const { data: uploadData, error: uploadErr } = await supabase.storage
-        .from('payments-proofs')
-        .upload(storagePath, fileBytes, {
-          contentType: paymentProof.type,
-          upsert: true,
-        });
-
-      if (uploadErr) {
-        console.error('[API Book] Storage upload error:', uploadErr);
-        await supabase.from('bookings').delete().eq('id', createdBookingId);
-        return NextResponse.json({
-          success: false,
-          message: `Failed to upload payment screenshot: ${uploadErr.message || 'Unknown error'}. Booking rolled back.`,
-        }, { status: 500 });
+    if (updateErr) {
+      console.error('[API Book] Booking reference update error:', updateErr);
+      await supabase.from('bookings').delete().eq('id', createdBookingId);
+      if (uploadedStoragePath) {
+        await supabase.storage.from('payment-proofs').remove([uploadedStoragePath]);
       }
-
-      // Get Public URL
-      const { data: publicUrlData, error: publicUrlError } = supabase.storage
-        .from('payments-proofs')
-        .getPublicUrl(storagePath);
-
-      if (publicUrlError) {
-        console.error('[API Book] Public URL error:', publicUrlError);
-        await supabase.from('bookings').delete().eq('id', createdBookingId);
-        return NextResponse.json({ success: false, message: 'Failed to generate screenshot URL. Booking rolled back.' }, { status: 500 });
-      }
-
-      uploadedProofUrl = publicUrlData.publicUrl;
-
-      // Update booking row with reference and screenshot URL
-      const { error: updateErr } = await supabase
-        .from('bookings')
-        .update({
-          booking_reference: bookingRef,
-          payment_proof: uploadedProofUrl,
-        })
-        .eq('id', createdBookingId);
-
-      if (updateErr) {
-        console.error('[API Book] Booking final update error:', updateErr);
-        await supabase.from('bookings').delete().eq('id', createdBookingId);
-        return NextResponse.json({ success: false, message: 'Database confirmation failed.' }, { status: 500 });
-      }
-    } else {
-      // Just update reference for pay_at_hotel
-      const { error: updateErr } = await supabase
-        .from('bookings')
-        .update({ booking_reference: bookingRef })
-        .eq('id', createdBookingId);
-
-      if (updateErr) {
-        console.error('[API Book] Booking final reference update error:', updateErr);
-        await supabase.from('bookings').delete().eq('id', createdBookingId);
-        return NextResponse.json({ success: false, message: 'Database confirmation failed.' }, { status: 500 });
-      }
+      return NextResponse.json({ success: false, message: 'Database confirmation failed.' }, { status: 500 });
     }
 
     // 9. Update room status
@@ -296,11 +291,8 @@ export async function POST(request: Request) {
       if (createdBookingId) {
         await supabase.from('bookings').delete().eq('id', createdBookingId);
       }
-      if (uploadedProofUrl) {
-        const proofFile = uploadedProofUrl.split('/').pop();
-        if (proofFile) {
-          await supabase.storage.from('payments-proofs').remove([proofFile]);
-        }
+      if (uploadedStoragePath) {
+        await supabase.storage.from('payment-proofs').remove([uploadedStoragePath]);
       }
       return NextResponse.json({ success: false, message: 'Failed to update room status after booking. Please try again.' }, { status: 500 });
     }
@@ -328,8 +320,10 @@ export async function POST(request: Request) {
   } catch (err: any) {
     console.error('[API Book] Unexpected server error:', err);
     if (createdBookingId) {
-      // Cleanup booking row if anything failed at the end
       await supabase.from('bookings').delete().eq('id', createdBookingId);
+    }
+    if (uploadedStoragePath) {
+      await supabase.storage.from('payment-proofs').remove([uploadedStoragePath]);
     }
     return NextResponse.json({ success: false, message: 'Unexpected server error occurred. Please try again.' }, { status: 500 });
   }
