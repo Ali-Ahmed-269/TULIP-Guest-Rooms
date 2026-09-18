@@ -71,7 +71,7 @@ export default function Navbar({ guesthouseName = 'Tulip Guest Rooms' }: NavbarP
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
           <ul>
             <li>
-              <Link href={isHome ? '#home' : '/'} onClick={closeMenu}>Home</Link>
+              <Link href={isHome ? '#home' : '/'} className={pathname === '/' ? 'active' : ''} onClick={closeMenu}>Home</Link>
             </li>
             <li>
               <Link href={isHome ? '#about' : '/#about'} onClick={closeMenu}>About</Link>
@@ -89,25 +89,14 @@ export default function Navbar({ guesthouseName = 'Tulip Guest Rooms' }: NavbarP
               <Link href="/admin/login" className={pathname === '/admin/login' ? 'active' : ''} onClick={closeMenu}>Admin</Link>
             </li>
             <li>
-              <Link href={isHome ? '#booking' : '/#booking'} onClick={closeMenu}>Book Now</Link>
+              <Link href={isHome ? '#contact' : '/#contact'} onClick={closeMenu}>Contact</Link>
             </li>
             <li>
-              <Link href={isHome ? '#contact' : '/#contact'} onClick={closeMenu}>Contact</Link>
+              <Link href={isHome ? '#booking' : '/#booking'} className="btn-nav-book" onClick={closeMenu}>Book Now</Link>
             </li>
           </ul>
         </nav>
       </div>
-
-      <style jsx global>{`
-        /* Active links style */
-        .nav-links a.active {
-          color: var(--primary) !important;
-          border-bottom: 2px solid var(--primary);
-        }
-        .navbar.scrolled .nav-links a.active {
-          color: var(--primary) !important;
-        }
-      `}</style>
     </header>
   );
 }

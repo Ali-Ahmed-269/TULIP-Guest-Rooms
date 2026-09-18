@@ -72,15 +72,9 @@ export default function Footer({ settings }: FooterProps) {
       </div>
 
       {/* Copywrite Bottom Bar */}
-      <div className="mt-10 pt-4 border-t border-[#444] text-[#888] text-[0.85rem]">
+      <div className="mt-10 pt-4 border-t border-[rgba(255,255,255,0.08)] text-[#b7c0cb] text-[0.85rem]">
         <p>&copy; {new Date().getFullYear()} {ghName}. All rights reserved.</p>
       </div>
-
-      <style jsx>{`
-        .footer-link-hover:hover {
-          color: var(--gold) !important;
-        }
-      `}</style>
     </footer>
   );
 }
