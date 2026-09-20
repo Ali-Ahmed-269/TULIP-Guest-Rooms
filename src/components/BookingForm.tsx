@@ -50,8 +50,19 @@ export default function BookingForm({ rooms }: BookingFormProps) {
       setRoomType(selectedType);
       setRoomId('');
     };
+    const handleHeroCheck = (e: Event) => {
+      const { checkIn: cIn, checkOut: cOut, guests: g } = (e as CustomEvent).detail || {};
+      if (cIn) setCheckIn(cIn);
+      if (cOut) setCheckOut(cOut);
+      if (g) setGuests(g);
+    };
+
     window.addEventListener('set-room-type', handleSetRoomType);
-    return () => window.removeEventListener('set-room-type', handleSetRoomType);
+    window.addEventListener('hero-availability-check', handleHeroCheck);
+    return () => {
+      window.removeEventListener('set-room-type', handleSetRoomType);
+      window.removeEventListener('hero-availability-check', handleHeroCheck);
+    };
   }, []);
 
   // Derive price from selected room type via real DB data
@@ -131,229 +142,175 @@ export default function BookingForm({ rooms }: BookingFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="booking-form grid gap-8" noValidate>
+    <form onSubmit={handleSubmit} className="booking-form" noValidate>
+      <div className="grid gap-y-6 gap-x-12" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', columnGap: '3rem', rowGap: '1.5rem' }}>
 
-      {/* ── Section 1: Guest Information ── */}
-      <fieldset className="booking-fieldset">
-        <legend className="booking-fieldset-legend">Guest Information</legend>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
+        {/* ── Left column: Guest Information + Payment ── */}
+        <div className="grid gap-5">
 
-          <div className="form-field">
-            <label htmlFor="bf-fullname">Full Name <span aria-hidden="true">*</span></label>
-            <input
-              id="bf-fullname"
-              type="text"
-              value={fullname}
-              onChange={(e) => setFullname(e.target.value)}
-              placeholder="John Doe"
-              required
-              autoComplete="name"
-            />
-          </div>
+          <fieldset className="booking-fieldset">
+            <legend className="booking-fieldset-legend">Guest Information</legend>
+            <div className="grid grid-cols-2 gap-3">
 
-          <div className="form-field">
-            <label htmlFor="bf-email">Email Address <span aria-hidden="true">*</span></label>
-            <input
-              id="bf-email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
-              required
-              autoComplete="email"
-            />
-          </div>
+              <div className="form-field">
+                <label htmlFor="bf-fullname">Full Name <span aria-hidden="true">*</span></label>
+                <input id="bf-fullname" type="text" value={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
+                  placeholder="John Doe" required autoComplete="name" />
+              </div>
 
-          <div className="form-field">
-            <label htmlFor="bf-phone">Phone Number <span aria-hidden="true">*</span></label>
-            <input
-              id="bf-phone"
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="03XX-XXXXXXX"
-              required
-              autoComplete="tel"
-            />
-          </div>
+              <div className="form-field">
+                <label htmlFor="bf-phone">Phone <span aria-hidden="true">*</span></label>
+                <input id="bf-phone" type="tel" value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="03XX-XXXXXXX" required autoComplete="tel" />
+              </div>
 
-          <div className="form-field">
-            <label htmlFor="bf-cnic">CNIC <span aria-hidden="true">*</span></label>
-            <input
-              id="bf-cnic"
-              type="text"
-              value={cnic}
-              onChange={(e) => setCnic(e.target.value)}
-              placeholder="XXXXX-XXXXXXX-X"
-              required
-            />
-          </div>
+              <div className="form-field" style={{ gridColumn: '1 / -1' }}>
+                <label htmlFor="bf-email">Email Address <span aria-hidden="true">*</span></label>
+                <input id="bf-email" type="email" value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com" required autoComplete="email" />
+              </div>
 
-          <div className="form-field" style={{ gridColumn: '1 / -1' }}>
-            <label htmlFor="bf-address">Address <span aria-hidden="true">*</span></label>
-            <textarea
-              id="bf-address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Street, city, province"
-              rows={2}
-              required
-            />
-          </div>
-        </div>
-      </fieldset>
+              <div className="form-field">
+                <label htmlFor="bf-cnic">CNIC <span aria-hidden="true">*</span></label>
+                <input id="bf-cnic" type="text" value={cnic}
+                  onChange={(e) => setCnic(e.target.value)}
+                  placeholder="XXXXX-XXXXXXX-X" required />
+              </div>
 
-      {/* ── Section 2: Stay Details ── */}
-      <fieldset className="booking-fieldset">
-        <legend className="booking-fieldset-legend">Stay Details</legend>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+              <div className="form-field">
+                <label htmlFor="bf-address">Address <span aria-hidden="true">*</span></label>
+                <input id="bf-address" type="text" value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Street, city, province" required />
+              </div>
 
-          <div className="form-field">
-            <label htmlFor="bf-checkin">Check-in Date <span aria-hidden="true">*</span></label>
-            <input
-              id="bf-checkin"
-              type="date"
-              value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-              required
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="bf-checkout">Check-out Date <span aria-hidden="true">*</span></label>
-            <input
-              id="bf-checkout"
-              type="date"
-              value={checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
-              min={checkIn || new Date().toISOString().split('T')[0]}
-              required
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="bf-guests">Number of Guests <span aria-hidden="true">*</span></label>
-            <input
-              id="bf-guests"
-              type="number"
-              value={guests}
-              min={1}
-              max={10}
-              onChange={(e) => setGuests(Number(e.target.value))}
-              required
-            />
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="bf-room-type">Room Type <span aria-hidden="true">*</span></label>
-            <select
-              id="bf-room-type"
-              value={roomType}
-              onChange={(e) => { setRoomType(e.target.value); setRoomId(''); }}
-              required
-            >
-              <option value="">Select room type</option>
-              {[...new Set(rooms.map((r) => r.room_type))].map((type) => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="bf-room-number">Room Number <span aria-hidden="true">*</span></label>
-            <select
-              id="bf-room-number"
-              value={roomId}
-              onChange={(e) => setRoomId(e.target.value)}
-              required
-              disabled={!roomType}
-            >
-              {!roomType ? (
-                <option value="" disabled>Select a room type first</option>
-              ) : (
-                <>
-                  <option value="">Select room number</option>
-                  {roomNumbersForType.map((num) => (
-                    <option key={num} value={num}>{num}</option>
-                  ))}
-                </>
-              )}
-            </select>
-          </div>
-        </div>
-
-        {/* Live price summary */}
-        {nights > 0 && priceForType > 0 && (
-          <div className="mt-4 p-4 rounded-lg bg-background border-2 border-dashed border-[--gold,#d4a853] text-text-dark font-bold text-center text-[1rem]">
-            {nights} {nights === 1 ? 'night' : 'nights'} × PKR {priceForType}/night
-            {' '}= <span className="text-primary">PKR {totalAmount}</span> total
-          </div>
-        )}
-
-        <div className="form-field mt-4">
-          <label htmlFor="bf-requests">Special Requests</label>
-          <textarea
-            id="bf-requests"
-            value={specialRequests}
-            onChange={(e) => setSpecialRequests(e.target.value)}
-            rows={2}
-            placeholder="Extra pillows, late check-in, etc."
-          />
-        </div>
-      </fieldset>
-
-      {/* ── Section 3: Payment ── */}
-      <fieldset className="booking-fieldset">
-        <legend className="booking-fieldset-legend">Payment</legend>
-        <div className="grid gap-4">
-
-          <div className="form-field">
-            <label htmlFor="bf-payment">Payment Method <span aria-hidden="true">*</span></label>
-            <select
-              id="bf-payment"
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            >
-              <option value="pay_at_hotel">Pay at Hotel</option>
-              <option value="jazzcash">JazzCash Transfer</option>
-              <option value="easypaisa">Easypaisa Transfer</option>
-            </select>
-          </div>
-
-          {paymentMethod !== 'pay_at_hotel' && (
-            <div className="form-field">
-              <label htmlFor="bf-proof">
-                Payment Screenshot <span aria-hidden="true">*</span>
-              </label>
-              <span className="field-hint">Upload a screenshot of your transfer (PNG or JPG)</span>
-              <input
-                id="bf-proof"
-                type="file"
-                accept="image/png,image/jpeg"
-                onChange={(e) => setPaymentProof(e.target.files?.[0] ?? null)}
-                required
-              />
             </div>
-          )}
-        </div>
-      </fieldset>
+          </fieldset>
 
-      {/* ── Feedback messages ── */}
+          {/* Payment */}
+          <fieldset className="booking-fieldset">
+            <legend className="booking-fieldset-legend">Payment</legend>
+            <div className="grid gap-3">
+
+              <div className="form-field">
+                <label htmlFor="bf-payment">Payment Method <span aria-hidden="true">*</span></label>
+                <select id="bf-payment" value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}>
+                  <option value="pay_at_hotel">Pay at Hotel</option>
+                  <option value="jazzcash">JazzCash Transfer</option>
+                  <option value="easypaisa">Easypaisa Transfer</option>
+                </select>
+              </div>
+
+              {paymentMethod !== 'pay_at_hotel' && (
+                <div className="form-field">
+                  <label htmlFor="bf-proof">Payment Screenshot <span aria-hidden="true">*</span></label>
+                  <span className="field-hint">Upload a screenshot of your transfer (PNG or JPG)</span>
+                  <input id="bf-proof" type="file" accept="image/png,image/jpeg"
+                    onChange={(e) => setPaymentProof(e.target.files?.[0] ?? null)} required />
+                </div>
+              )}
+
+            </div>
+          </fieldset>
+
+        </div>
+
+        {/* ── Right column: Stay Details ── */}
+        <fieldset className="booking-fieldset">
+          <legend className="booking-fieldset-legend">Stay Details</legend>
+          <div className="grid grid-cols-2 gap-3">
+
+            <div className="form-field">
+              <label htmlFor="bf-checkin">Check-in <span aria-hidden="true">*</span></label>
+              <input id="bf-checkin" type="date" value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+                min={new Date().toISOString().split('T')[0]} required />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="bf-checkout">Check-out <span aria-hidden="true">*</span></label>
+              <input id="bf-checkout" type="date" value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                min={checkIn || new Date().toISOString().split('T')[0]} required />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="bf-guests">Guests <span aria-hidden="true">*</span></label>
+              <input id="bf-guests" type="number" value={guests}
+                min={1} max={10} onChange={(e) => setGuests(Number(e.target.value))} required />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="bf-room-type">Room Type <span aria-hidden="true">*</span></label>
+              <select id="bf-room-type" value={roomType}
+                onChange={(e) => { setRoomType(e.target.value); setRoomId(''); }} required>
+                <option value="">Select room type</option>
+                {[...new Set(rooms.map((r) => r.room_type))].map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-field" style={{ gridColumn: '1 / -1' }}>
+              <label htmlFor="bf-room-number">Room Number <span aria-hidden="true">*</span></label>
+              <select id="bf-room-number" value={roomId}
+                onChange={(e) => setRoomId(e.target.value)} required disabled={!roomType}>
+                {!roomType ? (
+                  <option value="" disabled>Select a room type first</option>
+                ) : (
+                  <>
+                    <option value="">Select room number</option>
+                    {roomNumbersForType.map((num) => (
+                      <option key={num} value={num}>{num}</option>
+                    ))}
+                  </>
+                )}
+              </select>
+            </div>
+
+            {/* Live price summary */}
+            {nights > 0 && priceForType > 0 && (
+              <div className="mt-1 p-3 rounded-lg bg-background border-2 border-dashed border-[--gold,#d4a853] text-center text-[0.92rem] font-bold"
+                style={{ gridColumn: '1 / -1' }}>
+                {nights} {nights === 1 ? 'night' : 'nights'} × PKR {priceForType}/night
+                {' '}= <span className="text-primary">PKR {totalAmount}</span> total
+              </div>
+            )}
+
+            <div className="form-field" style={{ gridColumn: '1 / -1' }}>
+              <label htmlFor="bf-requests">Special Requests</label>
+              <textarea id="bf-requests" value={specialRequests}
+                onChange={(e) => setSpecialRequests(e.target.value)}
+                rows={3} placeholder="Extra pillows, late check-in, etc." />
+            </div>
+
+          </div>
+        </fieldset>
+
+      </div>
+
+      {/* ── Feedback ── */}
       {errorMessage && (
-        <div role="alert" className="error-msg p-3 rounded-lg bg-[#fff1f2] border border-[#fecdd3]">
+        <div role="alert" className="error-msg mt-5 p-3 rounded-lg bg-[#fff1f2] border border-[#fecdd3]">
           {errorMessage}
         </div>
       )}
       {statusMessage && (
-        <div role="status" className="p-3 rounded-lg bg-[#ecfdf5] text-[#065f46] font-semibold">
+        <div role="status" className="mt-5 p-3 rounded-lg bg-[#ecfdf5] text-[#065f46] font-semibold">
           {statusMessage}
         </div>
       )}
 
-      <button type="submit" className="btn btn-primary w-full" disabled={submitting}>
-        {submitting ? 'Submitting reservation…' : 'Confirm Reservation'}
-      </button>
+      {/* ── Action Row ── */}
+      <div style={{ marginTop: '3.5rem', paddingTop: '1.75rem', borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
+        <button type="submit" className="btn btn-primary btn-pill w-full" disabled={submitting}>
+          {submitting ? 'Submitting reservation…' : 'Confirm Reservation'}
+        </button>
+      </div>
     </form>
   );
 }

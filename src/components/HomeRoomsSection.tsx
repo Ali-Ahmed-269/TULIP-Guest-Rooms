@@ -17,8 +17,8 @@ interface HomeRoomsSectionProps {
 
 const ROOM_FEATURES: Record<string, string[]> = {
   'Standard':     ['Free WiFi', 'Hot Water', 'TV'],
-  'Premium':      ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV', 'Mini Fridge', 'City View'],
-  'Comfort Plus': ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV', 'Mini Fridge', 'King Bed', 'Living Area'],
+  'Premium':      ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV'],
+  'Comfort Plus': ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV', 'King Bed'],
 };
 
 const ROOM_IMAGES: Record<string, string> = {
@@ -119,79 +119,51 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
   };
 
   return (
-    <div className="grid gap-6">
-      {/* Date Availability Checker */}
-      <div className="card">
-        <h3 className="mb-4 text-[1.2rem]">Check live availability for your dates</h3>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 items-end">
-          <div className="form-field">
-            <label htmlFor="avail-checkin">Check-in Date</label>
-            <input
-              id="avail-checkin"
-              type="date"
-              value={checkIn}
-              onChange={(e) => setCheckIn(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-            />
-          </div>
-          <div className="form-field">
-            <label htmlFor="avail-checkout">Check-out Date</label>
-            <input
-              id="avail-checkout"
-              type="date"
-              value={checkOut}
-              onChange={(e) => setCheckOut(e.target.value)}
-              min={checkIn || new Date().toISOString().split('T')[0]}
-            />
-          </div>
-          <button
-            type="button"
-            className="btn btn-primary h-12"
-            onClick={handleCheckAvailability}
-            disabled={loading}
-          >
-            {loading ? 'Checking…' : 'Check Availability'}
-          </button>
-        </div>
-        {checkerMessage && (
-          <p className="mt-4 text-[0.95rem] font-semibold text-primary">{checkerMessage}</p>
-        )}
-      </div>
-
-      {/* Room Cards Grid */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
+    <div>
+      {/* Room Cards Grid — 3 columns desktop, responsive */}
+      <div className="rooms-grid">
         {cards.map((card) => (
-          <article
-            key={card.type}
-            className="card !p-0 overflow-hidden flex flex-col"
-          >
-            {/* Room Image */}
-            <img
-              src={card.image}
-              alt={`${card.type} at Tulip Guest Rooms`}
-              className="w-full h-[220px] object-cover"
-              loading="lazy"
-            />
+          <article key={card.type} className="room-card">
+            {/* Room Image — edge-to-edge, rounded only at top */}
+            <div className="room-card-image-wrap">
+              <img
+                src={card.image}
+                alt={`${card.type} at Tulip Guest Rooms`}
+                className="room-card-image"
+                loading="lazy"
+              />
+            </div>
 
-            <div className="p-6 flex flex-col flex-1">
-              {/* Title + Price */}
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <h3 className="font-heading text-[1.35rem] leading-tight">
+            <div className="room-card-body">
+              {/* Name + Price */}
+              <div className="room-card-title-row">
+                <h3 className="room-card-name">
                   {ROOM_DISPLAY_NAMES[card.type] ?? card.type}
                 </h3>
-                <span className="font-bold text-primary text-[1.05rem] whitespace-nowrap">
-                  PKR {card.price}<span className="text-muted text-[0.8rem] font-normal">/night</span>
+                <span className="room-card-price">
+                  PKR {card.price.toLocaleString()}
+                  <span className="room-card-price-unit">/night</span>
                 </span>
               </div>
-              <p className="text-muted text-[0.88rem] mb-4">Up to {card.maxGuests} guest{card.maxGuests !== 1 ? 's' : ''}</p>
 
-              {/* Features */}
-              <ul className="grid gap-1.5 mb-5 list-none">
+              {/* Guest capacity */}
+              <div className="room-card-guests">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                  strokeLinejoin="round" aria-hidden="true" className="room-card-guest-icon">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Up to {card.maxGuests} guest{card.maxGuests !== 1 ? 's' : ''}
+              </div>
+
+              {/* Amenity checklist — gold check + muted label, no bullets */}
+              <ul className="room-card-amenities">
                 {card.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2 text-[0.9rem]">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  <li key={feature} className="room-card-amenity">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" strokeWidth="3" strokeLinecap="round"
-                      strokeLinejoin="round" className="text-sage shrink-0" aria-hidden="true">
+                      strokeLinejoin="round" aria-hidden="true" className="room-card-check">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                     {feature}
@@ -199,12 +171,10 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
                 ))}
               </ul>
 
-              {/* Room Status — dot + text label for every room number */}
-              <div className="mt-auto">
-                <p className="text-[0.82rem] text-muted font-semibold uppercase tracking-wide mb-2">
-                  Room Status
-                </p>
-                <div className="flex gap-2 flex-wrap mb-5">
+              {/* Room Status pills */}
+              <div className="room-card-status-block">
+                <p className="room-card-status-label">Room Status</p>
+                <div className="flex gap-2 flex-wrap mb-4">
                   {card.rooms.map((num) => {
                     const status = availability[num] ?? 'Available';
                     const statusClass = getStatusClass(status);
@@ -223,17 +193,26 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
                   })}
                 </div>
                 {card.type === 'Standard' && card.rooms.includes('108') && (
-                  <p className="text-[0.82rem] text-muted italic mb-4">
+                  <p className="text-[0.82rem] text-[--text-muted-token,#b7c0cb] italic mb-3">
                     (Room 108 includes AC — additional charges apply)
                   </p>
                 )}
+              </div>
 
+              {/* View Details — outline pill, secondary action */}
+              <div className="room-card-actions">
                 <button
                   type="button"
-                  className="btn btn-primary w-full"
+                  className="room-card-view-btn"
                   onClick={() => handleBookRoom(card.type)}
                 >
-                  Book This Room
+                  Book Room
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+                    strokeLinejoin="round" aria-hidden="true">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                  </svg>
                 </button>
               </div>
             </div>
