@@ -23,7 +23,7 @@ export default function HeroBookingBar() {
   const checkInRef  = useRef<HTMLInputElement>(null);
   const checkOutRef = useRef<HTMLInputElement>(null);
 
-  function openPicker(ref: React.RefObject<HTMLInputElement>) {
+  function openPicker(ref: React.RefObject<HTMLInputElement | null>) {
     try {
       ref.current?.showPicker();
     } catch {
