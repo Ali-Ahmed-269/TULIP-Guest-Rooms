@@ -103,7 +103,7 @@ export default function ReviewsPage() {
             <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '14px' }}>
               <label className="form-group">
                 <span>Booking ID</span>
-                <input value={bookingId} onChange={(event) => setBookingId(event.target.value)} className="form-control" placeholder="TGR-2026-0001" />
+                <input value={bookingId} onChange={(event) => setBookingId(event.target.value)} className="form-control" placeholder="TGR-2026-0001-X7K" />
               </label>
               <label className="form-group">
                 <span>Phone</span>

@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       check_out_date: row.check_out_date,
       booking_status: row.booking_status,
       payment_status: row.payment_status,
-      invoice_url: `/api/bookings/invoice?booking_id=${row.id}`,
+      invoice_url: `/api/bookings/invoice?booking_id=${encodeURIComponent(row.booking_reference || row.id)}&phone=${encodeURIComponent(phone)}`,
     }));
 
     return NextResponse.json({

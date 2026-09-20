@@ -263,7 +263,12 @@ export async function POST(request: Request) {
 
     createdBookingId = newBooking.id;
     const currentYear = new Date().getFullYear();
-    const bookingRef = `TGR-${currentYear}-${String(createdBookingId).padStart(4, '0')}`;
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let randomSuffix = '';
+    for (let i = 0; i < 3; i++) {
+      randomSuffix += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const bookingRef = `TGR-${currentYear}-${String(createdBookingId).padStart(4, '0')}-${randomSuffix}`;
 
     // 8. Update booking row with booking reference
     const { error: updateErr } = await supabase
@@ -314,7 +319,7 @@ export async function POST(request: Request) {
       success: true,
       booking_id: createdBookingId,
       booking_reference: bookingRef,
-      redirect_url: `confirmation?booking_id=${encodeURIComponent(bookingRef)}`,
+      redirect_url: `confirmation?booking_id=${encodeURIComponent(bookingRef)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`,
     });
 
   } catch (err: any) {

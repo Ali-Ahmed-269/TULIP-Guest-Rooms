@@ -122,7 +122,7 @@ export default function BookingForm({ rooms }: BookingFormProps) {
       setStatusMessage('Booking submitted successfully. Redirecting you now…');
       router.push(
         result.redirect_url ??
-        `/confirmation?booking_id=${encodeURIComponent(result.booking_reference ?? result.booking_id)}`
+        `/confirmation?booking_id=${encodeURIComponent(result.booking_reference ?? result.booking_id)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`
       );
     } catch {
       setErrorMessage('Unexpected error while submitting booking. Please try again.');

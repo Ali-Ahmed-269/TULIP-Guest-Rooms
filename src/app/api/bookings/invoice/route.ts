@@ -1,32 +1,95 @@
 import { NextResponse } from 'next/server';
-import { createServiceRoleClient } from '@/utils/supabase/server';
+import { createServiceRoleClient, createClient } from '@/utils/supabase/server';
 import { generateInvoicePdf } from '@/utils/pdf-generator';
 
-export async function GET(request: Request) {
+async function processInvoiceRequest(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const bookingId = parseInt(searchParams.get('booking_id') || '0', 10);
-    const mode = searchParams.get('mode') || '';
+    const url = new URL(request.url);
+    const searchParams = url.searchParams;
 
-    if (bookingId <= 0) {
+    let bookingIdParam = (searchParams.get('booking_id') || '').trim();
+    let mode = searchParams.get('mode') || '';
+    let emailParam = (request.headers.get('x-guest-email') || '').trim().toLowerCase();
+    let phoneParam = (request.headers.get('x-guest-phone') || '').trim();
+
+    // Check if body contains data (for POST requests)
+    if (request.method === 'POST') {
+      try {
+        const body = await request.clone().json();
+        if (body) {
+          if (!bookingIdParam && body.booking_id) {
+            bookingIdParam = String(body.booking_id).trim();
+          }
+          if (!mode && body.mode) {
+            mode = String(body.mode);
+          }
+          if (!emailParam && (body.email || body.guest_email)) {
+            emailParam = (body.email || body.guest_email || '').trim().toLowerCase();
+          }
+          if (!phoneParam && (body.phone || body.guest_phone)) {
+            phoneParam = (body.phone || body.guest_phone || '').trim();
+          }
+        }
+      } catch {
+        // Body parsing failed or empty body
+      }
+    }
+
+    if (!bookingIdParam) {
       return NextResponse.json({ success: false, message: 'booking_id is required.' }, { status: 400 });
     }
 
     const supabase = createServiceRoleClient();
 
     // 1. Load booking with associated room
-    const { data: booking, error: bookingErr } = await supabase
-      .from('bookings')
-      .select('*, rooms(*)')
-      .eq('id', bookingId)
-      .single();
+    let query = supabase.from('bookings').select('*, rooms(*)');
+    if (/^\d+$/.test(bookingIdParam)) {
+      query = query.eq('id', parseInt(bookingIdParam, 10));
+    } else {
+      query = query.eq('booking_reference', bookingIdParam);
+    }
+
+    const { data: booking, error: bookingErr } = await query.maybeSingle();
 
     if (bookingErr || !booking) {
-      console.error(`[API Invoice] Error fetching booking #${bookingId}:`, bookingErr);
+      console.error(`[API Invoice] Error fetching booking "${bookingIdParam}":`, bookingErr);
       return NextResponse.json({ success: false, message: 'Booking not found.' }, { status: 404 });
     }
 
-    // 2. Load site settings
+    // 2. Verification step: require guest's email or phone via body/header, OR authenticated admin session
+    let isAuthorized = false;
+
+    const emailMatches = Boolean(emailParam && booking.guest_email.toLowerCase() === emailParam);
+    const cleanGuestPhone = (booking.guest_phone || '').replace(/\D/g, '');
+    const cleanInputPhone = phoneParam.replace(/\D/g, '');
+    const phoneMatches = Boolean(
+      phoneParam &&
+      (booking.guest_phone === phoneParam || (cleanGuestPhone.length >= 7 && cleanGuestPhone === cleanInputPhone))
+    );
+
+    if (emailMatches || phoneMatches) {
+      isAuthorized = true;
+    } else {
+      // Check if user has an active admin session
+      try {
+        const userClient = await createClient();
+        const { data: { user } } = await userClient.auth.getUser();
+        if (user) {
+          isAuthorized = true;
+        }
+      } catch (authErr) {
+        // Not an admin session
+      }
+    }
+
+    if (!isAuthorized) {
+      return NextResponse.json({
+        success: false,
+        message: 'Access denied. Valid guest email or phone verification (sent via POST body or x-guest-email/x-guest-phone header) is required.',
+      }, { status: 403 });
+    }
+
+    // 3. Load site settings
     const { data: settingsData } = await supabase
       .from('site_settings')
       .select('setting_key, setting_value');
@@ -36,11 +99,11 @@ export async function GET(request: Request) {
       settings[row.setting_key] = row.setting_value;
     });
 
-    // 3. Generate PDF
+    // 4. Generate PDF
     const pdfBuffer = await generateInvoicePdf(booking, settings);
-    const invoiceFilename = `INV-TGR-${new Date(booking.created_at).getFullYear()}-${String(booking.id).padStart(4, '0')}.pdf`;
+    const invoiceFilename = `INV-${booking.booking_reference || `TGR-${new Date(booking.created_at).getFullYear()}-${String(booking.id).padStart(4, '0')}`}.pdf`;
 
-    // 4. Return invoice (either as JSON base64 or download stream)
+    // 5. Return invoice (either as JSON base64 or download stream)
     if (mode === 'base64') {
       return NextResponse.json({
         success: true,
@@ -60,4 +123,12 @@ export async function GET(request: Request) {
     console.error('[API Invoice] Error generating invoice:', err);
     return NextResponse.json({ success: false, message: 'Could not generate invoice.' }, { status: 500 });
   }
+}
+
+export async function GET(request: Request) {
+  return processInvoiceRequest(request);
+}
+
+export async function POST(request: Request) {
+  return processInvoiceRequest(request);
 }

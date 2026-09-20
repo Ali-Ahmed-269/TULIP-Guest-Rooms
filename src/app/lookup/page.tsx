@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
+import DownloadInvoiceButton from '@/components/DownloadInvoiceButton';
 
 interface BookingSummary {
   booking_reference: string;
@@ -122,6 +123,13 @@ export default function LookupPage() {
                       <p style={{ fontWeight: 700 }}>Check-out</p>
                       <p>{booking.check_out_date}</p>
                     </div>
+                  </div>
+                  <div style={{ marginTop: '16px' }}>
+                    <DownloadInvoiceButton
+                      bookingId={booking.booking_reference}
+                      phone={phone}
+                      className="btn btn-outline"
+                    />
                   </div>
                 </div>
               ))}

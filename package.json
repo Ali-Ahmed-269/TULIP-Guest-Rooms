@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "smoke:test": "node scripts/smoke-test.mjs"
+    "smoke:test": "node scripts/smoke-test.mjs",
+    "test:admin": "node scripts/test-admin-auth.mjs",
+    "test:invoice": "node scripts/test-invoice-verification.mjs",
+    "test:rls:anon": "node scripts/test-rooms-anon-rls.mjs",
+    "test:rls:admin": "node scripts/test-rooms-admin-rls.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
@@ -16,11 +20,13 @@
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
     "pdf-lib": "^1.17.1",
+    "pg": "^8.23.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.12.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

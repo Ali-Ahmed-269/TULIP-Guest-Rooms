@@ -1,11 +1,15 @@
 import Link from 'next/link';
+import DownloadInvoiceButton from '@/components/DownloadInvoiceButton';
 
 interface ConfirmationPageProps {
-  searchParams: { booking_id?: string };
+  searchParams: Promise<{ booking_id?: string; email?: string; phone?: string }>;
 }
 
-export default function ConfirmationPage({ searchParams }: ConfirmationPageProps) {
-  const bookingId = searchParams.booking_id;
+export default async function ConfirmationPage({ searchParams }: ConfirmationPageProps) {
+  const resolvedParams = await searchParams;
+  const bookingId = resolvedParams.booking_id;
+  const email = resolvedParams.email;
+  const phone = resolvedParams.phone;
 
   return (
     <section className="section-padding">
@@ -17,9 +21,11 @@ export default function ConfirmationPage({ searchParams }: ConfirmationPageProps
               Thank you! Your reservation is recorded with reference <strong>{bookingId}</strong>.
             </p>
             <div style={{ display: 'grid', gap: '16px', justifyItems: 'center' }}>
-              <a className="btn btn-primary" href={`/api/bookings/invoice?booking_id=${encodeURIComponent(bookingId)}`}>
-                Download Invoice PDF
-              </a>
+              <DownloadInvoiceButton
+                bookingId={bookingId}
+                email={email}
+                phone={phone}
+              />
               <Link href="/" className="btn btn-outline">
                 Back to Home
               </Link>

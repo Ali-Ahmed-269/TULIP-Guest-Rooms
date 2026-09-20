@@ -83,7 +83,7 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
         setError(data.message || 'Failed to create walk-in booking.');
       } else {
         setMessage('Walk-in booking created successfully.');
-        router.push(data.redirect_url || `/confirmation?booking_id=${encodeURIComponent(data.booking_reference || data.booking_id)}`);
+        router.push(data.redirect_url || `/confirmation?booking_id=${encodeURIComponent(data.booking_reference || data.booking_id)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`);
       }
     } catch (err) {
       setError('Server error when creating booking.');

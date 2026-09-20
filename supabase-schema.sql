@@ -15,6 +15,21 @@ CREATE TABLE rooms (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Enable RLS & Policies for Rooms Table
+ALTER TABLE rooms ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read access to rooms"
+ON rooms FOR SELECT TO public USING (true);
+
+CREATE POLICY "Allow authenticated insert rooms"
+ON rooms FOR INSERT TO authenticated WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated update rooms"
+ON rooms FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated delete rooms"
+ON rooms FOR DELETE TO authenticated USING (true);
+
 -- Bookings Table
 CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
@@ -37,6 +52,21 @@ CREATE TABLE bookings (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Enable RLS & Policies for Bookings Table
+ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow authenticated select bookings"
+ON bookings FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "Allow authenticated insert bookings"
+ON bookings FOR INSERT TO authenticated WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated update bookings"
+ON bookings FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated delete bookings"
+ON bookings FOR DELETE TO authenticated USING (true);
+
 -- Reviews Table
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
@@ -48,6 +78,21 @@ CREATE TABLE reviews (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Enable RLS & Policies for Reviews Table
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public select approved reviews"
+ON reviews FOR SELECT TO public USING (status = 'Approved');
+
+CREATE POLICY "Allow authenticated insert reviews"
+ON reviews FOR INSERT TO authenticated WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated update reviews"
+ON reviews FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated delete reviews"
+ON reviews FOR DELETE TO authenticated USING (true);
+
 -- Rate Limit Table (Optional PostgreSQL fallback rate limit log)
 CREATE TABLE rate_limit_log (
     id SERIAL PRIMARY KEY,
@@ -56,12 +101,33 @@ CREATE TABLE rate_limit_log (
 );
 CREATE INDEX idx_ip_attempted ON rate_limit_log(ip_address, attempted_at);
 
+-- Enable RLS & Policies for Rate Limit Log Table
+ALTER TABLE rate_limit_log ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow authenticated select rate_limit_log"
+ON rate_limit_log FOR SELECT TO authenticated USING (true);
+
 -- Site Settings Table
 CREATE TABLE site_settings (
     setting_key VARCHAR(64) PRIMARY KEY,
     setting_value TEXT NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Enable RLS & Policies for Site Settings Table
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public select site_settings"
+ON site_settings FOR SELECT TO public USING (true);
+
+CREATE POLICY "Allow authenticated insert site_settings"
+ON site_settings FOR INSERT TO authenticated WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated update site_settings"
+ON site_settings FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated delete site_settings"
+ON site_settings FOR DELETE TO authenticated USING (true);
 
 -- Seed Rooms
 INSERT INTO rooms (room_number, room_type, price_per_night, max_guests, status) VALUES
