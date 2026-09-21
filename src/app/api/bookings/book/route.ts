@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServiceRoleClient } from '@/utils/supabase/server';
 import { sendBookingEmailTriggers } from '@/utils/resend';
+import { validateOrigin } from '@/utils/csrf';
 
 function isValidPhone(phone: string) {
   return /^03\d{2}-\d{7}$/.test(phone);
@@ -22,6 +23,10 @@ export async function POST(request: Request) {
   const supabase = createServiceRoleClient();
 
   try {
+    // 0. CSRF origin check — reject cross-origin POST requests
+    const csrfError = validateOrigin(request);
+    if (csrfError) return csrfError;
+
     const formData = await request.formData();
     
     // 1. Extract inputs
@@ -95,13 +100,6 @@ export async function POST(request: Request) {
     // 3. Rate limiting (database-backed, max 5 POSTs per IP per hour)
     const ip = getClientIp(request);
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-
-    // Clean up old rate limit logs
-    await supabase
-      .from('rate_limit_log')
-      .delete()
-      .eq('ip_address', ip)
-      .lt('attempted_at', oneHourAgo);
 
     // Count recent attempts
     const { count: attempts, error: limitErr } = await supabase

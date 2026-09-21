@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { validateOrigin } from '@/utils/csrf';
 
 export async function POST(request: Request) {
   try {
+    // 0. CSRF origin check — reject cross-origin requests
+    const csrfError = validateOrigin(request);
+    if (csrfError) return csrfError;
+
     // 1. Guard route: verify admin auth session
     const clientSupabase = await createClient();
     const { data: { user } } = await clientSupabase.auth.getUser();

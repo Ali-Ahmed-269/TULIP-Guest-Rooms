@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createServiceRoleClient } from '@/utils/supabase/server';
+import { validateOrigin } from '@/utils/csrf';
 
 export async function POST(request: Request) {
+  // CSRF origin check — reject cross-origin POST requests
+  const csrfError = validateOrigin(request);
+  if (csrfError) return csrfError;
+
   try {
     let phone = '';
 

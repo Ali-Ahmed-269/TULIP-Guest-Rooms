@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServiceRoleClient, createClient } from '@/utils/supabase/server';
 import { generateInvoicePdf } from '@/utils/pdf-generator';
+import { validateOrigin } from '@/utils/csrf';
 
 async function processInvoiceRequest(request: Request) {
   try {
@@ -130,5 +131,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  // CSRF origin check — reject cross-origin POST requests
+  const csrfError = validateOrigin(request);
+  if (csrfError) return csrfError;
   return processInvoiceRequest(request);
 }

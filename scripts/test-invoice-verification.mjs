@@ -85,7 +85,7 @@ async function runTest() {
   {
     const res = await fetch(`${BASE_URL}/api/bookings/invoice`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Origin': BASE_URL },
       body: JSON.stringify({ booking_id: bookingRef, email: guestEmail }),
     });
 
@@ -105,6 +105,7 @@ async function runTest() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': BASE_URL,
         'x-guest-phone': guestPhone,
       },
       body: JSON.stringify({ booking_id: bookingRef }),
@@ -120,7 +121,7 @@ async function runTest() {
   {
     const res = await fetch(`${BASE_URL}/api/bookings/invoice`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Origin': BASE_URL },
       body: JSON.stringify({ booking_id: bookingRef }),
     });
 
@@ -134,7 +135,7 @@ async function runTest() {
   {
     const res = await fetch(`${BASE_URL}/api/bookings/invoice`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Origin': BASE_URL },
       body: JSON.stringify({
         booking_id: bookingRef,
         email: 'invalid-email-xyz@domain.invalid',
@@ -168,6 +169,7 @@ async function runTest() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Origin': BASE_URL,
           Cookie: cookieHeader,
         },
         body: JSON.stringify({ booking_id: bookingRef }), // NO email or phone passed!

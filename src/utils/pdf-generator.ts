@@ -79,25 +79,54 @@ export async function generateInvoicePdf(booking: any, settings: any) {
   page.drawText('Guest Details', { x: 40, y: y, size: 12, font: boldFont, color: primaryColor });
   y -= 15;
 
+  function wrapTextLines(text: string, fontObj: any, fontSize: number, maxWidth: number): string[] {
+    if (!text || !text.trim()) return ['—'];
+    const words = text.trim().split(/\s+/);
+    const lines: string[] = [];
+    let currentLine = '';
+
+    for (const word of words) {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      const testWidth = fontObj.widthOfTextAtSize(testLine, fontSize);
+      if (testWidth <= maxWidth) {
+        currentLine = testLine;
+      } else {
+        if (currentLine) lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    if (currentLine) lines.push(currentLine);
+    return lines.length > 0 ? lines : ['—'];
+  }
+
   const drawRow = (label: string, value: string) => {
+    const valStr = value || '—';
+    const lines = wrapTextLines(valStr, font, 9, 365);
+    const lineHeight = 12;
+    const rowHeight = Math.max(18, lines.length * lineHeight + 6);
+    const boxBottom = (y + 14) - rowHeight;
+
     // Draw row background
     page.drawRectangle({
       x: 40,
-      y: y - 4,
+      y: boxBottom,
       width: 515,
-      height: 18,
+      height: rowHeight,
       color: bgHeaderColor,
     });
     
     page.drawText(label, { x: 45, y: y, size: 9, font: boldFont, color: darkGray });
-    page.drawText(value || '—', { x: 180, y: y, size: 9, font, color: darkGray });
+    
+    lines.forEach((lineText, idx) => {
+      page.drawText(lineText, { x: 180, y: y - (idx * lineHeight), size: 9, font, color: darkGray });
+    });
     
     // Draw boundary box
     page.drawRectangle({
       x: 40,
-      y: y - 4,
+      y: boxBottom,
       width: 515,
-      height: 18,
+      height: rowHeight,
       borderColor: lineStroke,
       borderWidth: 0.5,
     });
@@ -105,12 +134,12 @@ export async function generateInvoicePdf(booking: any, settings: any) {
     // Draw middle vertical line
     page.drawLine({
       start: { x: 170, y: y + 14 },
-      end: { x: 170, y: y - 4 },
+      end: { x: 170, y: boxBottom },
       thickness: 0.5,
       color: lineStroke,
     });
 
-    y -= 18;
+    y -= rowHeight;
   };
 
   drawRow('Full Name', booking.guest_name);

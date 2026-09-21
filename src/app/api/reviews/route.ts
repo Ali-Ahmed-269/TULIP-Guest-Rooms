@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServiceRoleClient } from '@/utils/supabase/server';
+import { validateOrigin } from '@/utils/csrf';
 
 function isValidPhone(phone: string) {
   return /^03\d{2}-\d{7}$/.test(phone);
@@ -50,6 +51,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  // CSRF origin check — reject cross-origin POST requests
+  const csrfError = validateOrigin(request);
+  if (csrfError) return csrfError;
+
   try {
     let bookingRef = '';
     let phone = '';
