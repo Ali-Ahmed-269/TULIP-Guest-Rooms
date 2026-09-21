@@ -53,6 +53,23 @@ function getAllowedOrigins(): string[] {
 export function validateOrigin(request: Request): NextResponse | null {
   const allowedOrigins = getAllowedOrigins();
 
+  const originHeader  = request.headers.get('origin')  ?? '';
+  const refererHeader = request.headers.get('referer') ?? '';
+  const sourceHeader  = originHeader || refererHeader;
+  const requestOrigin = toOrigin(sourceHeader);
+  const isAllowed     = Boolean(requestOrigin && allowedOrigins.includes(requestOrigin));
+
+  console.log('[CSRF DEBUG]', {
+    NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    allowedOrigins,
+    originHeader,
+    refererHeader,
+    sourceHeader,
+    requestOrigin,
+    isAllowed,
+  });
+
   if (allowedOrigins.length === 0) {
     console.error(
       '[CSRF] NEXT_PUBLIC_SITE_URL is not set and NODE_ENV is production. ' +
@@ -60,39 +77,41 @@ export function validateOrigin(request: Request): NextResponse | null {
     );
   }
 
-  const originHeader  = request.headers.get('origin')  ?? '';
-  const refererHeader = request.headers.get('referer') ?? '';
-
-  // Prefer Origin header (it's authoritative); fall back to Referer
-  const sourceHeader = originHeader || refererHeader;
-
   if (!sourceHeader) {
     console.warn('[CSRF] Rejected: no Origin or Referer header present.');
-    return NextResponse.json(
-      { success: false, message: 'Forbidden' },
+    const res = NextResponse.json(
+      { success: false, message: 'Forbidden (No Origin/Referer)' },
       { status: 403 }
     );
+    res.headers.set('x-csrf-debug-reason', 'no-source-header');
+    return res;
   }
-
-  const requestOrigin = toOrigin(sourceHeader);
 
   if (!requestOrigin) {
     console.warn(`[CSRF] Rejected: invalid Origin or Referer header value "${sourceHeader}".`);
-    return NextResponse.json(
-      { success: false, message: 'Forbidden' },
+    const res = NextResponse.json(
+      { success: false, message: 'Forbidden (Invalid Origin format)' },
       { status: 403 }
     );
+    res.headers.set('x-csrf-debug-reason', 'invalid-origin-format');
+    return res;
   }
 
   // Exact origin matching
-  const isAllowed = allowedOrigins.includes(requestOrigin);
-
   if (!isAllowed) {
     console.warn(`[CSRF] Rejected: origin "${requestOrigin}" is not in allowed list ${JSON.stringify(allowedOrigins)}.`);
-    return NextResponse.json(
-      { success: false, message: 'Forbidden' },
+    const res = NextResponse.json(
+      {
+        success: false,
+        message: 'Forbidden (Origin Not Allowed)',
+        debug: { allowedOrigins, requestOrigin }
+      },
       { status: 403 }
     );
+    res.headers.set('x-csrf-debug-reason', 'origin-not-allowed');
+    res.headers.set('x-csrf-request-origin', requestOrigin);
+    res.headers.set('x-csrf-allowed-origins', JSON.stringify(allowedOrigins));
+    return res;
   }
 
   return null; // request is allowed
