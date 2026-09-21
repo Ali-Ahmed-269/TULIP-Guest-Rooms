@@ -23,7 +23,7 @@ export default async function AdminWalkinPage() {
           title="Walk-in Booking"
           description="Create a fast walk-in reservation and mark payment as pay-at-hotel."
         />
-        <div className="card" style={{ backgroundColor: '#fff', padding: '30px' }}>
+        <div className="bg-[#16283f] border border-white/10 rounded-2xl p-6 shadow-md">
           <WalkInForm rooms={rooms} />
         </div>
       </section>

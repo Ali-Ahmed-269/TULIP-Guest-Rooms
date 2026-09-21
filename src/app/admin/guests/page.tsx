@@ -1,5 +1,6 @@
-import { createServiceRoleClient } from '@/utils/supabase/server';
+﻿import { createServiceRoleClient } from '@/utils/supabase/server';
 import AdminLayout from '@/components/AdminLayout';
+import PageHeader from '@/components/PageHeader';
 
 async function getUniqueGuests() {
   const supabase = createServiceRoleClient();
@@ -11,13 +12,11 @@ async function getUniqueGuests() {
   const guestsMap = new Map<string, { name: string; phone: string; cnic: string; count: number }>();
 
   bookings?.forEach((b) => {
-    // Group by CNIC first, then phone if CNIC is empty, fallback to phone
     const key = (b.guest_cnic || b.guest_phone || '').trim();
     if (!key) return;
 
     if (guestsMap.has(key)) {
-      const existing = guestsMap.get(key)!;
-      existing.count += 1;
+      guestsMap.get(key)!.count += 1;
     } else {
       guestsMap.set(key, {
         name: b.guest_name,
@@ -37,42 +36,33 @@ export default async function AdminGuestsPage() {
   return (
     <AdminLayout>
       <section className="pb-10">
-        <div className="mb-6">
-          <h1>Guests Directory</h1>
-          <p className="text-muted">
-            List of unique guests who have reserved rooms, grouped by CNIC/Phone, and their total bookings count.
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Admin"
+          title="Guests Directory"
+          description="List of unique guests who have reserved rooms, grouped by CNIC/Phone, and their total bookings count."
+        />
 
-        <div className="card !p-0 overflow-hidden">
+        <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-md">
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse min-w-[720px]">
+            <table className="w-full border-collapse min-w-[720px] text-sm">
               <thead>
-                <tr className="bg-background text-left">
+                <tr className="bg-[#0e1e33] text-left text-xs font-semibold text-[#b7c0cb] uppercase tracking-wider">
                   {['Guest Name', 'Phone Number', 'CNIC', 'Total Bookings'].map((heading) => (
-                    <th key={heading} className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">
+                    <th key={heading} className="px-4 py-3.5 border-b border-white/10 whitespace-nowrap">
                       {heading}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-white/5">
                 {guests.length > 0 ? (
                   guests.map((guest, index) => (
-                    <tr key={`${guest.phone}-${index}`} className="bg-surface">
-                      <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">
-                        {guest.name}
-                      </td>
-                      <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                        {guest.phone}
-                      </td>
-                      <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                        {guest.cnic || '—'}
-                      </td>
-                      <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                        <span
-                          className="badge badge-blue text-[0.9rem] px-2.5 py-1 rounded-[20px] min-w-[35px] text-center"
-                        >
+                    <tr key={`${guest.phone}-${index}`} className="hover:bg-white/[0.025] transition-colors">
+                      <td className="px-4 py-3.5 text-slate-200 font-semibold whitespace-nowrap">{guest.name}</td>
+                      <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{guest.phone}</td>
+                      <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{guest.cnic || '—'}</td>
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-xs font-bold bg-[#d9b571]/15 border border-[#d9b571]/30 text-[#d9b571] min-w-[32px]">
                           {guest.count}
                         </span>
                       </td>
@@ -80,7 +70,7 @@ export default async function AdminGuestsPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={4} className="p-8 text-center text-muted">
+                    <td colSpan={4} className="px-4 py-10 text-center text-slate-400 text-sm">
                       No guests registered yet.
                     </td>
                   </tr>

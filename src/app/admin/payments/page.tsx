@@ -1,6 +1,7 @@
 import { createServiceRoleClient } from '@/utils/supabase/server';
 import AdminLayout from '@/components/AdminLayout';
 import AdminPaymentsList from '@/components/AdminPaymentsList';
+import PageHeader from '@/components/PageHeader';
 
 async function getPendingPayments() {
   const supabase = createServiceRoleClient();
@@ -20,12 +21,11 @@ export default async function AdminPaymentsPage() {
   return (
     <AdminLayout>
       <section className="pb-10">
-        <div className="mb-6">
-          <h1>Payments Pending Verification</h1>
-          <p className="text-muted">
-            Review JazzCash or Easypaisa transfer screenshots uploaded by guests and verify or reject reservations.
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Admin"
+          title="Payments Pending Verification"
+          description="Review JazzCash or Easypaisa transfer screenshots uploaded by guests and verify or reject reservations."
+        />
         <AdminPaymentsList initialPayments={payments as any} />
       </section>
     </AdminLayout>

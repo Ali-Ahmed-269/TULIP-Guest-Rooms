@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 
@@ -33,13 +33,12 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
   const [error, setError] = useState<string | null>(null);
 
   const handleAction = async (bookingId: number, action: 'verify' | 'reject') => {
-    const confirmMessage = action === 'verify'
-      ? 'Are you sure you want to verify this payment? The booking will be confirmed.'
-      : 'Are you sure you want to reject this payment? The booking will be cancelled.';
+    const confirmMessage =
+      action === 'verify'
+        ? 'Are you sure you want to verify this payment? The booking will be confirmed.'
+        : 'Are you sure you want to reject this payment? The booking will be cancelled.';
 
-    if (!confirm(confirmMessage)) {
-      return;
-    }
+    if (!confirm(confirmMessage)) return;
 
     setActionLoading(bookingId);
     setMessage(null);
@@ -51,16 +50,14 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ booking_id: bookingId, action }),
       });
-
       const result = await response.json();
       if (!result.success) {
         setError(result.message || `Failed to perform ${action} action.`);
       } else {
         setMessage(result.message || 'Payment status updated successfully.');
-        // Remove the booking from the pending list since its status is no longer 'Pending Verification'
         setPayments((prev) => prev.filter((p) => p.id !== bookingId));
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setActionLoading(null);
@@ -68,70 +65,61 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
   };
 
   return (
-    <div className="grid gap-4">
-      {/* Messages */}
-      {message && <div className="p-3.5 rounded-[12px] bg-[#e9f7ef] text-[#175d30] font-semibold">{message}</div>}
-      {error && <div className="error-msg p-3.5 rounded-[12px] bg-[#fdf2f2] text-[#9b1c1c] font-semibold">{error}</div>}
+    <div className="flex flex-col gap-4">
+      {message && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {message}</div>}
+      {error && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {error}</div>}
 
-      <div className="card !p-0 overflow-hidden">
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-md">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse min-w-[860px]">
+          <table className="w-full border-collapse min-w-[860px] text-sm">
             <thead>
-              <tr className="bg-background text-left">
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Reference</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Guest</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Phone</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Room</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Check-in</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Amount</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Method</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold text-center">Screenshot</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold text-center">Actions</th>
+              <tr className="bg-[#0e1e33] text-left text-xs font-semibold text-[#b7c0cb] uppercase tracking-wider">
+                {['Reference', 'Guest', 'Phone', 'Room', 'Check-in', 'Amount', 'Method', 'Screenshot', 'Actions'].map((h) => (
+                  <th key={h} className="px-4 py-3.5 border-b border-white/10 whitespace-nowrap">{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-white/5">
               {payments.length > 0 ? (
                 payments.map((b) => (
-                  <tr key={b.id} className="bg-surface">
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-bold">{b.booking_reference}</td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">{b.guest_name}</td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">{b.guest_phone}</td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      {b.rooms ? `Room ${b.rooms.room_number}` : 'N/A'}
+                  <tr key={b.id} className="hover:bg-white/[0.025] transition-colors">
+                    <td className="px-4 py-3.5 font-mono text-xs font-semibold text-white whitespace-nowrap">{b.booking_reference}</td>
+                    <td className="px-4 py-3.5 text-slate-200 font-medium whitespace-nowrap">{b.guest_name}</td>
+                    <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{b.guest_phone}</td>
+                    <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{b.rooms ? `Room ${b.rooms.room_number}` : 'N/A'}</td>
+                    <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{b.check_in_date}</td>
+                    <td className="px-4 py-3.5 text-slate-200 font-medium whitespace-nowrap">PKR {Number(b.total_amount).toLocaleString()}</td>
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <span className="text-xs font-semibold text-[#d9b571] uppercase">{b.payment_method}</span>
                     </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">{b.check_in_date}</td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">PKR {b.total_amount}</td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      <span className="uppercase text-[0.85rem] font-semibold">{b.payment_method}</span>
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] text-center">
+                    <td className="px-4 py-3.5">
                       {b.payment_proof ? (
                         <img
                           src={b.payment_proof}
                           alt="Screenshot"
-                          className="w-[50px] h-[50px] object-cover rounded border border-[#ddd] cursor-pointer"
+                          className="w-12 h-12 object-cover rounded-lg border border-white/10 cursor-pointer hover:border-[#d9b571]/50 transition-colors"
                           onClick={() => setSelectedProof(b.payment_proof)}
                           title="Click to view full image"
                         />
                       ) : (
-                        <span className="text-muted text-[0.9rem]">None</span>
+                        <span className="text-slate-500 text-xs">None</span>
                       )}
                     </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      <div className="flex gap-2 justify-center">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          className="btn btn-primary px-3 py-1.5 min-h-[32px] text-[0.85rem] !bg-sage"
                           onClick={() => handleAction(b.id, 'verify')}
                           disabled={actionLoading === b.id}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 transition-colors disabled:opacity-50"
                         >
                           Verify
                         </button>
                         <button
                           type="button"
-                          className="btn btn-primary px-3 py-1.5 min-h-[32px] text-[0.85rem]"
                           onClick={() => handleAction(b.id, 'reject')}
                           disabled={actionLoading === b.id}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/10 border border-rose-500/25 text-rose-300 hover:bg-rose-500/20 transition-colors disabled:opacity-50"
                         >
                           Reject
                         </button>
@@ -141,7 +129,7 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9} className="p-8 text-center text-muted">
+                  <td colSpan={9} className="px-4 py-10 text-center text-slate-400 text-sm">
                     No bookings currently pending payment verification.
                   </td>
                 </tr>
@@ -153,18 +141,21 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
 
       {/* Proof Lightbox Modal */}
       {selectedProof && (
-        <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-[3000] p-5" onClick={() => setSelectedProof(null)}>
+        <div
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-[3000] p-5"
+          onClick={() => setSelectedProof(null)}
+        >
           <div className="relative max-w-[90%] max-h-[90%]">
             <button
               onClick={() => setSelectedProof(null)}
-              className="absolute -top-10 right-0 border-none bg-transparent text-[2rem] cursor-pointer text-white"
+              className="absolute -top-10 right-0 text-white text-3xl font-bold hover:text-slate-300 transition-colors"
             >
-              &times;
+              ×
             </button>
             <img
               src={selectedProof}
               alt="Payment Proof Full View"
-              className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+              className="max-w-full max-h-[80vh] object-contain rounded-xl border border-white/10 shadow-2xl"
             />
           </div>
         </div>

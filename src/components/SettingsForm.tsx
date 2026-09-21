@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
@@ -6,6 +6,10 @@ import { createClient } from '@/utils/supabase/client';
 interface SettingsFormProps {
   initialSettings: Record<string, string>;
 }
+
+const inputClass =
+  'w-full px-4 py-2.5 rounded-xl bg-[#0a1626] border border-white/10 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#d9b571]/60 transition-colors';
+const labelClass = 'block text-xs font-semibold text-[#b7c0cb] mb-1.5 uppercase tracking-wider';
 
 export default function SettingsForm({ initialSettings }: SettingsFormProps) {
   const [guesthouseName, setGuesthouseName] = useState(initialSettings['guesthouse_name'] || '');
@@ -51,7 +55,7 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
       } else {
         setSettingsMessage(result.message || 'Settings saved successfully.');
       }
-    } catch (err) {
+    } catch {
       setSettingsError('An error occurred while saving settings.');
     } finally {
       setSavingSettings(false);
@@ -63,22 +67,14 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
     setPasswordMessage(null);
     setPasswordError(null);
 
-    if (!newPassword) {
-      setPasswordError('Password cannot be empty.');
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setPasswordError('Passwords do not match.');
-      return;
-    }
+    if (!newPassword) { setPasswordError('Password cannot be empty.'); return; }
+    if (newPassword !== confirmPassword) { setPasswordError('Passwords do not match.'); return; }
 
     setUpdatingPassword(true);
 
     try {
       const supabase = createClient();
       const { error } = await supabase.auth.updateUser({ password: newPassword });
-
       if (error) {
         setPasswordError(error.message);
       } else {
@@ -86,7 +82,7 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
         setNewPassword('');
         setConfirmPassword('');
       }
-    } catch (err) {
+    } catch {
       setPasswordError('An unexpected error occurred while updating the password.');
     } finally {
       setUpdatingPassword(false);
@@ -94,118 +90,80 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
   };
 
   return (
-    <div className="grid gap-6">
+    <div className="flex flex-col gap-6">
       {/* Site Settings Card */}
-      <div className="card bg-surface">
-        <h2 className="mb-4 border-b border-[rgba(0,0,0,0.05)] pb-2">
-          Guesthouse Configuration
-        </h2>
-        <form onSubmit={handleSaveSettings} className="grid gap-4">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-            <label className="form-group">
-              <span>Guesthouse Name</span>
-              <input
-                className="form-control"
-                value={guesthouseName}
-                onChange={(e) => setGuesthouseName(e.target.value)}
-                required
-              />
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl p-6 shadow-md">
+        <div className="mb-5 pb-4 border-b border-white/10">
+          <h2 className="text-lg font-heading font-bold text-white">Guesthouse Configuration</h2>
+          <p className="text-xs text-[#b7c0cb] mt-0.5">Update your guesthouse details and payment contact numbers.</p>
+        </div>
+        <form onSubmit={handleSaveSettings} className="flex flex-col gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <label>
+              <span className={labelClass}>Guesthouse Name *</span>
+              <input className={inputClass} value={guesthouseName} onChange={(e) => setGuesthouseName(e.target.value)} required />
             </label>
-            <label className="form-group">
-              <span>Guesthouse Phone</span>
-              <input
-                className="form-control"
-                value={guesthousePhone}
-                onChange={(e) => setGuesthousePhone(e.target.value)}
-                required
-              />
+            <label>
+              <span className={labelClass}>Phone *</span>
+              <input className={inputClass} value={guesthousePhone} onChange={(e) => setGuesthousePhone(e.target.value)} required />
             </label>
-            <label className="form-group">
-              <span>Guesthouse Email</span>
-              <input
-                type="email"
-                className="form-control"
-                value={guesthouseEmail}
-                onChange={(e) => setGuesthouseEmail(e.target.value)}
-                required
-              />
+            <label>
+              <span className={labelClass}>Email *</span>
+              <input type="email" className={inputClass} value={guesthouseEmail} onChange={(e) => setGuesthouseEmail(e.target.value)} required />
             </label>
           </div>
 
-          <label className="form-group">
-            <span>Guesthouse Address</span>
-            <textarea
-              className="form-control"
-              value={guesthouseAddress}
-              onChange={(e) => setGuesthouseAddress(e.target.value)}
-              rows={3}
-              required
-            />
+          <label>
+            <span className={labelClass}>Address</span>
+            <textarea className={`${inputClass} resize-none`} value={guesthouseAddress} onChange={(e) => setGuesthouseAddress(e.target.value)} rows={3} required />
           </label>
 
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-            <label className="form-group">
-              <span>JazzCash Number</span>
-              <input
-                className="form-control"
-                value={jazzcashNumber}
-                onChange={(e) => setJazzcashNumber(e.target.value)}
-              />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label>
+              <span className={labelClass}>JazzCash Number</span>
+              <input className={inputClass} value={jazzcashNumber} onChange={(e) => setJazzcashNumber(e.target.value)} placeholder="03XX-XXXXXXX" />
             </label>
-            <label className="form-group">
-              <span>Easypaisa Number</span>
-              <input
-                className="form-control"
-                value={easypaisaNumber}
-                onChange={(e) => setEasypaisaNumber(e.target.value)}
-              />
+            <label>
+              <span className={labelClass}>Easypaisa Number</span>
+              <input className={inputClass} value={easypaisaNumber} onChange={(e) => setEasypaisaNumber(e.target.value)} placeholder="03XX-XXXXXXX" />
             </label>
           </div>
 
-          {settingsError && <div className="error-msg">{settingsError}</div>}
-          {settingsMessage && <div className="text-sage font-semibold">{settingsMessage}</div>}
+          {settingsError && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {settingsError}</div>}
+          {settingsMessage && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {settingsMessage}</div>}
 
-          <button type="submit" className="btn btn-primary w-fit" disabled={savingSettings}>
-            {savingSettings ? 'Saving Settings...' : 'Save Settings'}
-          </button>
+          <div>
+            <button type="submit" disabled={savingSettings} className="px-6 py-3 rounded-xl font-semibold text-sm bg-[#d9b571] text-[#0a1626] hover:bg-[#ead9ac] transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed">
+              {savingSettings ? 'Saving…' : 'Save Settings'}
+            </button>
+          </div>
         </form>
       </div>
 
       {/* Admin Password Change Card */}
-      <div className="card bg-surface">
-        <h2 className="mb-4 border-b border-[rgba(0,0,0,0.05)] pb-2">
-          Change Admin Password
-        </h2>
-        <form onSubmit={handleUpdatePassword} className="grid gap-4 max-w-[480px]">
-          <label className="form-group">
-            <span>New Password</span>
-            <input
-              type="password"
-              className="form-control"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Min 6 characters"
-              required
-            />
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl p-6 shadow-md">
+        <div className="mb-5 pb-4 border-b border-white/10">
+          <h2 className="text-lg font-heading font-bold text-white">Change Admin Password</h2>
+          <p className="text-xs text-[#b7c0cb] mt-0.5">Update your admin account password.</p>
+        </div>
+        <form onSubmit={handleUpdatePassword} className="flex flex-col gap-4 max-w-[480px]">
+          <label>
+            <span className={labelClass}>New Password *</span>
+            <input type="password" className={inputClass} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Min 6 characters" required />
           </label>
-          <label className="form-group">
-            <span>Confirm Password</span>
-            <input
-              type="password"
-              className="form-control"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Re-enter new password"
-              required
-            />
+          <label>
+            <span className={labelClass}>Confirm Password *</span>
+            <input type="password" className={inputClass} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Re-enter new password" required />
           </label>
 
-          {passwordError && <div className="error-msg">{passwordError}</div>}
-          {passwordMessage && <div className="text-sage font-semibold">{passwordMessage}</div>}
+          {passwordError && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {passwordError}</div>}
+          {passwordMessage && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {passwordMessage}</div>}
 
-          <button type="submit" className="btn btn-primary w-fit" disabled={updatingPassword}>
-            {updatingPassword ? 'Updating Password...' : 'Update Password'}
-          </button>
+          <div>
+            <button type="submit" disabled={updatingPassword} className="px-6 py-3 rounded-xl font-semibold text-sm bg-[#d9b571] text-[#0a1626] hover:bg-[#ead9ac] transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed">
+              {updatingPassword ? 'Updating…' : 'Update Password'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

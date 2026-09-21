@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 
@@ -41,122 +41,96 @@ export default function AdminReviewsList({ initialReviews }: AdminReviewsListPro
       if (!result.success) {
         setError(result.message || `Failed to ${action} review.`);
       } else {
-        setMessage(result.message || `Review status updated successfully.`);
-        // Update local state
+        setMessage(result.message || 'Review status updated successfully.');
         setReviews((prev) =>
           prev.map((r) => (r.id === reviewId ? { ...r, status: action === 'approve' ? 'Approved' : 'Rejected' } : r))
         );
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setActionLoading(null);
     }
   };
 
-  const filteredReviews = reviews.filter((r) => {
-    return statusFilter === 'All' || r.status === statusFilter;
-  });
+  const filteredReviews = reviews.filter((r) => statusFilter === 'All' || r.status === statusFilter);
 
   const renderStars = (rating: number) => {
-    return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    return Array.from({ length: 5 }, (_, i) => (
+      <span key={i} style={{ color: i < rating ? '#d9b571' : '#374151' }}>★</span>
+    ));
   };
 
-  return (
-    <div className="grid gap-4">
-      {/* Messages */}
-      {message && <div className="p-3.5 rounded-[12px] bg-[#e9f7ef] text-[#175d30] font-semibold">{message}</div>}
-      {error && <div className="error-msg p-3.5 rounded-[12px] bg-[#fdf2f2] text-[#9b1c1c] font-semibold">{error}</div>}
+  const statusStyle = (status: string) =>
+    status === 'Approved'
+      ? { bg: 'rgba(16,185,129,0.12)', text: '#34d399', border: 'rgba(16,185,129,0.3)', dot: '#34d399' }
+      : status === 'Rejected'
+      ? { bg: 'rgba(239,68,68,0.12)', text: '#f87171', border: 'rgba(239,68,68,0.3)', dot: '#f87171' }
+      : { bg: 'rgba(234,179,8,0.12)', text: '#facc15', border: 'rgba(234,179,8,0.3)', dot: '#facc15' };
 
-      {/* Filter Options */}
-      <div className="card p-[18px] bg-surface flex gap-4 flex-wrap items-center justify-between">
-        <h3 className="m-0 text-[1.1rem]">Filter Reviews by Status</h3>
-        <div className="form-group mb-0 min-w-[180px]">
-          <select
-            className="form-control"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="All">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-        </div>
+  return (
+    <div className="flex flex-col gap-4">
+      {message && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {message}</div>}
+      {error && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {error}</div>}
+
+      {/* Filter Bar */}
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl p-4 flex items-center gap-4 shadow-md flex-wrap">
+        <span className="text-sm font-medium text-slate-300">Filter by status:</span>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-3 py-2 rounded-xl bg-[#0e1e33] border border-white/10 text-white text-sm focus:outline-none focus:border-[#d9b571]/60 transition-colors appearance-none cursor-pointer min-w-[160px]"
+        >
+          <option value="All">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+        <span className="text-xs text-slate-400 ml-auto">{filteredReviews.length} reviews</span>
       </div>
 
       {/* Reviews Table */}
-      <div className="card !p-0 overflow-hidden">
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-md">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse min-w-[820px]">
+          <table className="w-full border-collapse min-w-[820px] text-sm">
             <thead>
-              <tr className="bg-background text-left">
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Booking Ref</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Guest</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Rating</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Review Message</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Status</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold">Date</th>
-                <th className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-semibold text-center">Actions</th>
+              <tr className="bg-[#0e1e33] text-left text-xs font-semibold text-[#b7c0cb] uppercase tracking-wider">
+                {['Booking Ref', 'Guest', 'Rating', 'Review', 'Status', 'Date', 'Actions'].map((h) => (
+                  <th key={h} className="px-4 py-3.5 border-b border-white/10 whitespace-nowrap">{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-white/5">
               {filteredReviews.length > 0 ? (
-                filteredReviews.map((r) => (
-                  <tr key={r.id} className="bg-surface">
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-bold">
-                      {r.bookings?.booking_reference || 'N/A'}
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">{r.guest_name}</td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] text-gold tracking-widest text-[1.1rem]">
-                      {renderStars(r.rating)}
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] max-w-[300px] whitespace-normal break-all">
-                      {r.review_text}
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      <span className={`badge ${
-                        r.status === 'Approved' ? 'badge-green' :
-                        r.status === 'Rejected' ? 'badge-red' : 'badge-yellow'
-                      }`}>
-                        {r.status}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      {new Date(r.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      <div className="flex gap-2 justify-center">
-                        {r.status !== 'Approved' && (
-                          <button
-                            type="button"
-                            className="btn btn-primary px-3 py-1.5 min-h-[32px] text-[0.85rem] !bg-sage"
-                            onClick={() => handleAction(r.id, 'approve')}
-                            disabled={actionLoading === r.id}
-                          >
-                            Approve
-                          </button>
-                        )}
-                        {r.status !== 'Rejected' && (
-                          <button
-                            type="button"
-                            className="btn btn-primary px-3 py-1.5 min-h-[32px] text-[0.85rem]"
-                            onClick={() => handleAction(r.id, 'reject')}
-                            disabled={actionLoading === r.id}
-                          >
-                            Reject
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                filteredReviews.map((r) => {
+                  const ss = statusStyle(r.status);
+                  return (
+                    <tr key={r.id} className="hover:bg-white/[0.025] transition-colors">
+                      <td className="px-4 py-3.5 font-mono text-xs font-semibold text-white whitespace-nowrap">{r.bookings?.booking_reference || 'N/A'}</td>
+                      <td className="px-4 py-3.5 text-slate-200 font-medium whitespace-nowrap">{r.guest_name}</td>
+                      <td className="px-4 py-3.5 text-base tracking-wider whitespace-nowrap">{renderStars(r.rating)}</td>
+                      <td className="px-4 py-3.5 text-slate-300 max-w-[280px] whitespace-normal break-words">{r.review_text}</td>
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border" style={{ background: ss.bg, color: ss.text, borderColor: ss.border }}>
+                          <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: ss.dot }} />{r.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3.5 text-slate-400 text-xs whitespace-nowrap">{new Date(r.created_at).toLocaleDateString()}</td>
+                      <td className="px-4 py-3.5 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          {r.status !== 'Approved' && (
+                            <button type="button" onClick={() => handleAction(r.id, 'approve')} disabled={actionLoading === r.id} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 transition-colors disabled:opacity-50">Approve</button>
+                          )}
+                          {r.status !== 'Rejected' && (
+                            <button type="button" onClick={() => handleAction(r.id, 'reject')} disabled={actionLoading === r.id} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/10 border border-rose-500/25 text-rose-300 hover:bg-rose-500/20 transition-colors disabled:opacity-50">Reject</button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
-                <tr>
-                  <td colSpan={7} className="p-8 text-center text-muted">
-                    No reviews found.
-                  </td>
-                </tr>
+                <tr><td colSpan={7} className="px-4 py-10 text-center text-slate-400 text-sm">No reviews found.</td></tr>
               )}
             </tbody>
           </table>

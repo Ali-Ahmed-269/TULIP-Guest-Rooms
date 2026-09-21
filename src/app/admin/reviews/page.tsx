@@ -1,6 +1,7 @@
 import { createServiceRoleClient } from '@/utils/supabase/server';
 import AdminLayout from '@/components/AdminLayout';
 import AdminReviewsList from '@/components/AdminReviewsList';
+import PageHeader from '@/components/PageHeader';
 
 async function getReviews() {
   const supabase = createServiceRoleClient();
@@ -18,12 +19,11 @@ export default async function AdminReviewsPage() {
   return (
     <AdminLayout>
       <section style={{ paddingBottom: '40px' }}>
-        <div style={{ marginBottom: '22px' }}>
-          <h1>Reviews Management</h1>
-          <p style={{ color: 'var(--text-muted)' }}>
-            Approve or reject guest reviews to control which ones are displayed on the public site.
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Admin"
+          title="Reviews Management"
+          description="Approve or reject guest reviews to control which ones are displayed on the public site."
+        />
         <AdminReviewsList initialReviews={reviews as any} />
       </section>
     </AdminLayout>

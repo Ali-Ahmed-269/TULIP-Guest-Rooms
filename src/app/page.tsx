@@ -133,21 +133,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Booking Section ── */}
-      <section className="section-padding bg-surface" id="booking">
-        <div className="container grid gap-6">
-          <div className="grid gap-3 max-w-[680px]">
-            <span className="badge badge-red">Reservation</span>
-            <h2>Reserve your preferred room</h2>
-            <p className="text-muted">
-              Select an available room, enter your check-in details, and secure the best
-              rate with a confirmed booking reference.
-            </p>
-          </div>
-          <BookingForm rooms={rooms ?? []} />
-        </div>
-      </section>
-
       {/* ── About Section (Dark theme matching reference) ── */}
       <section className="section-padding bg-[#0a1422]" id="about">
         <div className="container">
@@ -257,6 +242,21 @@ export default async function HomePage() {
             </div>
 
           </div>
+        </div>
+      </section>
+
+      {/* ── Booking Section ── */}
+      <section className="section-padding bg-surface" id="booking">
+        <div className="container grid gap-6">
+          <div className="grid gap-3 max-w-[680px]">
+            <span className="badge badge-red">Reservation</span>
+            <h2>Reserve your preferred room</h2>
+            <p className="text-muted">
+              Select an available room, enter your check-in details, and secure the best
+              rate with a confirmed booking reference.
+            </p>
+          </div>
+          <BookingForm rooms={rooms ?? []} />
         </div>
       </section>
 

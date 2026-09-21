@@ -248,12 +248,13 @@ button {
 }
 
 .badge-green {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
   transition: all 0.2s ease;
 }
 .badge-green:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 .badge-green::before {
@@ -261,12 +262,13 @@ button {
 }
 
 .badge-red {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
   transition: all 0.2s ease;
 }
 .badge-red:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
 }
 .badge-red::before {
@@ -274,12 +276,13 @@ button {
 }
 
 .badge-yellow {
-  background-color: #fef9c3;
-  color: #854d0e;
+  background-color: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
   transition: all 0.2s ease;
 }
 .badge-yellow:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(234, 179, 8, 0.2);
 }
 .badge-yellow::before {
@@ -287,25 +290,27 @@ button {
 }
 
 .badge-blue {
-  background-color: #dbeafe;
-  color: #1e40af;
+  background-color: rgba(217, 181, 113, 0.15);
+  color: #d9b571;
+  border: 1px solid rgba(217, 181, 113, 0.3);
   transition: all 0.2s ease;
 }
 .badge-blue:hover {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+  transform: scale(1.03);
+  box-shadow: 0 2px 8px rgba(217, 181, 113, 0.2);
 }
 .badge-blue::before {
-  background-color: #3b82f6;
+  background-color: #d9b571;
 }
 
 .badge-gray {
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #b7c0cb;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   transition: all 0.2s ease;
 }
 .badge-gray:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(156, 163, 175, 0.2);
 }
 .badge-gray::before {
@@ -931,6 +936,89 @@ button {
   background-color: var(--surface);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   padding: 18px 0;
+}
+
+/* ─── Admin Portal Container ─────────────────────────────────────────────── */
+
+/* Centred, max-width-capped wrapper for all admin shell content.
+   Replaces Tailwind utilities (max-w-7xl mx-auto px-6 py-8) which are
+   not reliably scanned by Tailwind v4 in server-component layout files. */
+.admin-container {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-inline: 1.5rem; /* px-6 */
+  padding-block: 1.75rem; /* py-7 */
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem; /* gap-7 */
+}
+
+@media (min-width: 768px) {
+  .admin-container {
+    padding-inline: 2.5rem; /* md:px-10 */
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .admin-container {
+    padding-inline: 2.5rem; /* matches lg:px-10 */
+  }
+}
+
+/* ─── Unified Admin Cards Internal Padding ─────────────────────────────── */
+
+.admin-card {
+  padding: 1.5rem 1.75rem;
+  background-color: #0b1b2d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+}
+
+@media (min-width: 768px) {
+  .admin-card {
+    padding: 1.75rem 2.25rem;
+  }
+}
+
+.admin-banner-content {
+  padding: 1.75rem 2.25rem;
+}
+
+@media (min-width: 768px) {
+  .admin-banner-content {
+    padding: 2.25rem 3rem;
+  }
+}
+
+/* ─── Admin Top Bar Header Padding & Alignment ──────────────────────────── */
+
+.admin-nav-header {
+  width: 100%;
+  background-color: #071424;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  padding-inline: 1.5rem; /* px-6 */
+  padding-block: 1rem;    /* py-4 */
+}
+
+@media (min-width: 768px) {
+  .admin-nav-header {
+    padding-inline: 2.5rem; /* md:px-10 */
+    padding-block: 1.25rem;
+  }
+}
+
+.admin-nav-content {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .booking-form {

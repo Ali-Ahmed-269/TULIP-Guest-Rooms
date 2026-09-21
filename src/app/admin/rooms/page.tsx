@@ -1,6 +1,7 @@
 import { createServiceRoleClient } from '@/utils/supabase/server';
 import AdminLayout from '@/components/AdminLayout';
 import RoomStatusManager from '@/components/RoomStatusManager';
+import PageHeader from '@/components/PageHeader';
 
 async function getRooms() {
   const supabase = createServiceRoleClient();
@@ -58,12 +59,11 @@ export default async function AdminRoomsPage() {
   return (
     <AdminLayout>
       <section className="pb-10">
-        <div className="mb-6">
-          <h1>Rooms Management</h1>
-          <p className="text-muted">
-            Update room statuses quickly when a property goes under maintenance or becomes available.
-          </p>
-        </div>
+        <PageHeader
+          eyebrow="Admin"
+          title="Rooms Management"
+          description="Update room statuses quickly when a property goes under maintenance or becomes available."
+        />
         <RoomStatusManager rooms={rooms as any} />
       </section>
     </AdminLayout>

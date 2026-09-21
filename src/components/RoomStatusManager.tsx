@@ -17,6 +17,14 @@ interface RoomStatusManagerProps {
 
 
 
+const STATUS_STYLES: Record<string, { bg: string; text: string; border: string; dot: string }> = {
+  Available: { bg: 'rgba(16,185,129,0.12)', text: '#34d399', border: 'rgba(16,185,129,0.3)', dot: '#34d399' },
+  Booked:    { bg: 'rgba(239,68,68,0.12)', text: '#f87171', border: 'rgba(239,68,68,0.3)', dot: '#f87171' },
+  Reserved:  { bg: 'rgba(234,179,8,0.12)', text: '#facc15', border: 'rgba(234,179,8,0.3)', dot: '#facc15' },
+  Maintenance:{ bg: 'rgba(245,158,11,0.12)', text: '#fbbf24', border: 'rgba(245,158,11,0.3)', dot: '#fbbf24' },
+};
+const DEFAULT_STYLE = { bg: 'rgba(100,116,139,0.12)', text: '#94a3b8', border: 'rgba(100,116,139,0.3)', dot: '#94a3b8' };
+
 export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
   const [activeRooms, setActiveRooms] = useState(rooms);
   const [message, setMessage] = useState<string | null>(null);
@@ -33,10 +41,7 @@ export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
     data.append('status', status);
 
     try {
-      const response = await fetch('/api/rooms/toggle-status', {
-        method: 'POST',
-        body: data,
-      });
+      const response = await fetch('/api/rooms/toggle-status', { method: 'POST', body: data });
       const result = await response.json();
       if (!result.success) {
         setError(result.message || 'Failed to update room status.');
@@ -46,81 +51,57 @@ export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
       setActiveRooms((prev) =>
         prev.map((room) => (room.room_number === roomNumber ? { ...room, status } : room))
       );
-    } catch (err) {
+    } catch {
       setError('Could not update room status.');
     } finally {
       setLoadingRoom(null);
     }
   };
 
-  const getBadgeClass = (status: string) => {
-    switch (status) {
-      case 'Available':
-        return 'badge-green';
-      case 'Booked':
-        return 'badge-red';
-      case 'Reserved':
-        return 'badge-yellow';
-      default:
-        return '';
-    }
-  };
-
   return (
-    <div className="grid gap-4">
-      {message && <div className="p-3.5 rounded-[12px] bg-[#e9f7ef] text-[#175d30] font-semibold">{message}</div>}
-      {error && <div className="error-msg p-3.5 rounded-[12px] bg-[#fdf2f2] text-[#9b1c1c] font-semibold">{error}</div>}
+    <div className="flex flex-col gap-4">
+      {message && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {message}</div>}
+      {error && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {error}</div>}
 
-      <div className="card !p-0 overflow-hidden">
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-md">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse min-w-[720px]">
+          <table className="w-full border-collapse min-w-[720px] text-sm">
             <thead>
-              <tr className="bg-background">
-                {['Room #', 'Type', 'Rate', 'Status', 'Update Status Actions'].map((heading) => (
-                  <th key={heading} className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] text-left font-semibold">
-                    {heading}
-                  </th>
+              <tr className="bg-[#0e1e33] text-left text-xs font-semibold text-[#b7c0cb] uppercase tracking-wider">
+                {['Room #', 'Type', 'Rate / Night', 'Current Status', 'Update Status'].map((h) => (
+                  <th key={h} className="px-4 py-3.5 border-b border-white/10 whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-white/5">
               {activeRooms.map((room) => {
-                const badgeClass = getBadgeClass(room.status);
+                const s = STATUS_STYLES[room.status] || DEFAULT_STYLE;
                 return (
-                  <tr key={room.id} className="bg-surface">
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)] font-bold">
-                      Room {room.room_number}
+                  <tr key={room.id} className="hover:bg-white/[0.025] transition-colors">
+                    <td className="px-4 py-3.5 font-bold text-white whitespace-nowrap">Room {room.room_number}</td>
+                    <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{ROOM_DISPLAY_NAMES[room.room_type] || room.room_type}</td>
+                    <td className="px-4 py-3.5 text-slate-200 font-medium whitespace-nowrap">PKR {Number(room.price_per_night).toLocaleString()}</td>
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border" style={{ background: s.bg, color: s.text, borderColor: s.border }}>
+                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: s.dot }} />{room.status}
+                      </span>
                     </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      {ROOM_DISPLAY_NAMES[room.room_type] || room.room_type}
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      PKR {room.price_per_night}
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      {badgeClass ? (
-                        <span className={`badge ${badgeClass}`}>{room.status}</span>
-                      ) : (
-                        <span className="badge badge-gray">
-                          {room.status}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[rgba(0,0,0,0.08)]">
-                      <div className="flex gap-2">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <div className="flex items-center gap-2 flex-wrap">
                         {['Available', 'Maintenance', 'Reserved', 'Booked'].map((status) => {
                           const isCurrent = room.status === status;
+                          const isLoading = loadingRoom === room.room_number;
                           return (
                             <button
                               key={status}
                               type="button"
-                              className={`btn px-3 py-1.5 min-h-[32px] text-[0.85rem] ${
-                                isCurrent
-                                  ? 'btn-primary'
-                                  : 'btn-outline'
-                              } ${loadingRoom === room.room_number ? 'opacity-60' : ''}`}
                               onClick={() => handleStatusChange(room.room_number, status)}
-                              disabled={isCurrent || loadingRoom === room.room_number}
+                              disabled={isCurrent || isLoading}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border whitespace-nowrap ${
+                                isCurrent
+                                  ? 'bg-[#d9b571]/15 border-[#d9b571]/40 text-[#d9b571] cursor-default'
+                                  : 'bg-white/5 border-white/10 text-slate-300 hover:border-[#d9b571]/50 hover:text-white hover:bg-white/10'
+                              } ${isLoading ? 'opacity-50' : ''}`}
                             >
                               {status}
                             </button>
