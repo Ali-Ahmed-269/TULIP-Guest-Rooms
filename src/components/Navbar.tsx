@@ -12,6 +12,7 @@ interface NavbarProps {
 export default function Navbar({ guesthouseName = 'Tulip Guest Rooms' }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('home');
   const pathname = usePathname();
 
   useEffect(() => {
@@ -36,6 +37,44 @@ export default function Navbar({ guesthouseName = 'Tulip Guest Rooms' }: NavbarP
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
+  }, [pathname]);
+
+  // Track active section on homepage based on scroll position
+  useEffect(() => {
+    if (pathname !== '/') return;
+
+    const sectionIds = ['home', 'rooms', 'about', 'booking', 'contact'];
+
+    const updateActiveSection = () => {
+      if (window.scrollY < 80) {
+        setActiveSection('home');
+        return;
+      }
+
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 50) {
+        setActiveSection('contact');
+        return;
+      }
+
+      const headerOffset = 120;
+      let current = 'home';
+
+      for (const id of sectionIds) {
+        const element = document.getElementById(id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= headerOffset && rect.bottom >= headerOffset) {
+            current = id;
+            break;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+
+    updateActiveSection();
+    window.addEventListener('scroll', updateActiveSection, { passive: true });
+    return () => window.removeEventListener('scroll', updateActiveSection);
   }, [pathname]);
 
   const toggleMenu = () => {
@@ -71,28 +110,76 @@ export default function Navbar({ guesthouseName = 'Tulip Guest Rooms' }: NavbarP
         <nav className={`nav-links ${menuOpen ? 'open' : ''}`}>
           <ul>
             <li>
-              <Link href={isHome ? '#home' : '/'} className={pathname === '/' ? 'active' : ''} onClick={closeMenu}>Home</Link>
+              <Link
+                href={isHome ? '#home' : '/'}
+                className={isHome ? (activeSection === 'home' ? 'active' : '') : (pathname === '/' ? 'active' : '')}
+                onClick={closeMenu}
+              >
+                Home
+              </Link>
             </li>
             <li>
-              <Link href={isHome ? '#about' : '/#about'} onClick={closeMenu}>About</Link>
+              <Link
+                href={isHome ? '#rooms' : '/#rooms'}
+                className={isHome && activeSection === 'rooms' ? 'active' : ''}
+                onClick={closeMenu}
+              >
+                Rooms
+              </Link>
             </li>
             <li>
-              <Link href={isHome ? '#rooms' : '/#rooms'} onClick={closeMenu}>Rooms</Link>
+              <Link
+                href={isHome ? '#about' : '/#about'}
+                className={isHome && activeSection === 'about' ? 'active' : ''}
+                onClick={closeMenu}
+              >
+                About
+              </Link>
             </li>
             <li>
-              <Link href="/lookup" className={pathname === '/lookup' ? 'active' : ''} onClick={closeMenu}>My Bookings</Link>
+              <Link
+                href={isHome ? '#booking' : '/#booking'}
+                className={isHome && activeSection === 'booking' ? 'active' : ''}
+                onClick={closeMenu}
+              >
+                Book Now
+              </Link>
             </li>
             <li>
-              <Link href="/reviews" className={pathname === '/reviews' ? 'active' : ''} onClick={closeMenu}>Reviews</Link>
+              <Link
+                href={isHome ? '#contact' : '/#contact'}
+                className={isHome && activeSection === 'contact' ? 'active' : ''}
+                onClick={closeMenu}
+              >
+                Contact
+              </Link>
             </li>
             <li>
-              <Link href="/admin/login" className={pathname === '/admin/login' ? 'active' : ''} onClick={closeMenu}>Admin</Link>
+              <Link
+                href="/lookup"
+                className={pathname === '/lookup' ? 'active' : ''}
+                onClick={closeMenu}
+              >
+                My Bookings
+              </Link>
             </li>
             <li>
-              <Link href={isHome ? '#contact' : '/#contact'} onClick={closeMenu}>Contact</Link>
+              <Link
+                href="/reviews"
+                className={pathname === '/reviews' ? 'active' : ''}
+                onClick={closeMenu}
+              >
+                Reviews
+              </Link>
             </li>
             <li>
-              <Link href={isHome ? '#booking' : '/#booking'} className="btn-nav-book" onClick={closeMenu}>Book Now</Link>
+              <Link
+                href="/admin/login"
+                className={pathname === '/admin/login' ? 'active' : ''}
+                onClick={closeMenu}
+              >
+                Admin
+              </Link>
             </li>
           </ul>
         </nav>

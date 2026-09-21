@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -16,10 +16,15 @@ interface WalkInFormProps {
 }
 
 const ROOM_DISPLAY_NAMES: Record<string, string> = {
-  'Standard':     'Standard Room',
-  'Premium':      'Premium Room',
+  Standard: 'Standard Room',
+  Premium: 'Premium Room',
   'Comfort Plus': 'Comfort Plus',
 };
+
+const inputClass =
+  'w-full px-4 py-2.5 rounded-xl bg-[#0e1e33] border border-white/10 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#d9b571]/60 transition-colors';
+
+const labelClass = 'block text-xs font-semibold text-[#b7c0cb] mb-1.5 uppercase tracking-wider';
 
 export default function WalkInForm({ rooms }: WalkInFormProps) {
   const router = useRouter();
@@ -74,10 +79,7 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
     formData.append('special_requests', 'Walk-in booking created by admin.');
 
     try {
-      const response = await fetch('/api/bookings/book', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch('/api/bookings/book', { method: 'POST', body: formData });
       const data = await response.json();
       if (!data.success) {
         setError(data.message || 'Failed to create walk-in booking.');
@@ -85,7 +87,7 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
         setMessage('Walk-in booking created successfully.');
         router.push(data.redirect_url || `/confirmation?booking_id=${encodeURIComponent(data.booking_reference || data.booking_id)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`);
       }
-    } catch (err) {
+    } catch {
       setError('Server error when creating booking.');
     } finally {
       setLoading(false);
@@ -93,59 +95,84 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-        <label className="form-group">
-          <span>Guest Name</span>
-          <input className="form-control" value={fullname} onChange={(event) => setFullname(event.target.value)} required />
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      {error && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {error}</div>}
+      {message && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {message}</div>}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label>
+          <span className={labelClass}>Guest Name *</span>
+          <input className={inputClass} value={fullname} onChange={(e) => setFullname(e.target.value)} required placeholder="Full name" />
         </label>
-        <label className="form-group">
-          <span>Email</span>
-          <input type="email" className="form-control" value={email} onChange={(event) => setEmail(event.target.value)} required />
+        <label>
+          <span className={labelClass}>Email *</span>
+          <input type="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="guest@email.com" />
         </label>
-        <label className="form-group">
-          <span>Phone</span>
-          <input className="form-control" value={phone} onChange={(event) => setPhone(event.target.value)} required />
+        <label>
+          <span className={labelClass}>Phone *</span>
+          <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+92 300 0000000" />
         </label>
-        <label className="form-group">
-          <span>CNIC</span>
-          <input className="form-control" value={cnic} onChange={(event) => setCnic(event.target.value)} required />
+        <label>
+          <span className={labelClass}>CNIC *</span>
+          <input className={inputClass} value={cnic} onChange={(e) => setCnic(e.target.value)} required placeholder="XXXXX-XXXXXXX-X" />
         </label>
       </div>
-      <label className="form-group">
-        <span>Address</span>
-        <textarea className="form-control" value={address} onChange={(event) => setAddress(event.target.value)} rows={3} required />
+
+      <label>
+        <span className={labelClass}>Address *</span>
+        <textarea
+          className={`${inputClass} resize-none`}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          rows={3}
+          required
+          placeholder="Guest address"
+        />
       </label>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
-        <label className="form-group">
-          <span>Check-in</span>
-          <input type="date" className="form-control" value={checkIn} onChange={(event) => setCheckIn(event.target.value)} required />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <label>
+          <span className={labelClass}>Check-in *</span>
+          <input type="date" className={inputClass} value={checkIn} onChange={(e) => setCheckIn(e.target.value)} required />
         </label>
-        <label className="form-group">
-          <span>Check-out</span>
-          <input type="date" className="form-control" value={checkOut} onChange={(event) => setCheckOut(event.target.value)} required />
+        <label>
+          <span className={labelClass}>Check-out *</span>
+          <input type="date" className={inputClass} value={checkOut} onChange={(e) => setCheckOut(e.target.value)} required />
         </label>
-        <label className="form-group">
-          <span>Guests</span>
-          <input type="number" className="form-control" min={1} max={10} value={guests} onChange={(event) => setGuests(Number(event.target.value))} required />
+        <label>
+          <span className={labelClass}>Guests *</span>
+          <input
+            type="number"
+            className={inputClass}
+            min={1}
+            max={10}
+            value={guests}
+            onChange={(e) => setGuests(Number(e.target.value))}
+            required
+          />
         </label>
-        <label className="form-group">
-          <span>Room</span>
-          <select className="form-control" value={roomId} onChange={(event) => handleRoomChange(event.target.value)} required>
+        <label>
+          <span className={labelClass}>Room *</span>
+          <select className={`${inputClass} appearance-none cursor-pointer`} value={roomId} onChange={(e) => handleRoomChange(e.target.value)} required>
             <option value="">Select a room</option>
             {availableRooms.map((room) => (
               <option key={room.id} value={room.room_number}>
-                {room.room_number} – {ROOM_DISPLAY_NAMES[room.room_type] || room.room_type} – PKR {room.price_per_night}
+                {room.room_number} – {ROOM_DISPLAY_NAMES[room.room_type] || room.room_type} – PKR {Number(room.price_per_night).toLocaleString()}
               </option>
             ))}
           </select>
         </label>
       </div>
-      {error ? <div className="error-msg">{error}</div> : null}
-      {message ? <div className="text-sage font-semibold">{message}</div> : null}
-      <button type="submit" className="btn btn-primary" disabled={loading}>
-        {loading ? 'Creating booking...' : 'Create Walk-in Booking'}
-      </button>
+
+      <div className="pt-2">
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-6 py-3 rounded-xl font-semibold text-sm bg-[#d9b571] text-[#0a1626] hover:bg-[#ead9ac] transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Creating booking…' : 'Create Walk-in Booking'}
+        </button>
+      </div>
     </form>
   );
 }
