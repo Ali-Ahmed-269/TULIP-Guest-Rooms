@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ROOM_DISPLAY_NAMES } from '@/utils/roomTypes';
 
 interface Booking {
   id: number;
@@ -31,11 +32,7 @@ interface Booking {
   } | null;
 }
 
-const ROOM_DISPLAY_NAMES: Record<string, string> = {
-  'Standard':     'Standard Room',
-  'Premium':      'Premium Room',
-  'Comfort Plus': 'Comfort Plus',
-};
+
 
 interface AdminBookingsListProps {
   initialBookings: Booking[];

@@ -1,10 +1,5 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-
-const ROOM_DISPLAY_NAMES: Record<string, string> = {
-  'Standard':     'Standard Room',
-  'Premium':      'Premium Room',
-  'Comfort Plus': 'Comfort Plus',
-};
+import { ROOM_DISPLAY_NAMES } from './roomTypes';
 
 function getRoomTypeDisplayName(type: string): string {
   return ROOM_DISPLAY_NAMES[type] || type;

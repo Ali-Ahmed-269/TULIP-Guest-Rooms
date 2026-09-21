@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ROOM_DISPLAY_NAMES } from '@/utils/roomTypes';
 
 interface RoomOption {
   id: number;
@@ -15,11 +16,7 @@ interface WalkInFormProps {
   rooms: RoomOption[];
 }
 
-const ROOM_DISPLAY_NAMES: Record<string, string> = {
-  'Standard':     'Standard Room',
-  'Premium':      'Premium Room',
-  'Comfort Plus': 'Comfort Plus',
-};
+
 
 export default function WalkInForm({ rooms }: WalkInFormProps) {
   const router = useRouter();

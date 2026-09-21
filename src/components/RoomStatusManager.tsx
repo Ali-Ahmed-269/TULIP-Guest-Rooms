@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ROOM_DISPLAY_NAMES } from '@/utils/roomTypes';
 
 interface RoomRow {
   id: number;
@@ -14,11 +15,7 @@ interface RoomStatusManagerProps {
   rooms: RoomRow[];
 }
 
-const ROOM_DISPLAY_NAMES: Record<string, string> = {
-  'Standard':     'Standard Room',
-  'Premium':      'Premium Room',
-  'Comfort Plus': 'Comfort Plus',
-};
+
 
 export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
   const [activeRooms, setActiveRooms] = useState(rooms);

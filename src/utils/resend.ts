@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
 import { createServiceRoleClient } from './supabase/server';
 import { generateInvoicePdf } from './pdf-generator';
+import { ROOM_DISPLAY_NAMES } from './roomTypes';
 
 const getResendClient = () => {
   const apiKey = process.env.RESEND_API_KEY;
@@ -11,11 +12,7 @@ const getResendClient = () => {
   return new Resend(apiKey);
 };
 
-const ROOM_DISPLAY_NAMES: Record<string, string> = {
-  'Standard':     'Standard Room',
-  'Premium':      'Premium Room',
-  'Comfort Plus': 'Comfort Plus',
-};
+
 
 function getRoomTypeDisplayName(type: string): string {
   return ROOM_DISPLAY_NAMES[type] || type;

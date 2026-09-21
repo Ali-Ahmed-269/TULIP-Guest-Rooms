@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ROOM_DISPLAY_NAMES } from '@/utils/roomTypes';
 
 interface Room {
   id: number;
@@ -27,11 +28,7 @@ const ROOM_IMAGES: Record<string, string> = {
   'Comfort Plus': 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600',
 };
 
-const ROOM_DISPLAY_NAMES: Record<string, string> = {
-  'Standard':     'Standard Room',
-  'Premium':      'Premium Room',
-  'Comfort Plus': 'Comfort Plus',
-};
+
 
 /** Returns a CSS class name — no arbitrary hex in JSX */
 function getStatusClass(status: string): string {

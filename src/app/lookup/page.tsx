@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import PageHeader from '@/components/PageHeader';
 import DownloadInvoiceButton from '@/components/DownloadInvoiceButton';
+import { ROOM_DISPLAY_NAMES } from '@/utils/roomTypes';
 
 interface BookingSummary {
   booking_reference: string;
@@ -14,11 +15,7 @@ interface BookingSummary {
   room_type: string;
 }
 
-const ROOM_DISPLAY_NAMES: Record<string, string> = {
-  'Standard':     'Standard Room',
-  'Premium':      'Premium Room',
-  'Comfort Plus': 'Comfort Plus',
-};
+
 
 export default function LookupPage() {
   const [phone, setPhone] = useState('');
