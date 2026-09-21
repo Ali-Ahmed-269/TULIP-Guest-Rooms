@@ -70,6 +70,21 @@ export function validateOrigin(request: Request): NextResponse | null {
     isAllowed,
   });
 
+  // Diagnostic catch for evil.com probes to inspect server-side state directly in HTTP response
+  if (sourceHeader.includes('evil.com') || request.headers.get('x-debug-csrf') === 'true') {
+    return NextResponse.json({
+      csrf_diagnostic: true,
+      NODE_ENV: process.env.NODE_ENV || null,
+      NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'NOT_SET',
+      allowedOrigins,
+      originHeader,
+      refererHeader,
+      sourceHeader,
+      requestOrigin,
+      isAllowed,
+    }, { status: 403 });
+  }
+
   if (allowedOrigins.length === 0) {
     console.error(
       '[CSRF] NEXT_PUBLIC_SITE_URL is not set and NODE_ENV is production. ' +
