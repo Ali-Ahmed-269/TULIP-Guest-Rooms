@@ -68,7 +68,7 @@ async function getAdminOverview() {
   const totalBookings = bookings.length;
   const confirmedBookings = bookings.filter((b) => b.booking_status === 'Confirmed').length;
   const pendingPayments = bookings.filter((b) => b.payment_status === 'Pending Verification').length;
-  
+
   // Total Revenue: sum total_amount of bookings where payment_status is 'Paid'
   const totalRevenue = bookings
     .filter((b) => b.payment_status === 'Paid')
@@ -176,7 +176,7 @@ export default async function AdminDashboardPage() {
         {/* ── 1. Overview Banner with Luxury Room Interior Blend & Quick Actions ── */}
         <div className="relative w-full rounded-2xl overflow-hidden border border-white/10 bg-[#0e1e33] min-h-[220px] md:min-h-[260px] flex items-center shadow-lg">
           {/* Room Photo positioned on the right ~45% */}
-          <div className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 lg:w-5/12 h-full">
+          <div className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 lg:w-5/12 h-full opacity-30 md:opacity-100 transition-opacity">
             <Image
               src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&auto=format&fit=crop&q=80"
               alt="Luxury hotel room interior"
@@ -213,12 +213,12 @@ export default async function AdminDashboardPage() {
               Operational Overview
             </h2>
 
-            <p className="text-xs md:text-sm text-[#b7c0cb] mt-1.5 leading-relaxed max-w-lg">
+            <p className="text-xs md:text-sm text-[#b7c0cb] mt-3.5 md:mt-4 leading-relaxed max-w-lg">
               Manage room allocations, verify pending deposits, and register walk-in guests directly.
             </p>
 
             {/* Banner Quick Actions */}
-            <div className="flex items-center gap-3 mt-5 pt-1 flex-wrap">
+            <div className="flex items-center gap-3 mt-6 md:mt-7 flex-wrap">
               <Link
                 href="/admin/walkin"
                 className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-[#d9b571]/70 shadow-sm"
@@ -424,44 +424,40 @@ export default async function AdminDashboardPage() {
                       <td className="px-4 py-3.5 text-slate-300">{booking.check_out_date}</td>
                       <td className="px-4 py-3.5">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${
-                            booking.booking_status === 'Confirmed'
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${booking.booking_status === 'Confirmed'
                               ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
                               : booking.booking_status === 'Cancelled'
-                              ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
-                              : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                          }`}
+                                ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
+                                : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                            }`}
                         >
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              booking.booking_status === 'Confirmed'
+                            className={`w-1.5 h-1.5 rounded-full ${booking.booking_status === 'Confirmed'
                                 ? 'bg-emerald-400'
                                 : booking.booking_status === 'Cancelled'
-                                ? 'bg-rose-400'
-                                : 'bg-amber-400'
-                            }`}
+                                  ? 'bg-rose-400'
+                                  : 'bg-amber-400'
+                              }`}
                           />
                           {booking.booking_status}
                         </span>
                       </td>
                       <td className="px-4 py-3.5">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${
-                            booking.payment_status === 'Paid'
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${booking.payment_status === 'Paid'
                               ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
                               : booking.payment_status === 'Failed'
-                              ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
-                              : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                          }`}
+                                ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
+                                : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                            }`}
                         >
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              booking.payment_status === 'Paid'
+                            className={`w-1.5 h-1.5 rounded-full ${booking.payment_status === 'Paid'
                                 ? 'bg-emerald-400'
                                 : booking.payment_status === 'Failed'
-                                ? 'bg-rose-400'
-                                : 'bg-amber-400'
-                            }`}
+                                  ? 'bg-rose-400'
+                                  : 'bg-amber-400'
+                              }`}
                           />
                           {booking.payment_status}
                         </span>

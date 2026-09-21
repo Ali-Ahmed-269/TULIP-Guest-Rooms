@@ -84,15 +84,15 @@ export default function AdminNav() {
     <header className="admin-nav-header">
       <div className="admin-nav-content">
         {/* Top Header Row: Logo & Brand + Title & Quick Control Badges */}
-        <div className="flex items-center justify-between gap-6 flex-wrap">
+        <div className="flex items-center justify-between gap-3 sm:gap-6 flex-wrap">
           {/* Left: Brand Logo Block + Admin Portal Heading */}
-          <div className="flex items-center gap-6 lg:gap-8 flex-wrap">
-            <Link href="/admin/dashboard" className="flex items-center gap-3.5 group">
+          <div className="flex items-center gap-3 sm:gap-6 lg:gap-8 flex-wrap">
+            <Link href="/admin/dashboard" className="flex items-center gap-3 group shrink-0">
               {/* Tulip Gold Icon */}
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#d9b571]/20 to-[#d9b571]/5 border border-[#d9b571]/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-inner">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#d9b571]/20 to-[#d9b571]/5 border border-[#d9b571]/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-inner">
                 <svg
-                  width="22"
-                  height="22"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +123,7 @@ export default function AdminNav() {
               </div>
 
               <div>
-                <h2 className="text-xl lg:text-2xl font-heading font-bold text-white tracking-tight leading-tight">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-heading font-bold text-white tracking-tight leading-tight">
                   Tulip Guest Rooms
                 </h2>
                 <p className="text-[9px] text-[#d9b571] tracking-widest uppercase font-medium mt-0.5 opacity-90">
@@ -133,25 +133,25 @@ export default function AdminNav() {
             </Link>
 
             {/* Vertical Divider Line */}
-            <div className="w-[1px] h-10 bg-white/15 shrink-0 hidden sm:block" />
+            <div className="w-[1px] h-9 bg-white/15 shrink-0 hidden md:block" />
 
-            <div>
-              <h1 className="text-xl lg:text-2xl font-heading font-bold text-white tracking-tight flex items-center">
+            <div className="hidden sm:block">
+              <h1 className="text-lg lg:text-2xl font-heading font-bold text-white tracking-tight flex items-center">
                 <span>Admin Portal</span>
                 <span
                   className="text-[10px] rounded-full bg-[#d9b571]/15 text-[#d9b571] border border-[#d9b571]/30 font-body font-semibold uppercase tracking-wider shrink-0"
                   style={{
-                    marginLeft: '14px',
+                    marginLeft: '12px',
                     paddingLeft: '10px',
                     paddingRight: '10px',
-                    paddingTop: '3px',
-                    paddingBottom: '3px',
+                    paddingTop: '2px',
+                    paddingBottom: '2px',
                   }}
                 >
                   Live
                 </span>
               </h1>
-              <p className="text-xs text-[#b7c0cb] mt-0.5">
+              <p className="text-xs text-[#b7c0cb] mt-0.5 hidden md:block">
                 Manage reservations, room availability, payments and guest settings.
               </p>
             </div>
@@ -268,8 +268,8 @@ export default function AdminNav() {
 
             {/* Date-Picker Pill */}
             <div
-              className="flex items-center gap-3 rounded-xl bg-[#0b1c30]/90 border border-[#1b3859] text-white text-xs sm:text-sm font-medium shadow-sm hover:border-[#d9b571]/50 transition-colors"
-              style={{ paddingLeft: '20px', paddingRight: '20px', paddingTop: '8px', paddingBottom: '8px' }}
+              className="hidden sm:flex items-center gap-3 rounded-xl bg-[#0b1c30]/90 border border-[#1b3859] text-white text-xs sm:text-sm font-medium shadow-sm hover:border-[#d9b571]/50 transition-colors"
+              style={{ paddingLeft: '18px', paddingRight: '18px', paddingTop: '8px', paddingBottom: '8px' }}
             >
               <CalendarIcon size={16} className="text-[#d9b571] shrink-0" />
               <span className="text-slate-200">{formattedDate}</span>
@@ -279,7 +279,7 @@ export default function AdminNav() {
         </div>
 
         {/* Horizontal Navigation Pill Bar */}
-        <nav className="flex items-center justify-between gap-2.5 overflow-x-auto py-1 no-scrollbar w-full">
+        <nav className="flex items-center justify-start sm:justify-between gap-2 sm:gap-2.5 overflow-x-auto py-1 no-scrollbar w-full scroll-smooth">
           {ADMIN_NAV_LINKS.map((item) => {
             const active = isLinkActive(item.href);
             const Icon = item.icon;
@@ -288,13 +288,13 @@ export default function AdminNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex-1 min-w-[95px] inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border shrink-0 ${
+                className={`flex-1 min-w-[85px] sm:min-w-[95px] inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border shrink-0 ${
                   active
                     ? 'border-[#d9b571] bg-gradient-to-r from-[#d9b571]/25 via-[#d9b571]/15 to-[#d9b571]/10 text-[#d9b571] shadow-[0_0_14px_rgba(217,181,113,0.25)] font-bold'
                     : 'border-[#1b3859] bg-[#0b1c30]/90 text-slate-300 hover:border-[#d9b571]/60 hover:text-white hover:bg-[#112742]'
                 }`}
               >
-                <Icon size={16} className={active ? 'text-[#d9b571]' : 'text-slate-400'} />
+                <Icon size={15} className={active ? 'text-[#d9b571]' : 'text-slate-400'} />
                 <span>{item.pillLabel}</span>
               </Link>
             );
@@ -303,9 +303,9 @@ export default function AdminNav() {
           <button
             type="button"
             onClick={handleSignOut}
-            className="flex-1 min-w-[95px] inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border border-[#d9b571]/70 bg-[#0b1c30]/90 text-white hover:bg-rose-500/15 hover:border-rose-400 hover:text-rose-300 shadow-sm shrink-0"
+            className="flex-1 min-w-[85px] sm:min-w-[95px] inline-flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 border border-[#d9b571]/70 bg-[#0b1c30]/90 text-white hover:bg-rose-500/15 hover:border-rose-400 hover:text-rose-300 shadow-sm shrink-0"
           >
-            <LogOut size={16} className="text-[#d9b571]" />
+            <LogOut size={15} className="text-[#d9b571]" />
             <span>Sign Out</span>
           </button>
         </nav>

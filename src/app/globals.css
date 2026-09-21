@@ -26,13 +26,20 @@
 }
 
 :root {
-  --navy-950: #0a1626;   /* page background */
-  --navy-900: #0e1e33;   /* nav, footer, dark bands */
-  --navy-800: #16283f;   /* cards, booking widget */
-  --cream-50: #faf7f0;   /* light "About" section */
-  --gold-400: #d9b571;   /* primary accent / buttons */
-  --gold-300: #ead9ac;   /* hover state */
-  --gold-600: #b8934a;   /* icons/checks on light bg */
+  --navy-950: #0a1626;
+  /* page background */
+  --navy-900: #0e1e33;
+  /* nav, footer, dark bands */
+  --navy-800: #16283f;
+  /* cards, booking widget */
+  --cream-50: #faf7f0;
+  /* light "About" section */
+  --gold-400: #d9b571;
+  /* primary accent / buttons */
+  --gold-300: #ead9ac;
+  /* hover state */
+  --gold-600: #b8934a;
+  /* icons/checks on light bg */
   --text-white: #ffffff;
   --text-muted-token: #b7c0cb;
   --text-navy-dark: #17263b;
@@ -46,8 +53,8 @@
   --muted: var(--text-muted-token);
   --radius: 10px;
   --radius-pill: 9999px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.25);
-  
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+
   --hero-image: url('/guest-house1.png');
   --font-heading: var(--font-playfair), 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
   --font-body: var(--font-inter), 'Aptos', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -81,7 +88,12 @@ body {
   line-height: 1.6;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   line-height: 1.3;
@@ -253,10 +265,12 @@ button {
   border: 1px solid rgba(16, 185, 129, 0.3);
   transition: all 0.2s ease;
 }
+
 .badge-green:hover {
   transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
+
 .badge-green::before {
   background-color: #10b981;
 }
@@ -267,10 +281,12 @@ button {
   border: 1px solid rgba(239, 68, 68, 0.3);
   transition: all 0.2s ease;
 }
+
 .badge-red:hover {
   transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
 }
+
 .badge-red::before {
   background-color: #ef4444;
 }
@@ -281,10 +297,12 @@ button {
   border: 1px solid rgba(234, 179, 8, 0.3);
   transition: all 0.2s ease;
 }
+
 .badge-yellow:hover {
   transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(234, 179, 8, 0.2);
 }
+
 .badge-yellow::before {
   background-color: #eab308;
 }
@@ -295,10 +313,12 @@ button {
   border: 1px solid rgba(217, 181, 113, 0.3);
   transition: all 0.2s ease;
 }
+
 .badge-blue:hover {
   transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(217, 181, 113, 0.2);
 }
+
 .badge-blue::before {
   background-color: #d9b571;
 }
@@ -309,10 +329,12 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.12);
   transition: all 0.2s ease;
 }
+
 .badge-gray:hover {
   transform: scale(1.03);
   box-shadow: 0 2px 8px rgba(156, 163, 175, 0.2);
 }
+
 .badge-gray::before {
   background-color: #9ca3af;
 }
@@ -328,7 +350,7 @@ button {
 }
 
 .form-group label,
-.form-group > span:first-child {
+.form-group>span:first-child {
   font-weight: 600;
   font-size: 0.9rem;
   color: var(--text-dark);
@@ -342,14 +364,14 @@ button {
 }
 
 /* All form fields must have associated <label> elements for accessibility */
-.form-field > label,
-.form-field > .field-label {
+.form-field>label,
+.form-field>.field-label {
   font-weight: 600;
   font-size: 0.9rem;
   color: var(--text-dark);
 }
 
-.form-field > .field-hint {
+.form-field>.field-hint {
   font-size: 0.8rem;
   color: var(--muted);
   margin-top: -2px;
@@ -446,7 +468,7 @@ button {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 16px 0;
   transition: background-color 0.3s ease, border-color 0.3s ease,
-              box-shadow 0.3s ease, padding 0.3s ease;
+    box-shadow 0.3s ease, padding 0.3s ease;
 }
 
 /* Scrolled state */
@@ -601,7 +623,8 @@ button {
   min-height: 92vh;
   display: flex;
   align-items: center;
-  padding-top: 80px; /* navbar offset */
+  padding-top: 80px;
+  /* navbar offset */
   overflow: hidden;
 }
 
@@ -609,13 +632,11 @@ button {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.90) 0%,
-    rgba(0, 0, 0, 0.75) 12%,
-    rgba(0, 0, 0, 0.25) 25%,
-    transparent 38%
-  );
+  background: linear-gradient(90deg,
+      rgba(0, 0, 0, 0.90) 0%,
+      rgba(0, 0, 0, 0.75) 12%,
+      rgba(0, 0, 0, 0.25) 25%,
+      transparent 38%);
   z-index: 1;
 }
 
@@ -899,17 +920,21 @@ button {
   .hero-headline {
     font-size: 2.2rem;
   }
+
   .hero-ctas {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .hero-ctas .btn {
     width: 100%;
     justify-content: center;
   }
+
   .container {
     padding: 0 16px;
   }
+
   .section-padding {
     padding: 40px 0;
   }
@@ -947,32 +972,40 @@ button {
   width: 100%;
   max-width: 1400px;
   margin-inline: auto;
-  padding-inline: 1.5rem; /* px-6 */
-  padding-block: 1.75rem; /* py-7 */
+  padding-inline: 1rem;
+  padding-block: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem; /* gap-7 */
+  gap: 1.5rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   .admin-container {
-    padding-inline: 2.5rem; /* md:px-10 */
+    padding-inline: 1.5rem;
+    padding-block: 1.75rem;
+    gap: 1.75rem;
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media (min-width: 1024px) {
   .admin-container {
-    padding-inline: 2.5rem; /* matches lg:px-10 */
+    padding-inline: 2.5rem;
   }
 }
 
 /* ─── Unified Admin Cards Internal Padding ─────────────────────────────── */
 
 .admin-card {
-  padding: 1.5rem 1.75rem;
+  padding: 1.25rem 1.25rem;
   background-color: #0b1b2d;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1rem;
+}
+
+@media (min-width: 640px) {
+  .admin-card {
+    padding: 1.5rem 1.75rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -982,7 +1015,13 @@ button {
 }
 
 .admin-banner-content {
-  padding: 1.75rem 2.25rem;
+  padding: 1.25rem 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .admin-banner-content {
+    padding: 1.75rem 2.25rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -1001,13 +1040,20 @@ button {
   top: 0;
   z-index: 50;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-  padding-inline: 1.5rem; /* px-6 */
-  padding-block: 1rem;    /* py-4 */
+  padding-inline: 1rem;
+  padding-block: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .admin-nav-header {
+    padding-inline: 1.5rem;
+    padding-block: 1rem;
+  }
 }
 
 @media (min-width: 768px) {
   .admin-nav-header {
-    padding-inline: 2.5rem; /* md:px-10 */
+    padding-inline: 2.5rem;
     padding-block: 1.25rem;
   }
 }
@@ -1073,10 +1119,12 @@ button {
   color: #065f46;
   transition: all 0.2s ease;
 }
+
 .room-status--available:hover {
   box-shadow: 0 2px 8px rgba(122, 158, 126, 0.3);
   transform: translateY(-1px);
 }
+
 .room-status--available .room-status-dot {
   background-color: var(--sage, #7a9e7e);
 }
@@ -1088,10 +1136,12 @@ button {
   color: #9f1239;
   transition: all 0.2s ease;
 }
+
 .room-status--booked:hover {
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
   transform: translateY(-1px);
 }
+
 .room-status--booked .room-status-dot {
   background-color: var(--primary);
 }
@@ -1103,10 +1153,12 @@ button {
   color: #92400e;
   transition: all 0.2s ease;
 }
+
 .room-status--reserved:hover {
   box-shadow: 0 2px 8px rgba(212, 168, 83, 0.3);
   transform: translateY(-1px);
 }
+
 .room-status--reserved .room-status-dot {
   background-color: var(--gold, #d4a853);
 }
@@ -1118,10 +1170,12 @@ button {
   color: #374151;
   transition: all 0.2s ease;
 }
+
 .room-status--maintenance:hover {
   box-shadow: 0 2px 8px rgba(156, 163, 175, 0.25);
   transform: translateY(-1px);
 }
+
 .room-status--maintenance .room-status-dot {
   background-color: #9ca3af;
 }
@@ -1160,30 +1214,38 @@ button {
   .container {
     padding: 0 16px;
   }
+
   .section-padding {
     padding: 40px 0;
   }
+
   .form-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
+
   .booking-form {
     padding: 20px;
   }
+
   .card {
     padding: 16px;
   }
+
   .btn {
     padding: 10px 20px;
     min-height: 44px;
     font-size: 0.95rem;
   }
+
   .hero-features {
     grid-template-columns: 1fr;
   }
+
   .hero-feature-card {
     padding: 16px;
   }
+
   .nav-links ul {
     gap: 20px;
   }
@@ -1194,16 +1256,20 @@ button {
   .container {
     padding: 0 20px;
   }
+
   .section-padding {
     padding: 60px 0;
   }
+
   .form-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
+
   .booking-form {
     padding: 24px;
   }
+
   .hero-features {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1214,13 +1280,16 @@ button {
   .container {
     padding: 0 20px;
   }
+
   .section-padding {
     padding: 80px 0;
   }
+
   .form-grid {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 18px;
   }
+
   .booking-form {
     padding: 32px;
   }
@@ -1288,9 +1357,11 @@ button {
   .hamburger.active .hamburger-line:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
   }
+
   .hamburger.active .hamburger-line:nth-child(2) {
     opacity: 0;
   }
+
   .hamburger.active .hamburger-line:nth-child(3) {
     transform: translateY(-8px) rotate(-45deg);
   }
@@ -1615,7 +1686,7 @@ button {
   cursor: pointer;
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease,
-              transform 0.2s ease;
+    transform 0.2s ease;
 }
 
 .room-card-view-btn:hover {
@@ -1633,4 +1704,3 @@ button {
   outline: 2px solid var(--gold-400);
   outline-offset: 3px;
 }
-
