@@ -165,7 +165,7 @@ export default function AdminNav() {
 
               {notificationsOpen && (
                 <div
-                  className="absolute right-0 top-12 w-96 bg-[#0c1e34] border border-[#1b3859] rounded-2xl shadow-2xl z-50 flex flex-col animate-in fade-in slide-in-from-top-2 duration-200"
+                  className="absolute left-0 sm:left-auto sm:right-0 top-12 w-80 sm:w-96 max-w-[calc(100vw-32px)] bg-[#0c1e34] border border-[#1b3859] rounded-2xl shadow-2xl z-50 flex flex-col animate-in fade-in slide-in-from-top-2 duration-200"
                   style={{ padding: '20px' }}
                 >
                   {/* Header Row */}
@@ -249,45 +249,48 @@ export default function AdminNav() {
               </button>
 
               {adminMenuOpen && (
-                <div className="absolute right-0 top-12 w-64 bg-[#0c1e34] border border-[#1b3859] rounded-2xl shadow-2xl p-3 z-50 flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="p-2 border-b border-white/10">
-                    <div className="flex items-center gap-2 mb-1">
-                      <ShieldCheck size={16} className="text-[#d9b571]" />
+                <div className="absolute left-0 sm:left-auto sm:right-0 top-12 w-72 max-w-[calc(100vw-32px)] bg-[#0c1e34] border border-[#1b3859] rounded-2xl shadow-2xl p-4 z-50 flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {/* Admin Header Info Badge */}
+                  <div className="p-3.5 rounded-xl bg-[#071322] border border-white/10 flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck size={16} className="text-[#d9b571] shrink-0" />
                       <span className="text-xs font-bold text-white uppercase tracking-wider">Super Admin</span>
                     </div>
-                    <p className="text-[11px] text-slate-300 truncate">alikhanswati42574@gmail.com</p>
+                    <p className="text-xs text-slate-300 font-medium truncate">alikhanswati42574@gmail.com</p>
                   </div>
 
-                  <Link
-                    href="/admin/settings"
-                    onClick={() => setAdminMenuOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-white/10 hover:text-white transition-colors"
-                  >
-                    <Settings size={14} className="text-[#d9b571]" />
-                    <span>System Settings</span>
-                  </Link>
+                  <div className="flex flex-col gap-1.5 pt-1">
+                    <Link
+                      href="/admin/settings"
+                      onClick={() => setAdminMenuOpen(false)}
+                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-white transition-colors"
+                    >
+                      <Settings size={15} className="text-[#d9b571] shrink-0" />
+                      <span>System Settings</span>
+                    </Link>
 
-                  <Link
-                    href="/"
-                    target="_blank"
-                    onClick={() => setAdminMenuOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-200 hover:bg-white/10 hover:text-white transition-colors"
-                  >
-                    <ExternalLink size={14} className="text-emerald-400" />
-                    <span>View Public Site</span>
-                  </Link>
+                    <Link
+                      href="/"
+                      target="_blank"
+                      onClick={() => setAdminMenuOpen(false)}
+                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-white transition-colors"
+                    >
+                      <ExternalLink size={15} className="text-emerald-400 shrink-0" />
+                      <span>View Public Site</span>
+                    </Link>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAdminMenuOpen(false);
-                      handleSignOut();
-                    }}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-rose-300 hover:bg-rose-500/15 hover:text-rose-200 transition-colors border-t border-white/5 mt-1"
-                  >
-                    <LogOut size={14} />
-                    <span>Sign Out</span>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAdminMenuOpen(false);
+                        handleSignOut();
+                      }}
+                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-rose-300 hover:bg-rose-500/15 hover:text-rose-200 transition-colors border-t border-white/10 mt-1 pt-3"
+                    >
+                      <LogOut size={15} className="shrink-0" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
