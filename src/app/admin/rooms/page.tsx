@@ -64,7 +64,9 @@ export default async function AdminRoomsPage() {
           title="Rooms Management"
           description="Update room statuses quickly when a property goes under maintenance or becomes available."
         />
-        <RoomStatusManager rooms={rooms as any} />
+        <div style={{ marginTop: '28px' }}>
+          <RoomStatusManager rooms={rooms as any} />
+        </div>
       </section>
     </AdminLayout>
   );

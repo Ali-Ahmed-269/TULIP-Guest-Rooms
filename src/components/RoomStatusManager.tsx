@@ -63,13 +63,13 @@ export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
       {message && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {message}</div>}
       {error && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {error}</div>}
 
-      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-md">
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse min-w-[720px] text-sm">
+          <table className="w-full border-collapse min-w-[780px] text-sm">
             <thead>
               <tr className="bg-[#0e1e33] text-left text-xs font-semibold text-[#b7c0cb] uppercase tracking-wider">
                 {['Room #', 'Type', 'Rate / Night', 'Current Status', 'Update Status'].map((h) => (
-                  <th key={h} className="px-4 py-3.5 border-b border-white/10 whitespace-nowrap">{h}</th>
+                  <th key={h} className="border-b border-white/10 whitespace-nowrap" style={{ padding: '18px 22px' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -78,16 +78,16 @@ export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
                 const s = STATUS_STYLES[room.status] || DEFAULT_STYLE;
                 return (
                   <tr key={room.id} className="hover:bg-white/[0.025] transition-colors">
-                    <td className="px-4 py-3.5 font-bold text-white whitespace-nowrap">Room {room.room_number}</td>
-                    <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{ROOM_DISPLAY_NAMES[room.room_type] || room.room_type}</td>
-                    <td className="px-4 py-3.5 text-slate-200 font-medium whitespace-nowrap">PKR {Number(room.price_per_night).toLocaleString()}</td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border" style={{ background: s.bg, color: s.text, borderColor: s.border }}>
-                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: s.dot }} />{room.status}
+                    <td className="font-bold text-white whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>Room {room.room_number}</td>
+                    <td className="text-slate-300 whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{ROOM_DISPLAY_NAMES[room.room_type] || room.room_type}</td>
+                    <td className="text-slate-200 font-medium whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>PKR {Number(room.price_per_night).toLocaleString()}</td>
+                    <td className="whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>
+                      <span className="inline-flex items-center gap-2 rounded-lg text-xs font-semibold border" style={{ background: s.bg, color: s.text, borderColor: s.border, paddingLeft: '14px', paddingRight: '14px', paddingTop: '6px', paddingBottom: '6px' }}>
+                        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.dot }} />{room.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-2 flex-wrap">
+                    <td className="whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>
+                      <div className="flex items-center gap-2.5 flex-wrap">
                         {['Available', 'Maintenance', 'Reserved', 'Booked'].map((status) => {
                           const isCurrent = room.status === status;
                           const isLoading = loadingRoom === room.room_number;
@@ -97,11 +97,12 @@ export default function RoomStatusManager({ rooms }: RoomStatusManagerProps) {
                               type="button"
                               onClick={() => handleStatusChange(room.room_number, status)}
                               disabled={isCurrent || isLoading}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border whitespace-nowrap ${
+                              className={`rounded-xl text-xs font-semibold transition-all border whitespace-nowrap shadow-sm ${
                                 isCurrent
-                                  ? 'bg-[#d9b571]/15 border-[#d9b571]/40 text-[#d9b571] cursor-default'
-                                  : 'bg-white/5 border-white/10 text-slate-300 hover:border-[#d9b571]/50 hover:text-white hover:bg-white/10'
+                                  ? 'bg-[#d9b571]/20 border-[#d9b571]/50 text-[#d9b571] cursor-default'
+                                  : 'bg-white/10 border-white/20 text-slate-200 hover:border-white/30 hover:text-white hover:bg-white/20'
                               } ${isLoading ? 'opacity-50' : ''}`}
+                              style={{ paddingLeft: '14px', paddingRight: '14px', paddingTop: '7px', paddingBottom: '7px' }}
                             >
                               {status}
                             </button>
