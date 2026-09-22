@@ -37,7 +37,7 @@ export default async function HomePage() {
       <section className="hero-section" id="home">
         {/* Next.js optimized background image */}
         <Image
-          src="/guest-house1.png"
+          src="/Tulip-Guest-Rooms.png"
           alt="Tulip Guest Rooms exterior at night"
           fill
           priority
