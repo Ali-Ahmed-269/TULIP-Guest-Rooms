@@ -26,7 +26,9 @@ export default async function AdminPaymentsPage() {
           title="Payments Pending Verification"
           description="Review JazzCash or Easypaisa transfer screenshots uploaded by guests and verify or reject reservations."
         />
-        <AdminPaymentsList initialPayments={payments as any} />
+        <div style={{ marginTop: '28px' }}>
+          <AdminPaymentsList initialPayments={payments as any} />
+        </div>
       </section>
     </AdminLayout>
   );

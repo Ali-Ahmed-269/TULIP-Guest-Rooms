@@ -19,9 +19,11 @@ interface WalkInFormProps {
 
 
 const inputClass =
-  'w-full px-4 py-2.5 rounded-xl bg-[#0e1e33] border border-white/10 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-[#d9b571]/60 transition-colors';
+  'w-full rounded-xl bg-[#0e1e33] border border-white/15 text-white text-sm placeholder:text-slate-400 focus:outline-none focus:border-[#d9b571] transition-colors shadow-inner';
 
-const labelClass = 'block text-xs font-semibold text-[#b7c0cb] mb-1.5 uppercase tracking-wider';
+const inputStyle = { paddingLeft: '18px', paddingRight: '18px', paddingTop: '13px', paddingBottom: '13px' };
+
+const labelClass = 'block text-xs font-bold text-[#b7c0cb] mb-2 uppercase tracking-widest';
 
 export default function WalkInForm({ rooms }: WalkInFormProps) {
   const router = useRouter();
@@ -96,22 +98,22 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
       {error && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {error}</div>}
       {message && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {message}</div>}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <label>
           <span className={labelClass}>Guest Name *</span>
-          <input className={inputClass} value={fullname} onChange={(e) => setFullname(e.target.value)} required placeholder="Full name" />
+          <input className={inputClass} style={inputStyle} value={fullname} onChange={(e) => setFullname(e.target.value)} required placeholder="Full name" />
         </label>
         <label>
           <span className={labelClass}>Email *</span>
-          <input type="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="guest@email.com" />
+          <input type="email" className={inputClass} style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="guest@email.com" />
         </label>
         <label>
           <span className={labelClass}>Phone *</span>
-          <input className={inputClass} value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+92 300 0000000" />
+          <input className={inputClass} style={inputStyle} value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+92 300 0000000" />
         </label>
         <label>
           <span className={labelClass}>CNIC *</span>
-          <input className={inputClass} value={cnic} onChange={(e) => setCnic(e.target.value)} required placeholder="XXXXX-XXXXXXX-X" />
+          <input className={inputClass} style={inputStyle} value={cnic} onChange={(e) => setCnic(e.target.value)} required placeholder="XXXXX-XXXXXXX-X" />
         </label>
       </div>
 
@@ -119,6 +121,7 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
         <span className={labelClass}>Address *</span>
         <textarea
           className={`${inputClass} resize-none`}
+          style={inputStyle}
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           rows={3}
@@ -127,20 +130,21 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
         />
       </label>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <label>
           <span className={labelClass}>Check-in *</span>
-          <input type="date" className={inputClass} value={checkIn} onChange={(e) => setCheckIn(e.target.value)} required />
+          <input type="date" className={inputClass} style={inputStyle} value={checkIn} onChange={(e) => setCheckIn(e.target.value)} required />
         </label>
         <label>
           <span className={labelClass}>Check-out *</span>
-          <input type="date" className={inputClass} value={checkOut} onChange={(e) => setCheckOut(e.target.value)} required />
+          <input type="date" className={inputClass} style={inputStyle} value={checkOut} onChange={(e) => setCheckOut(e.target.value)} required />
         </label>
         <label>
           <span className={labelClass}>Guests *</span>
           <input
             type="number"
             className={inputClass}
+            style={inputStyle}
             min={1}
             max={10}
             value={guests}
@@ -150,7 +154,7 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
         </label>
         <label>
           <span className={labelClass}>Room *</span>
-          <select className={`${inputClass} appearance-none cursor-pointer`} value={roomId} onChange={(e) => handleRoomChange(e.target.value)} required>
+          <select className={`${inputClass} appearance-none cursor-pointer`} style={inputStyle} value={roomId} onChange={(e) => handleRoomChange(e.target.value)} required>
             <option value="">Select a room</option>
             {availableRooms.map((room) => (
               <option key={room.id} value={room.room_number}>
@@ -161,11 +165,12 @@ export default function WalkInForm({ rooms }: WalkInFormProps) {
         </label>
       </div>
 
-      <div className="pt-2">
+      <div style={{ paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: '8px' }}>
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-3 rounded-xl font-semibold text-sm bg-[#d9b571] text-[#0a1626] hover:bg-[#ead9ac] transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+          className="rounded-xl font-bold text-sm bg-[#d9b571] text-[#0a1626] hover:bg-[#ead9ac] transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+          style={{ paddingLeft: '28px', paddingRight: '28px', paddingTop: '13px', paddingBottom: '13px' }}
         >
           {loading ? 'Creating booking…' : 'Create Walk-in Booking'}
         </button>

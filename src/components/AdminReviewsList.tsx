@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 
@@ -74,29 +74,30 @@ export default function AdminReviewsList({ initialReviews }: AdminReviewsListPro
       {error && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {error}</div>}
 
       {/* Filter Bar */}
-      <div className="bg-[#16283f] border border-white/10 rounded-2xl p-4 flex items-center gap-4 shadow-md flex-wrap">
-        <span className="text-sm font-medium text-slate-300">Filter by status:</span>
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl flex items-center gap-4 shadow-md flex-wrap" style={{ padding: '20px 24px' }}>
+        <span className="text-sm font-semibold text-slate-300">Filter by status:</span>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-2 rounded-xl bg-[#0e1e33] border border-white/10 text-white text-sm focus:outline-none focus:border-[#d9b571]/60 transition-colors appearance-none cursor-pointer min-w-[160px]"
+          className="rounded-xl bg-[#0e1e33] border border-white/15 text-white text-sm focus:outline-none focus:border-[#d9b571] transition-colors appearance-none cursor-pointer min-w-[160px] shadow-inner"
+          style={{ paddingLeft: '18px', paddingRight: '28px', paddingTop: '12px', paddingBottom: '12px' }}
         >
           <option value="All">All Statuses</option>
           <option value="Pending">Pending</option>
           <option value="Approved">Approved</option>
           <option value="Rejected">Rejected</option>
         </select>
-        <span className="text-xs text-slate-400 ml-auto">{filteredReviews.length} reviews</span>
+        <span className="text-xs text-slate-400 ml-auto font-medium">{filteredReviews.length} reviews</span>
       </div>
 
       {/* Reviews Table */}
-      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-md">
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse min-w-[820px] text-sm">
             <thead>
               <tr className="bg-[#0e1e33] text-left text-xs font-semibold text-[#b7c0cb] uppercase tracking-wider">
                 {['Booking Ref', 'Guest', 'Rating', 'Review', 'Status', 'Date', 'Actions'].map((h) => (
-                  <th key={h} className="px-4 py-3.5 border-b border-white/10 whitespace-nowrap">{h}</th>
+                  <th key={h} className="border-b border-white/10 whitespace-nowrap" style={{ padding: '18px 22px' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -106,23 +107,39 @@ export default function AdminReviewsList({ initialReviews }: AdminReviewsListPro
                   const ss = statusStyle(r.status);
                   return (
                     <tr key={r.id} className="hover:bg-white/[0.025] transition-colors">
-                      <td className="px-4 py-3.5 font-mono text-xs font-semibold text-white whitespace-nowrap">{r.bookings?.booking_reference || 'N/A'}</td>
-                      <td className="px-4 py-3.5 text-slate-200 font-medium whitespace-nowrap">{r.guest_name}</td>
-                      <td className="px-4 py-3.5 text-base tracking-wider whitespace-nowrap">{renderStars(r.rating)}</td>
-                      <td className="px-4 py-3.5 text-slate-300 max-w-[280px] whitespace-normal break-words">{r.review_text}</td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold border" style={{ background: ss.bg, color: ss.text, borderColor: ss.border }}>
-                          <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: ss.dot }} />{r.status}
+                      <td className="font-mono text-xs font-semibold text-white whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{r.bookings?.booking_reference || 'N/A'}</td>
+                      <td className="text-slate-200 font-medium whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{r.guest_name}</td>
+                      <td className="text-base tracking-wider whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{renderStars(r.rating)}</td>
+                      <td className="text-slate-300 max-w-[280px] whitespace-normal break-words align-middle" style={{ padding: '18px 22px' }}>{r.review_text}</td>
+                      <td className="whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>
+                        <span className="inline-flex items-center gap-2 rounded-lg text-xs font-semibold border" style={{ background: ss.bg, color: ss.text, borderColor: ss.border, paddingLeft: '14px', paddingRight: '14px', paddingTop: '6px', paddingBottom: '6px' }}>
+                          <span className="w-2 h-2 rounded-full shrink-0" style={{ background: ss.dot }} />{r.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3.5 text-slate-400 text-xs whitespace-nowrap">{new Date(r.created_at).toLocaleDateString()}</td>
-                      <td className="px-4 py-3.5 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
+                      <td className="text-slate-400 text-xs whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{new Date(r.created_at).toLocaleDateString()}</td>
+                      <td className="whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>
+                        <div className="flex items-center gap-2.5">
                           {r.status !== 'Approved' && (
-                            <button type="button" onClick={() => handleAction(r.id, 'approve')} disabled={actionLoading === r.id} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 transition-colors disabled:opacity-50">Approve</button>
+                            <button
+                              type="button"
+                              onClick={() => handleAction(r.id, 'approve')}
+                              disabled={actionLoading === r.id}
+                              className="rounded-xl text-xs font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition-all shadow-sm disabled:opacity-50"
+                              style={{ paddingLeft: '14px', paddingRight: '14px', paddingTop: '7px', paddingBottom: '7px' }}
+                            >
+                              Approve
+                            </button>
                           )}
                           {r.status !== 'Rejected' && (
-                            <button type="button" onClick={() => handleAction(r.id, 'reject')} disabled={actionLoading === r.id} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/10 border border-rose-500/25 text-rose-300 hover:bg-rose-500/20 transition-colors disabled:opacity-50">Reject</button>
+                            <button
+                              type="button"
+                              onClick={() => handleAction(r.id, 'reject')}
+                              disabled={actionLoading === r.id}
+                              className="rounded-xl text-xs font-semibold bg-rose-500/15 border border-rose-500/35 text-rose-300 hover:bg-rose-500/25 transition-all shadow-sm disabled:opacity-50"
+                              style={{ paddingLeft: '14px', paddingRight: '14px', paddingTop: '7px', paddingBottom: '7px' }}
+                            >
+                              Reject
+                            </button>
                           )}
                         </div>
                       </td>
@@ -130,7 +147,7 @@ export default function AdminReviewsList({ initialReviews }: AdminReviewsListPro
                   );
                 })
               ) : (
-                <tr><td colSpan={7} className="px-4 py-10 text-center text-slate-400 text-sm">No reviews found.</td></tr>
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-slate-400 text-sm">No reviews found.</td></tr>
               )}
             </tbody>
           </table>

@@ -143,14 +143,14 @@ export default function BookingForm({ rooms }: BookingFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="booking-form" noValidate>
-      <div className="grid gap-y-6 gap-x-12" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', columnGap: '3rem', rowGap: '1.5rem' }}>
+      <div className="grid gap-y-6 gap-x-12" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', columnGap: '2.5rem', rowGap: '1.5rem' }}>
 
         {/* ── Left column: Guest Information + Payment ── */}
         <div className="grid gap-5">
 
           <fieldset className="booking-fieldset">
             <legend className="booking-fieldset-legend">Guest Information</legend>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
               <div className="form-field">
                 <label htmlFor="bf-fullname">Full Name <span aria-hidden="true">*</span></label>
@@ -166,7 +166,7 @@ export default function BookingForm({ rooms }: BookingFormProps) {
                   placeholder="03XX-XXXXXXX" required autoComplete="tel" />
               </div>
 
-              <div className="form-field" style={{ gridColumn: '1 / -1' }}>
+              <div className="form-field sm:col-span-2">
                 <label htmlFor="bf-email">Email Address <span aria-hidden="true">*</span></label>
                 <input id="bf-email" type="email" value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -222,7 +222,7 @@ export default function BookingForm({ rooms }: BookingFormProps) {
         {/* ── Right column: Stay Details ── */}
         <fieldset className="booking-fieldset">
           <legend className="booking-fieldset-legend">Stay Details</legend>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
             <div className="form-field">
               <label htmlFor="bf-checkin">Check-in <span aria-hidden="true">*</span></label>
@@ -255,7 +255,7 @@ export default function BookingForm({ rooms }: BookingFormProps) {
               </select>
             </div>
 
-            <div className="form-field" style={{ gridColumn: '1 / -1' }}>
+            <div className="form-field sm:col-span-2">
               <label htmlFor="bf-room-number">Room Number <span aria-hidden="true">*</span></label>
               <select id="bf-room-number" value={roomId}
                 onChange={(e) => setRoomId(e.target.value)} required disabled={!roomType}>

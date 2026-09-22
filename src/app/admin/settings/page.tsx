@@ -29,7 +29,9 @@ export default async function AdminSettingsPage() {
           title="Settings"
           description="Guesthouse site settings and payment contact details."
         />
-        <SettingsForm initialSettings={settings} />
+        <div style={{ marginTop: '28px' }}>
+          <SettingsForm initialSettings={settings} />
+        </div>
       </section>
     </AdminLayout>
   );

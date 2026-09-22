@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
+import TulipIcon from './TulipIcon';
 import {
   Bell,
   Calendar as CalendarIcon,
@@ -37,12 +38,31 @@ export const ADMIN_NAV_LINKS = [
 export default function AdminNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlDate = searchParams.get('date');
 
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    return urlDate || new Date().toISOString().split('T')[0];
+  });
+
+  useEffect(() => {
+    if (urlDate) {
+      setSelectedDate(urlDate);
+    }
+  }, [urlDate]);
+
+  const handleDateChange = (newDate: string) => {
+    setSelectedDate(newDate);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('date', newDate);
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   const adminMenuRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   // Close dropdowns on click outside
   useEffect(() => {
@@ -72,13 +92,13 @@ export default function AdminNav() {
     return pathname.startsWith(href);
   };
 
-  // Formatted current date e.g., "Sat, Sep 19, 2026"
+  // Formatted date string based on selected date
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-  }).format(new Date());
+  }).format(new Date(selectedDate + 'T00:00:00'));
 
   return (
     <header className="admin-nav-header">
@@ -90,36 +110,7 @@ export default function AdminNav() {
             <Link href="/admin/dashboard" className="flex items-center gap-3 group shrink-0">
               {/* Tulip Gold Icon */}
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#d9b571]/20 to-[#d9b571]/5 border border-[#d9b571]/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-inner">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="text-[#d9b571]"
-                >
-                  <path
-                    d="M12 3C10.5 6 9.5 8.5 9.5 12C9.5 14.5 10.6 16.5 12 17C13.4 16.5 14.5 14.5 14.5 12C14.5 8.5 13.5 6 12 3Z"
-                    fill="currentColor"
-                    fillOpacity="0.9"
-                  />
-                  <path
-                    d="M6.5 7C5 9.5 4.5 12.5 5 14.5C5.5 16.5 7.5 18 10 18C10.8 18 11.5 17.7 12 17.2C10.2 16.2 9 14.2 9 11.8C9 9 10 7.2 10.8 6C9.2 6.2 7.8 6.5 6.5 7Z"
-                    fill="currentColor"
-                    fillOpacity="0.75"
-                  />
-                  <path
-                    d="M17.5 7C19 9.5 19.5 12.5 19 14.5C18.5 16.5 16.5 18 14 18C13.2 18 12.5 17.7 12 17.2C13.8 16.2 15 14.2 15 11.8C15 9 14 7.2 13.2 6C14.8 6.2 16.2 6.5 17.5 7Z"
-                    fill="currentColor"
-                    fillOpacity="0.75"
-                  />
-                  <path
-                    d="M12 18V22"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <TulipIcon size={24} />
               </div>
 
               <div>
@@ -173,36 +164,71 @@ export default function AdminNav() {
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 top-12 w-80 bg-[#0c1e34] border border-[#1b3859] rounded-2xl shadow-2xl p-4 z-50 flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-                    <span className="font-heading font-bold text-white text-sm">Notifications</span>
-                    <span className="text-[11px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full font-semibold">2 New</span>
-                  </div>
-                  <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
-                    <div className="p-2.5 rounded-xl bg-[#071322] border border-white/5 hover:border-[#d9b571]/30 transition-colors">
-                      <div className="flex items-center gap-2 mb-1">
-                        <CheckCircle2 size={14} className="text-emerald-400" />
-                        <span className="text-xs font-semibold text-white">Payment Verified</span>
-                      </div>
-                      <p className="text-[11px] text-slate-300">Room 108 booking verified (TGR-2026-0013)</p>
-                      <span className="text-[10px] text-slate-500 mt-1 block">15 mins ago</span>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-[#071322] border border-white/5 hover:border-[#d9b571]/30 transition-colors">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Clock size={14} className="text-amber-400" />
-                        <span className="text-xs font-semibold text-white">Room 106 Booked</span>
-                      </div>
-                      <p className="text-[11px] text-slate-300">Reservation confirmed for Sep 20 - Sep 22</p>
-                      <span className="text-[10px] text-slate-500 mt-1 block">1 hour ago</span>
-                    </div>
-                  </div>
-                  <Link
-                    href="/admin/bookings"
-                    onClick={() => setNotificationsOpen(false)}
-                    className="text-center text-xs font-semibold text-[#d9b571] hover:underline pt-1"
+                <div
+                  className="absolute right-0 top-12 w-96 bg-[#0c1e34] border border-[#1b3859] rounded-2xl shadow-2xl z-50 flex flex-col animate-in fade-in slide-in-from-top-2 duration-200"
+                  style={{ padding: '20px' }}
+                >
+                  {/* Header Row */}
+                  <div
+                    className="flex items-center justify-between border-b border-white/10"
+                    style={{ marginBottom: '16px', paddingBottom: '14px' }}
                   >
-                    View all bookings →
-                  </Link>
+                    <span className="font-heading font-bold text-white text-base">Notifications</span>
+                    <span
+                      className="text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded-full font-semibold"
+                      style={{ paddingLeft: '10px', paddingRight: '10px', paddingTop: '3px', paddingBottom: '3px' }}
+                    >
+                      2 New
+                    </span>
+                  </div>
+
+                  {/* Notification List */}
+                  <div className="flex flex-col gap-3 max-h-72 overflow-y-auto">
+                    {/* Item 1 */}
+                    <div
+                      className="rounded-xl bg-[#071322] border border-white/10 hover:border-[#d9b571]/40 transition-all shadow-sm"
+                      style={{ padding: '14px 16px' }}
+                    >
+                      <div className="flex items-center gap-2" style={{ marginBottom: '6px' }}>
+                        <CheckCircle2 size={15} className="text-emerald-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Payment Verified</span>
+                      </div>
+                      <p className="text-xs text-slate-300 leading-relaxed" style={{ marginBottom: '6px' }}>
+                        Room 108 booking verified (TGR-2026-0013)
+                      </p>
+                      <span className="text-[11px] text-slate-400 block font-medium" style={{ marginTop: '4px' }}>
+                        15 mins ago
+                      </span>
+                    </div>
+
+                    {/* Item 2 */}
+                    <div
+                      className="rounded-xl bg-[#071322] border border-white/10 hover:border-[#d9b571]/40 transition-all shadow-sm"
+                      style={{ padding: '14px 16px' }}
+                    >
+                      <div className="flex items-center gap-2" style={{ marginBottom: '6px' }}>
+                        <Clock size={15} className="text-amber-400 shrink-0" />
+                        <span className="text-xs font-bold text-white">Room 106 Booked</span>
+                      </div>
+                      <p className="text-xs text-slate-300 leading-relaxed" style={{ marginBottom: '6px' }}>
+                        Reservation confirmed for Sep 20 - Sep 22
+                      </p>
+                      <span className="text-[11px] text-slate-400 block font-medium" style={{ marginTop: '4px' }}>
+                        1 hour ago
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Footer Link */}
+                  <div className="border-t border-white/10 text-center" style={{ marginTop: '16px', paddingTop: '12px' }}>
+                    <Link
+                      href="/admin/bookings"
+                      onClick={() => setNotificationsOpen(false)}
+                      className="inline-block text-xs font-semibold text-[#d9b571] hover:underline"
+                    >
+                      View all bookings →
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
@@ -266,14 +292,38 @@ export default function AdminNav() {
               )}
             </div>
 
-            {/* Date-Picker Pill */}
-            <div
-              className="hidden sm:flex items-center gap-3 rounded-xl bg-[#0b1c30]/90 border border-[#1b3859] text-white text-xs sm:text-sm font-medium shadow-sm hover:border-[#d9b571]/50 transition-colors"
-              style={{ paddingLeft: '18px', paddingRight: '18px', paddingTop: '8px', paddingBottom: '8px' }}
-            >
-              <CalendarIcon size={16} className="text-[#d9b571] shrink-0" />
-              <span className="text-slate-200">{formattedDate}</span>
-              <ChevronDown size={14} className="text-[#b7c0cb] shrink-0" style={{ marginLeft: '4px' }} />
+            {/* Interactive Date-Picker Pill */}
+            <div className="relative hidden sm:block">
+              <button
+                type="button"
+                onClick={() => {
+                  if (dateInputRef.current) {
+                    const input = dateInputRef.current as HTMLInputElement & { showPicker?: () => void };
+                    if (typeof input.showPicker === 'function') {
+                      input.showPicker();
+                    } else {
+                      input.click();
+                    }
+                  }
+                }}
+                className="flex items-center gap-3 rounded-xl bg-[#0b1c30]/90 border border-[#1b3859] text-white text-xs sm:text-sm font-medium shadow-sm hover:border-[#d9b571]/50 transition-colors cursor-pointer select-none"
+                style={{ paddingLeft: '18px', paddingRight: '18px', paddingTop: '8px', paddingBottom: '8px' }}
+              >
+                <CalendarIcon size={16} className="text-[#d9b571] shrink-0" />
+                <span className="text-slate-200">{formattedDate}</span>
+                <ChevronDown size={14} className="text-[#b7c0cb] shrink-0" style={{ marginLeft: '4px' }} />
+              </button>
+              <input
+                ref={dateInputRef}
+                type="date"
+                value={selectedDate}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    handleDateChange(e.target.value);
+                  }
+                }}
+                className="absolute inset-0 opacity-0 pointer-events-none w-full h-full"
+              />
             </div>
           </div>
         </div>

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
+import TulipIcon from './TulipIcon';
+
 interface NavbarProps {
   guesthouseName?: string;
 }
@@ -94,8 +96,9 @@ export default function Navbar({ guesthouseName = 'Tulip Guest Rooms' }: NavbarP
   return (
     <header className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container nav-container">
-        <Link href="/" className="logo" onClick={closeMenu}>
-          {guesthouseName}
+        <Link href="/" className="logo inline-flex items-center gap-2.5" onClick={closeMenu}>
+          <TulipIcon size={28} className="hover:scale-105 transition-transform" />
+          <span>{guesthouseName}</span>
         </Link>
         
         <button 

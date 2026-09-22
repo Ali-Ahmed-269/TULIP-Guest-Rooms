@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 
@@ -69,13 +69,13 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
       {message && <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">✓ {message}</div>}
       {error && <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 text-sm font-medium">✕ {error}</div>}
 
-      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-md">
+      <div className="bg-[#16283f] border border-white/10 rounded-2xl overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
           <table className="w-full border-collapse min-w-[860px] text-sm">
             <thead>
               <tr className="bg-[#0e1e33] text-left text-xs font-semibold text-[#b7c0cb] uppercase tracking-wider">
                 {['Reference', 'Guest', 'Phone', 'Room', 'Check-in', 'Amount', 'Method', 'Screenshot', 'Actions'].map((h) => (
-                  <th key={h} className="px-4 py-3.5 border-b border-white/10 whitespace-nowrap">{h}</th>
+                  <th key={h} className="border-b border-white/10 whitespace-nowrap" style={{ padding: '18px 22px' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -83,16 +83,16 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
               {payments.length > 0 ? (
                 payments.map((b) => (
                   <tr key={b.id} className="hover:bg-white/[0.025] transition-colors">
-                    <td className="px-4 py-3.5 font-mono text-xs font-semibold text-white whitespace-nowrap">{b.booking_reference}</td>
-                    <td className="px-4 py-3.5 text-slate-200 font-medium whitespace-nowrap">{b.guest_name}</td>
-                    <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{b.guest_phone}</td>
-                    <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{b.rooms ? `Room ${b.rooms.room_number}` : 'N/A'}</td>
-                    <td className="px-4 py-3.5 text-slate-300 whitespace-nowrap">{b.check_in_date}</td>
-                    <td className="px-4 py-3.5 text-slate-200 font-medium whitespace-nowrap">PKR {Number(b.total_amount).toLocaleString()}</td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
+                    <td className="font-mono text-xs font-semibold text-white whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{b.booking_reference}</td>
+                    <td className="text-slate-200 font-medium whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{b.guest_name}</td>
+                    <td className="text-slate-300 whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{b.guest_phone}</td>
+                    <td className="text-slate-300 whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{b.rooms ? `Room ${b.rooms.room_number}` : 'N/A'}</td>
+                    <td className="text-slate-300 whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>{b.check_in_date}</td>
+                    <td className="text-slate-200 font-medium whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>PKR {Number(b.total_amount).toLocaleString()}</td>
+                    <td className="whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>
                       <span className="text-xs font-semibold text-[#d9b571] uppercase">{b.payment_method}</span>
                     </td>
-                    <td className="px-4 py-3.5">
+                    <td className="align-middle" style={{ padding: '18px 22px' }}>
                       {b.payment_proof ? (
                         <img
                           src={b.payment_proof}
@@ -105,13 +105,14 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
                         <span className="text-slate-500 text-xs">None</span>
                       )}
                     </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
+                    <td className="whitespace-nowrap align-middle" style={{ padding: '18px 22px' }}>
+                      <div className="flex items-center gap-2.5">
                         <button
                           type="button"
                           onClick={() => handleAction(b.id, 'verify')}
                           disabled={actionLoading === b.id}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 transition-colors disabled:opacity-50"
+                          className="rounded-xl text-xs font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 transition-all shadow-sm disabled:opacity-50"
+                          style={{ paddingLeft: '14px', paddingRight: '14px', paddingTop: '7px', paddingBottom: '7px' }}
                         >
                           Verify
                         </button>
@@ -119,7 +120,8 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
                           type="button"
                           onClick={() => handleAction(b.id, 'reject')}
                           disabled={actionLoading === b.id}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/10 border border-rose-500/25 text-rose-300 hover:bg-rose-500/20 transition-colors disabled:opacity-50"
+                          className="rounded-xl text-xs font-semibold bg-rose-500/15 border border-rose-500/35 text-rose-300 hover:bg-rose-500/25 transition-all shadow-sm disabled:opacity-50"
+                          style={{ paddingLeft: '14px', paddingRight: '14px', paddingTop: '7px', paddingBottom: '7px' }}
                         >
                           Reject
                         </button>
@@ -129,7 +131,7 @@ export default function AdminPaymentsList({ initialPayments }: AdminPaymentsList
                 ))
               ) : (
                 <tr>
-                  <td colSpan={9} className="px-4 py-10 text-center text-slate-400 text-sm">
+                  <td colSpan={9} className="px-4 py-12 text-center text-slate-400 text-sm">
                     No bookings currently pending payment verification.
                   </td>
                 </tr>

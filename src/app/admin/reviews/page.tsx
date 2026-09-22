@@ -24,7 +24,9 @@ export default async function AdminReviewsPage() {
           title="Reviews Management"
           description="Approve or reject guest reviews to control which ones are displayed on the public site."
         />
-        <AdminReviewsList initialReviews={reviews as any} />
+        <div style={{ marginTop: '28px' }}>
+          <AdminReviewsList initialReviews={reviews as any} />
+        </div>
       </section>
     </AdminLayout>
   );

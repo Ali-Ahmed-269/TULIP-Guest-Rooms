@@ -24,7 +24,9 @@ export default async function AdminBookingsPage() {
           title="Bookings"
           description="Recent booking records, search, status filters, and admin verification details."
         />
-        <AdminBookingsList initialBookings={bookings} />
+        <div style={{ marginTop: '28px' }}>
+          <AdminBookingsList initialBookings={bookings} />
+        </div>
       </section>
     </AdminLayout>
   );
