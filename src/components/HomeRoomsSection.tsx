@@ -62,13 +62,23 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
   });
   const [availability, setAvailability] = useState<Record<string, string>>(seedAvailability);
 
-  // Derive real prices & max guests per room type from DB
-  const roomTypeData: Record<string, { price: number; maxGuests: number; rooms: string[] }> = {};
+  // Derive real prices & max guests per room type from DB, guaranteeing all 3 categories exist
+  const roomTypeData: Record<string, { price: number; maxGuests: number; rooms: string[] }> = {
+    'Standard':     { price: 2500, maxGuests: 2, rooms: [] },
+    'Premium':      { price: 4000, maxGuests: 3, rooms: [] },
+    'Comfort Plus': { price: 7500, maxGuests: 4, rooms: [] },
+  };
+
   initialRooms.forEach((room) => {
     if (!roomTypeData[room.room_type]) {
-      roomTypeData[room.room_type] = { price: room.price_per_night, maxGuests: room.max_guests, rooms: [] };
+      roomTypeData[room.room_type] = { price: room.price_per_night, maxGuests: room.max_guests, rooms: [room.room_number] };
+    } else {
+      roomTypeData[room.room_type].price = room.price_per_night;
+      roomTypeData[room.room_type].maxGuests = room.max_guests;
+      if (!roomTypeData[room.room_type].rooms.includes(room.room_number)) {
+        roomTypeData[room.room_type].rooms.push(room.room_number);
+      }
     }
-    roomTypeData[room.room_type].rooms.push(room.room_number);
   });
 
   // Build cards from real data, falling back to static features/images

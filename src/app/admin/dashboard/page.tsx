@@ -402,23 +402,23 @@ export default async function AdminDashboardPage({
           </div>
 
           {/* Restyled Room Chips Grid - 2 Rows Layout (max 6 per row on desktop) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             {overview.rooms.map((room) => {
               const styles = getRoomColorStyles(room.status);
               return (
                 <div
                   key={room.room_number}
-                  className="rounded-xl flex flex-col justify-between transition-all duration-200 hover:scale-[1.02] shadow-sm hover:border-white/30"
+                  className="rounded-xl flex flex-col justify-between items-center text-center transition-all duration-200 hover:scale-[1.02] shadow-sm hover:border-white/30"
                   style={{
                     backgroundColor: styles.bg,
                     border: `1px solid ${styles.border}`,
-                    padding: '12px 16px',
+                    padding: '12px 10px',
                     minHeight: '98px',
                   }}
                 >
-                  <div>
+                  <div className="w-full flex flex-col items-center">
                     {/* Room Title with Status Dot */}
-                    <div className="flex items-center gap-2" style={{ marginBottom: '2px' }}>
+                    <div className="flex items-center justify-center gap-1.5 mb-0.5">
                       <span
                         className="w-2 h-2 rounded-full shrink-0"
                         style={{ backgroundColor: styles.dot }}
@@ -428,25 +428,22 @@ export default async function AdminDashboardPage({
                       </span>
                     </div>
 
-                    {/* Room Type aligned under title text */}
-                    <span
-                      className="text-xs text-[#b7c0cb] block font-medium"
-                      style={{ marginTop: '0px', marginBottom: '10px', paddingLeft: '16px' }}
-                    >
+                    {/* Room Type */}
+                    <span className="text-xs text-[#b7c0cb] font-medium block mb-2 text-center">
                       {room.room_type || 'Standard'}
                     </span>
                   </div>
 
-                  {/* Status Badge aligned under title text */}
-                  <div style={{ paddingLeft: '16px' }}>
+                  {/* Status Badge Centered */}
+                  <div className="flex justify-center w-full mt-auto">
                     <span
-                      className="text-[10px] font-bold uppercase tracking-wider rounded-md inline-block"
+                      className="text-[10px] font-bold uppercase tracking-wider rounded-md inline-block text-center"
                       style={{
                         color: styles.text,
                         backgroundColor: styles.badgeBg,
                         border: `1px solid ${styles.border}`,
-                        paddingLeft: '10px',
-                        paddingRight: '10px',
+                        paddingLeft: '12px',
+                        paddingRight: '12px',
                         paddingTop: '3.5px',
                         paddingBottom: '3.5px',
                       }}

@@ -72,24 +72,26 @@ export default function ReviewsPage() {
 
   return (
     <section className="section-padding">
-      <div className="page-shell" style={{ maxWidth: '1100px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px' }}>
-          <div>
+      <div className="container" style={{ maxWidth: '1100px' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+          <div className="lg:col-span-7">
             <PageHeader
               eyebrow="Community"
               title="Guest Reviews"
               description="Read recent approved guest reviews and add your own after your stay."
             />
-            <div style={{ display: 'grid', gap: '18px' }}>
+            <div className="grid gap-4 mt-6">
               {reviews.length > 0 ? (
                 reviews.map((review) => (
                   <article key={`${review.guest_name}-${review.created_at}`} className="panel">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '8px' }}>
-                      <strong>{review.guest_name}</strong>
-                      <span style={{ color: 'var(--primary)' }}>{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span>
+                    <div className="flex justify-between items-center flex-wrap gap-2 mb-2">
+                      <strong className="text-white font-semibold">{review.guest_name}</strong>
+                      <span className="text-[--gold-400] text-sm">
+                        {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                      </span>
                     </div>
-                    <p style={{ marginBottom: '10px' }}>{review.review_text}</p>
-                    <small style={{ color: 'var(--text-muted)' }}>{new Date(review.created_at).toLocaleDateString()}</small>
+                    <p className="text-slate-200 text-sm leading-relaxed mb-3">{review.review_text}</p>
+                    <small className="text-slate-400 text-xs">{new Date(review.created_at).toLocaleDateString()}</small>
                   </article>
                 ))
               ) : (
@@ -98,36 +100,66 @@ export default function ReviewsPage() {
             </div>
           </div>
 
-          <aside className="panel" style={{ height: 'fit-content' }}>
-            <h2 style={{ marginBottom: '16px' }}>Submit a Review</h2>
-            <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '14px' }}>
-              <label className="form-group">
-                <span>Booking ID</span>
-                <input value={bookingId} onChange={(event) => setBookingId(event.target.value)} className="form-control" placeholder="TGR-2026-0001-X7K" />
-              </label>
-              <label className="form-group">
-                <span>Phone</span>
-                <input value={phone} onChange={(event) => setPhone(event.target.value)} className="form-control" placeholder="03XX-XXXXXXX" />
-              </label>
-              <label className="form-group">
-                <span>Your Name</span>
-                <input value={guestName} onChange={(event) => setGuestName(event.target.value)} className="form-control" placeholder="Guest name" />
-              </label>
-              <label className="form-group">
-                <span>Rating</span>
-                <select value={rating} onChange={(event) => setRating(Number(event.target.value))} className="form-control">
+          <aside className="lg:col-span-5 panel h-fit">
+            <h2 className="text-xl font-bold text-white mb-4">Submit a Review</h2>
+            <form onSubmit={handleSubmit} className="grid gap-4">
+              <div className="form-field">
+                <label htmlFor="rev-booking-id">Booking ID</label>
+                <input
+                  id="rev-booking-id"
+                  value={bookingId}
+                  onChange={(event) => setBookingId(event.target.value)}
+                  className="form-control"
+                  placeholder="TGR-2026-0001-X7K"
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="rev-phone">Phone</label>
+                <input
+                  id="rev-phone"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  className="form-control"
+                  placeholder="03XX-XXXXXXX"
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="rev-name">Your Name</label>
+                <input
+                  id="rev-name"
+                  value={guestName}
+                  onChange={(event) => setGuestName(event.target.value)}
+                  className="form-control"
+                  placeholder="Guest name"
+                />
+              </div>
+              <div className="form-field">
+                <label htmlFor="rev-rating">Rating</label>
+                <select
+                  id="rev-rating"
+                  value={rating}
+                  onChange={(event) => setRating(Number(event.target.value))}
+                  className="form-control"
+                >
                   {[5, 4, 3, 2, 1].map((value) => (
                     <option key={value} value={value}>{value} stars</option>
                   ))}
                 </select>
-              </label>
-              <label className="form-group">
-                <span>Review</span>
-                <textarea value={reviewText} onChange={(event) => setReviewText(event.target.value)} className="form-control" rows={5} placeholder="Tell us what you enjoyed about your stay." />
-              </label>
+              </div>
+              <div className="form-field">
+                <label htmlFor="rev-text">Review</label>
+                <textarea
+                  id="rev-text"
+                  value={reviewText}
+                  onChange={(event) => setReviewText(event.target.value)}
+                  className="form-control"
+                  rows={4}
+                  placeholder="Tell us what you enjoyed about your stay."
+                />
+              </div>
               {errorMessage ? <div className="error-msg">{errorMessage}</div> : null}
               {submitMessage ? <div className="inline-message">{submitMessage}</div> : null}
-              <button type="submit" className="btn btn-primary" disabled={loading}>
+              <button type="submit" className="btn btn-primary w-full mt-2" disabled={loading}>
                 {loading ? 'Submitting...' : 'Submit Review'}
               </button>
             </form>
@@ -137,3 +169,4 @@ export default function ReviewsPage() {
     </section>
   );
 }
+
