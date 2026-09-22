@@ -2,6 +2,27 @@ import { NextResponse } from 'next/server';
 import { createServiceRoleClient } from '@/utils/supabase/server';
 import { validateOrigin } from '@/utils/csrf';
 
+async function enforceRateLimit(supabase: ReturnType<typeof createServiceRoleClient>, ip: string) {
+  const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count, error } = await supabase
+    .from('rate_limit_log')
+    .select('*', { count: 'exact', head: true })
+    .eq('ip_address', `lookup:${ip}`)
+    .gte('attempted_at', oneHourAgo);
+
+  if (error) {
+    console.warn('[Rate Limiter] Lookup limit check failed, allowing request:', error);
+    return true;
+  }
+
+  if ((count || 0) >= 10) {
+    return false;
+  }
+
+  await supabase.from('rate_limit_log').insert({ ip_address: `lookup:${ip}` });
+  return true;
+}
+
 export async function POST(request: Request) {
   // CSRF origin check — reject cross-origin POST requests
   const csrfError = validateOrigin(request);
@@ -29,6 +50,11 @@ export async function POST(request: Request) {
     }
 
     const supabase = createServiceRoleClient();
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'unknown';
+
+    if (!(await enforceRateLimit(supabase, ip))) {
+      return NextResponse.json({ success: false, message: 'Too many lookup attempts. Please try again later.' }, { status: 429 });
+    }
 
     // Query bookings joining room details
     const { data: rows, error } = await supabase
