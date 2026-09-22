@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { validateOrigin } from './utils/csrf';
 
 function copyCookies(source: NextResponse, target: NextResponse): NextResponse {
   source.cookies.getAll().forEach((cookie) => {
@@ -40,6 +41,14 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const url = request.nextUrl.clone();
+
+  // Enforce CSRF origin check on state-changing API requests (POST, PUT, DELETE, PATCH)
+  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method) && url.pathname.startsWith('/api')) {
+    const csrfError = validateOrigin(request);
+    if (csrfError) {
+      return copyCookies(supabaseResponse, csrfError);
+    }
+  }
 
   // Guard admin API routes
   if (url.pathname.startsWith('/api/admin')) {

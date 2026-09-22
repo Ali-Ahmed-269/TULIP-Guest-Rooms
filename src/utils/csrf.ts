@@ -24,11 +24,12 @@ function toOrigin(rawUrl: string): string | null {
  * Never falls back to a wildcard '*' — if the env var is missing in prod we fail safe.
  */
 function getAllowedOrigins(): string[] {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || process.env.VERCEL_URL?.trim();
   const origins: string[] = [];
 
   if (siteUrl) {
-    const siteOrigin = toOrigin(siteUrl);
+    const formattedUrl = siteUrl.startsWith('http') ? siteUrl : `https://${siteUrl}`;
+    const siteOrigin = toOrigin(formattedUrl);
     if (siteOrigin) origins.push(siteOrigin);
   }
 
@@ -70,20 +71,7 @@ export function validateOrigin(request: Request): NextResponse | null {
     isAllowed,
   });
 
-  // Diagnostic catch for evil.com probes to inspect server-side state directly in HTTP response
-  if (sourceHeader.includes('evil.com') || request.headers.get('x-debug-csrf') === 'true') {
-    return NextResponse.json({
-      csrf_diagnostic: true,
-      NODE_ENV: process.env.NODE_ENV || null,
-      NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'NOT_SET',
-      allowedOrigins,
-      originHeader,
-      refererHeader,
-      sourceHeader,
-      requestOrigin,
-      isAllowed,
-    }, { status: 403 });
-  }
+
 
   if (allowedOrigins.length === 0) {
     console.error(
