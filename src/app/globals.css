@@ -93,6 +93,7 @@
 
   background-color: var(--background);
   color: var(--text-dark);
+  font-family: var(--font-manrope), var(--font-body);
 }
 
 /* Green Navbar with White Text for Public Site */
@@ -126,59 +127,6 @@
 
 .public-theme .hamburger-line {
   background-color: #ffffff;
-}
-
-/* Dark Green Hero Text over Background Image */
-.public-theme .hero-eyebrow {
-  color: #1f4d3e;
-}
-
-.public-theme .hero-eyebrow-line {
-  background-color: #1f4d3e;
-}
-
-.public-theme .hero-headline {
-  color: #1f4d3e;
-}
-
-.public-theme .hero-headline .text-gold {
-  color: #1f4d3e;
-}
-
-.public-theme .hero-sub {
-  color: #1f4d3e;
-  font-weight: 500;
-}
-
-/* Public Section Headings, Subtitles, Feature Strip, and Rooms Header in Dark Green */
-.public-theme .feature-title {
-  color: #1f4d3e;
-}
-
-.public-theme .feature-desc {
-  color: #2d6650;
-}
-
-.public-theme .feature-icon-badge {
-  border-color: #1f4d3e;
-  color: #1f4d3e;
-  background-color: rgba(31, 77, 62, 0.06);
-}
-
-.public-theme .rooms-eyebrow {
-  color: #1f4d3e;
-}
-
-.public-theme .rooms-eyebrow-line {
-  background-color: #1f4d3e;
-}
-
-.public-theme .rooms-heading {
-  color: #1f4d3e;
-}
-
-.public-theme .rooms-subtext {
-  color: #2d6650;
 }
 
 .public-theme section h2,
@@ -960,347 +908,6 @@ button {
   color: var(--sage);
 }
 
-/* ─── Hero Section ───────────────────────────────────────────────────── */
-
-.hero-section {
-  position: relative;
-  min-height: 92vh;
-  display: flex;
-  align-items: center;
-  padding-top: 80px;
-  /* navbar offset */
-  overflow: hidden;
-}
-
-@media screen and (max-width: 767px) {
-  .hero-section {
-    min-height: auto;
-    padding-top: 90px;
-    padding-bottom: 48px;
-  }
-}
-
-/* Gradient overlay: Narrow left-edge black shadow fading by 38% for maximum photo clarity */
-.hero-overlay {
-  display: none;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  gap: 32px;
-  padding-top: 40px;
-  padding-bottom: 64px;
-  padding-left: 0;
-}
-
-@media screen and (max-width: 767px) {
-  .hero-content {
-    padding-top: 16px;
-    padding-bottom: 24px;
-    gap: 20px;
-  }
-}
-
-/* Headline block */
-.hero-text {
-  display: grid;
-  gap: 24px;
-  max-width: 780px;
-}
-
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--gold-400);
-}
-
-.hero-eyebrow-line {
-  display: inline-block;
-  width: 32px;
-  height: 2px;
-  background-color: var(--gold-400);
-}
-
-.hero-badge {
-  width: fit-content;
-  opacity: 0.92;
-}
-
-.hero-headline {
-  font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 6.5vw, 4rem);
-  font-weight: 800;
-  line-height: 1.1;
-  color: var(--text-white, #1a1a1a);
-  letter-spacing: -0.02em;
-  text-shadow: none;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-
-.hero-sub {
-  font-size: 1.1rem;
-  color: var(--text-muted-token, #6b7280);
-  line-height: 1.7;
-  max-width: 560px;
-  text-shadow: none;
-}
-
-/* ─── Hero Booking Availability Bar (Glass Card) ────────────────────────── */
-.hero-booking-bar-wrapper {
-  margin-top: 12px;
-  width: 100%;
-  max-width: 860px;
-}
-
-.hero-booking-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--surface, #ffffff);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-pill, 9999px);
-  padding: 10px 14px 10px 22px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-@media screen and (max-width: 767px) {
-  .hero-booking-bar-wrapper {
-    margin-top: 16px;
-    margin-bottom: 8px;
-  }
-  .hero-booking-bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    padding: 16px;
-    border-radius: var(--radius);
-    background: var(--surface, #ffffff);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-  }
-  .hero-bar-group {
-    width: 100%;
-    padding: 10px 12px;
-    background: rgba(0, 0, 0, 0.03);
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-  }
-  .hero-bar-btn {
-    width: 100%;
-    padding: 14px 20px;
-    margin-top: 4px;
-    justify-content: center;
-  }
-}
-
-
-@media screen and (min-width: 768px) {
-  .hero-booking-bar {
-    flex-wrap: nowrap;
-  }
-}
-
-.hero-bar-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 120px;
-}
-
-.hero-bar-icon {
-  color: var(--gold-400);
-  flex-shrink: 0;
-}
-
-.hero-bar-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: 100%;
-}
-
-.hero-bar-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted-token, #6b7280);
-}
-
-.hero-bar-display {
-  color: var(--text-white, #1a1a1a);
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.hero-bar-hidden-input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-}
-
-.hero-bar-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text-white, #1a1a1a);
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  font-weight: 700;
-  cursor: pointer;
-  width: 100%;
-  padding: 0;
-}
-
-.hero-bar-input::-webkit-calendar-picker-indicator {
-  filter: none;
-  cursor: pointer;
-}
-
-.hero-bar-select option {
-  background-color: #ffffff;
-  color: #1a1a1a;
-}
-
-.hero-bar-divider {
-  width: 1px;
-  height: 36px;
-  background-color: rgba(0, 0, 0, 0.08);
-  flex-shrink: 0;
-  display: none;
-}
-
-@media screen and (min-width: 768px) {
-  .hero-bar-divider {
-    display: block;
-  }
-}
-
-.hero-bar-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background-color: var(--gold-400);
-  color: #ffffff;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.9rem;
-  padding: 12px 24px;
-  border-radius: var(--radius-pill);
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.hero-bar-btn:hover:not(:disabled) {
-  background-color: var(--gold-300);
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(31, 77, 62, 0.35);
-}
-
-.hero-bar-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.hero-bar-msg {
-  margin-top: 8px;
-  font-size: 0.85rem;
-  color: var(--gold-400);
-  font-weight: 600;
-}
-
-/* Side-by-side CTAs with clear hierarchy */
-.hero-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-}
-
-/* Outline button on dark overlay — white border/text, fills on hover */
-.hero-outline-btn {
-  background-color: transparent;
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.75);
-  transition: all 0.2s ease;
-}
-
-.hero-outline-btn:hover:not(:disabled) {
-  background-color: #ffffff;
-  color: var(--navy-950);
-  border-color: #ffffff;
-  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Feature cards at bottom of hero */
-.hero-features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-}
-
-.hero-feature-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--radius);
-  padding: 18px;
-  color: #ffffff;
-  transition: all 0.2s ease;
-}
-
-.hero-feature-card:hover {
-  background: rgba(255, 255, 255, 0.13);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.hero-feature-icon {
-  font-size: 1.6rem;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.hero-feature-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 4px;
-}
-
-.hero-feature-desc {
-  font-size: 0.84rem;
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.5;
-}
-
 @media screen and (max-width: 640px) {
   .hero-headline {
     font-size: 2.2rem;
@@ -1775,318 +1382,159 @@ button {
   color: var(--gold-400) !important;
 }
 
-/* ─── Feature Strip Band ─────────────────────────────────────────────────── */
-.feature-strip {
-  background-color: var(--navy-900);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 40px 0;
-}
-
-.feature-strip-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 24px;
-}
-
+/* ─── Public Theme: generous fluid side gutters ─────────────────────────── */
 @media screen and (min-width: 768px) {
-  .feature-strip-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-  }
-
-  .feature-strip-item {
-    padding: 0 24px;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .feature-strip-item:first-child {
-    padding-left: 0;
-  }
-
-  .feature-strip-item:last-child {
-    border-right: none;
-    padding-right: 0;
+  .public-theme .container {
+    padding-left: clamp(24px, 4vw, 72px);
+    padding-right: clamp(24px, 4vw, 72px);
   }
 }
 
-.feature-strip-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+/* ─── Intro loader (first open per session) ─────────────────────────────── */
+html[data-intro="playing"] body {
+  overflow: hidden;
 }
 
-.feature-icon-badge {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 1.5px solid var(--gold-400);
-  background: transparent;
-  color: var(--gold-400);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.feature-title {
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 0.98rem;
-  color: var(--text-white);
-  margin-bottom: 2px;
-}
-
-.feature-desc {
-  font-size: 0.84rem;
-  color: var(--text-muted-token);
-  line-height: 1.4;
-}
-
-/* Dark background for the rooms section */
-.rooms-section-bg {
-  background-color: var(--navy-950);
-}
-
-/* ─── Rooms Section Header ───────────────────────────────────────────────── */
-
-.rooms-section-header {
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
   display: grid;
-  gap: 12px;
-  max-width: 600px;
+  place-items: center;
+  overflow: hidden;
+  background: #0b1f18;
+  color: #fff;
+  transition: transform 0.85s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* Eyebrow: thin gold line + uppercase tracking label — mirrors .hero-eyebrow */
-.rooms-eyebrow {
+html[data-intro="skip"] .intro {
+  display: none;
+}
+
+/* Failsafe release (boot script) when JS never took over */
+html[data-intro="done"] .intro:not(.is-leaving) {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+}
+
+.intro.is-leaving {
+  transform: translateY(-100%);
+}
+
+.intro-panel {
+  position: absolute;
+  inset: 0;
+  background: #d9b571;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.55s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.intro.is-exit .intro-panel {
+  transform: scaleY(1);
+}
+
+.intro-center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.intro-mark {
   display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--gold-400);
+  animation: intro-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
 }
 
-.rooms-eyebrow-line {
-  display: inline-block;
-  width: 32px;
-  height: 2px;
-  background-color: var(--gold-400);
-  flex-shrink: 0;
+.intro.is-exit .intro-mark,
+.intro.is-exit .intro-meta {
+  animation: intro-fade-out 0.3s ease both;
 }
 
-.rooms-heading {
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  font-weight: 700;
-  color: var(--text-white);
-  line-height: 1.2;
-  margin: 0;
-}
-
-.rooms-subtext {
-  font-size: 0.97rem;
-  color: var(--text-muted-token);
-  line-height: 1.65;
-  max-width: 520px;
-}
-
-/* ─── Room Cards Grid ────────────────────────────────────────────────────── */
-
-/* 3-col on desktop, 2-col on tablet, 1-col on mobile */
-.rooms-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-@media screen and (min-width: 640px) {
-  .rooms-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .rooms-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Card shell: navy-800 bg, radius, faint gold border */
-.room-card {
-  background-color: var(--navy-800);
-  border-radius: var(--radius);
-  border: 1px solid rgba(217, 181, 113, 0.15);
-  overflow: hidden;
+.intro-word {
   display: flex;
-  flex-direction: column;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.28);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.room-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(217, 181, 113, 0.25);
-}
-
-/* Image: edge-to-edge, rounded only at top to match card radius */
-.room-card-image-wrap {
-  width: 100%;
-  overflow: hidden;
-  border-radius: var(--radius) var(--radius) 0 0;
-  aspect-ratio: 16 / 8;
-  flex-shrink: 0;
-}
-
-.room-card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.4s ease;
-}
-
-.room-card:hover .room-card-image {
-  transform: scale(1.04);
-}
-
-/* Inner content area */
-.room-card-body {
-  padding: 16px 18px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 0;
-}
-
-/* Name + Price row */
-.room-card-title-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
-.room-card-name {
-  font-family: var(--font-heading);
-  font-size: clamp(1.05rem, 3.8vw, 1.2rem);
-  font-weight: 700;
-  color: var(--text-white);
-  line-height: 1.3;
-  margin: 0;
-}
-
-.room-card-price {
-  font-weight: 700;
-  font-size: clamp(0.88rem, 3.5vw, 1rem);
-  color: var(--gold-400);
-  white-space: nowrap;
-  flex-shrink: 0;
-  line-height: 1.3;
-}
-
-.room-card-price-unit {
-  font-size: 0.78rem;
-  font-weight: 400;
-  color: var(--text-muted-token);
-  margin-left: 1px;
-}
-
-/* Guest capacity line: person icon + text */
-.room-card-guests {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.87rem;
-  color: var(--text-muted-token);
-  margin-bottom: 10px;
-}
-
-.room-card-guest-icon {
-  color: var(--text-muted-token);
-  flex-shrink: 0;
-}
-
-/* Amenity checklist — no bullets, gold check + muted label */
-.room-card-amenities {
-  list-style: none;
-  display: grid;
-  gap: 5px;
-  margin: 0 0 12px 0;
-  padding: 0;
-}
-
-.room-card-amenity {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  color: var(--text-muted-token);
-  line-height: 1.4;
-}
-
-.room-card-check {
-  color: var(--gold-400);
-  flex-shrink: 0;
-}
-
-/* Status block */
-.room-card-status-block {
-  margin-top: auto;
-  padding-top: 4px;
-}
-
-.room-card-status-label {
-  font-size: 0.78rem;
-  color: var(--text-muted-token);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-bottom: 8px;
-}
-
-/* Actions row */
-.room-card-actions {
-  margin-top: 16px;
-}
-
-/* Outline pill "View Details" button — secondary action, gold border+text, tint on hover */
-.room-card-view-btn {
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 10px 24px;
-  min-height: 44px;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
+  column-gap: 0.26em;
+  font-family: var(--font-heading);
+  font-size: clamp(2.4rem, 8vw, 6.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.intro-w {
+  display: inline-flex;
+  overflow: hidden;
+  padding-bottom: 0.14em;        /* italic "p" descender */
+  margin-bottom: -0.14em;
+}
+
+.intro-w--accent {
+  font-style: italic;
+  color: #ecd6a6;
+}
+
+.intro-l {
+  display: inline-block;
+  transform: translateY(115%);
+  animation: intro-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(120ms + var(--i) * 45ms);
+}
+
+.intro.is-exit .intro-l {
+  animation: intro-leave 0.5s cubic-bezier(0.55, 0, 1, 0.45) both;
+  animation-delay: calc(var(--i) * 20ms);
+}
+
+.intro-meta {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(20px, 4vh, 36px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 clamp(20px, 4vw, 64px);
+  animation: intro-fade-up 0.6s ease 0.5s both;
+}
+
+.intro-tag {
+  font-size: 0.7rem;
   font-weight: 600;
-  color: var(--gold-400);
-  background-color: transparent;
-  border: 1.5px solid var(--gold-400);
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease,
-    transform 0.2s ease;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.room-card-view-btn:hover {
-  background-color: rgba(217, 181, 113, 0.12);
-  box-shadow: 0 0 0 1px var(--gold-400);
-  transform: translateY(-1px);
+.intro-count {
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1;
+  color: #d9b571;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
-.room-card-view-btn:active {
-  transform: translateY(0);
-  box-shadow: none;
+@keyframes intro-rise {
+  from { transform: translateY(115%); }
+  to   { transform: none; }
 }
 
-.room-card-view-btn:focus-visible {
-  outline: 2px solid var(--gold-400);
-  outline-offset: 3px;
+@keyframes intro-leave {
+  from { transform: none; }
+  to   { transform: translateY(-115%); }
+}
+
+@keyframes intro-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes intro-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
 }

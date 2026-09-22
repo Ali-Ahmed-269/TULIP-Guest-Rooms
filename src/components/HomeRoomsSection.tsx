@@ -1,7 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import {
+  Wifi, Snowflake, ShowerHead, Tv, BedDouble, Users, ArrowRight, Check,
+} from 'lucide-react';
 import { ROOM_DISPLAY_NAMES } from '@/utils/roomTypes';
+import Reveal from './Reveal';
 
 interface Room {
   id: number;
@@ -22,38 +26,52 @@ const ROOM_FEATURES: Record<string, string[]> = {
   'Comfort Plus': ['Free WiFi', 'Air Conditioning', 'Hot Water', 'TV', 'King Bed'],
 };
 
-const ROOM_IMAGES: Record<string, string> = {
-  'Standard':     'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600',
-  'Premium':      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600',
-  'Comfort Plus': 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600',
+const ROOM_BLURBS: Record<string, string> = {
+  'Standard':     'A clean, simple room with everything you need for a restful night.',
+  'Premium':      'More space and air conditioning for a cooler, calmer stay.',
+  'Comfort Plus': 'Our largest room, with a king bed and room for the whole family.',
 };
 
+const ROOM_IMAGES: Record<string, string> = {
+  'Standard':     'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1000&q=80&auto=format&fit=crop',
+  'Premium':      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1000&q=80&auto=format&fit=crop',
+  'Comfort Plus': 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1400&q=80&auto=format&fit=crop',
+};
 
+const FEATURE_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number }>> = {
+  'Free WiFi':        Wifi,
+  'Air Conditioning': Snowflake,
+  'Hot Water':        ShowerHead,
+  'TV':               Tv,
+  'King Bed':         BedDouble,
+};
 
-/** Returns a CSS class name — no arbitrary hex in JSX */
+/** Returns a CSS class name, no arbitrary hex in JSX */
 function getStatusClass(status: string): string {
   switch (status) {
-    case 'Available':             return 'room-status--available';
-    case 'Booked':                return 'room-status--booked';
+    case 'Available':             return 'rc-room--available';
+    case 'Booked':                return 'rc-room--booked';
     case 'Reserved':
     case 'Pending Verification':
-    case 'Pending':               return 'room-status--reserved';
-    case 'Maintenance':           return 'room-status--maintenance';
-    default:                      return 'room-status--maintenance';
+    case 'Pending':               return 'rc-room--reserved';
+    default:                      return 'rc-room--maintenance';
   }
 }
 
-/** Human-readable label — always shown alongside the dot */
+/** Human-readable label, always shown alongside the colour */
 function getStatusLabel(status: string): string {
   if (status === 'Pending Verification') return 'Pending';
   return status;
 }
 
+function formatShortDate(dateStr: string) {
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
 export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps) {
-  const [checkIn, setCheckIn]       = useState('');
-  const [checkOut, setCheckOut]     = useState('');
-  const [loading, setLoading]       = useState(false);
-  const [checkerMessage, setCheckerMessage] = useState<string | null>(null);
+  const [checkedRange, setCheckedRange] = useState<{ checkIn: string; checkOut: string } | null>(null);
 
   // Seed availability from real DB statuses
   const seedAvailability: Record<string, string> = {};
@@ -61,6 +79,30 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
     seedAvailability[room.room_number] = room.status;
   });
   const [availability, setAvailability] = useState<Record<string, string>>(seedAvailability);
+
+  // When the hero bar checks dates, refresh the room statuses for that range
+  useEffect(() => {
+    const handleHeroCheck = async (e: Event) => {
+      const { checkIn, checkOut } = (e as CustomEvent).detail ?? {};
+      if (!checkIn || !checkOut) return;
+      try {
+        const response = await fetch('/api/rooms/check-availability', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ check_in: checkIn, check_out: checkOut }),
+        });
+        if (!response.ok) return;
+        const data = await response.json();
+        setAvailability(data);
+        setCheckedRange({ checkIn, checkOut });
+      } catch {
+        // Keep the existing statuses if the refresh fails
+      }
+    };
+
+    window.addEventListener('hero-availability-check', handleHeroCheck);
+    return () => window.removeEventListener('hero-availability-check', handleHeroCheck);
+  }, []);
 
   // Derive real prices & max guests per room type from DB, guaranteeing all 3 categories exist
   const roomTypeData: Record<string, { price: number; maxGuests: number; rooms: string[] }> = {
@@ -81,43 +123,18 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
     }
   });
 
-  // Build cards from real data, falling back to static features/images
-  const cards = Object.entries(roomTypeData).map(([type, data]) => ({
-    type,
-    price:     data.price,
-    maxGuests: data.maxGuests,
-    rooms:     data.rooms,
-    features:  ROOM_FEATURES[type] ?? ['Free WiFi', 'Air Conditioning'],
-    image:     ROOM_IMAGES[type]   ?? 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600',
-  }));
-
-  const handleCheckAvailability = async () => {
-    setCheckerMessage(null);
-    if (!checkIn || !checkOut) {
-      setCheckerMessage('Please select both check-in and check-out dates.');
-      return;
-    }
-    if (new Date(checkOut) <= new Date(checkIn)) {
-      setCheckerMessage('Check-out date must be after check-in date.');
-      return;
-    }
-    setLoading(true);
-    try {
-      const response = await fetch('/api/rooms/check-availability', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ check_in: checkIn, check_out: checkOut }),
-      });
-      if (!response.ok) throw new Error('Failed to retrieve availability.');
-      const data = await response.json();
-      setAvailability(data);
-      setCheckerMessage('Room availability updated for your selected dates.');
-    } catch {
-      setCheckerMessage('Failed to check availability. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Ordered by price, low to high
+  const cards = Object.entries(roomTypeData)
+    .map(([type, data]) => ({
+      type,
+      price:     data.price,
+      maxGuests: data.maxGuests,
+      rooms:     data.rooms,
+      features:  ROOM_FEATURES[type] ?? ['Free WiFi', 'Air Conditioning'],
+      image:     ROOM_IMAGES[type]   ?? ROOM_IMAGES['Standard'],
+      blurb:     ROOM_BLURBS[type]   ?? 'A comfortable room with all the essentials.',
+    }))
+    .sort((a, b) => a.price - b.price);
 
   const handleBookRoom = (roomType: string) => {
     const event = new CustomEvent('set-room-type', { detail: roomType });
@@ -126,105 +143,110 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
   };
 
   return (
-    <div>
-      {/* Room Cards Grid — 3 columns desktop, responsive */}
-      <div className="rooms-grid">
-        {cards.map((card) => (
-          <article key={card.type} className="room-card">
-            {/* Room Image — edge-to-edge, rounded only at top */}
-            <div className="room-card-image-wrap">
-              <img
-                src={card.image}
-                alt={`${card.type} at Tulip Guest Rooms`}
-                className="room-card-image"
-                loading="lazy"
-              />
-            </div>
+    <div className="grid gap-6">
+      {checkedRange && (
+        <p className="rc-range" role="status">
+          Showing availability for {formatShortDate(checkedRange.checkIn)} to {formatShortDate(checkedRange.checkOut)}
+        </p>
+      )}
 
-            <div className="room-card-body">
-              {/* Name + Price */}
-              <div className="room-card-title-row">
-                <h3 className="room-card-name">
-                  {ROOM_DISPLAY_NAMES[card.type] ?? card.type}
-                </h3>
-                <span className="room-card-price">
-                  PKR {card.price.toLocaleString()}
-                  <span className="room-card-price-unit">/night</span>
-                </span>
+      <div className="rc-grid">
+        {cards.map((card, index) => {
+          const name = ROOM_DISPLAY_NAMES[card.type] ?? card.type;
+          const availableCount = card.rooms.filter(
+            (num) => (availability[num] ?? 'Available') === 'Available'
+          ).length;
+
+          return (
+            <Reveal
+              as="article"
+              key={card.type}
+              delay={index * 90}
+              className="rc"
+            >
+              <div className="rc-media">
+                <img
+                  src={card.image}
+                  alt={`${name} at Tulip Guest Rooms`}
+                  className="rc-img"
+                  loading="lazy"
+                />
               </div>
 
-              {/* Guest capacity */}
-              <div className="room-card-guests">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                  strokeLinejoin="round" aria-hidden="true" className="room-card-guest-icon">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-                Up to {card.maxGuests} guest{card.maxGuests !== 1 ? 's' : ''}
-              </div>
+              <div className="rc-body">
+                <header className="rc-head">
+                  <div className="grid gap-1.5">
+                    <h3 className="rc-name">{name}</h3>
+                    <p className="rc-meta">
+                      <Users size={14} strokeWidth={1.75} aria-hidden="true" />
+                      Up to {card.maxGuests} guest{card.maxGuests !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  <p className="rc-price">
+                    <span className="rc-currency">PKR</span>
+                    <span className="rc-amount">{card.price.toLocaleString()}</span>
+                    <span className="rc-per">per night</span>
+                  </p>
+                </header>
 
-              {/* Amenity checklist — gold check + muted label, no bullets */}
-              <ul className="room-card-amenities">
-                {card.features.map((feature) => (
-                  <li key={feature} className="room-card-amenity">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="3" strokeLinecap="round"
-                      strokeLinejoin="round" aria-hidden="true" className="room-card-check">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+                <p className="rc-blurb">{card.blurb}</p>
 
-              {/* Room Status pills */}
-              <div className="room-card-status-block">
-                <p className="room-card-status-label">Room Status</p>
-                <div className="flex gap-2 flex-wrap mb-4">
-                  {card.rooms.map((num) => {
-                    const status = availability[num] ?? 'Available';
-                    const statusClass = getStatusClass(status);
-                    const label = getStatusLabel(status);
+                <ul className="rc-amenities" aria-label={`${name} amenities`}>
+                  {card.features.map((feature) => {
+                    const Icon = FEATURE_ICONS[feature] ?? Check;
                     return (
-                      <span
-                        key={num}
-                        className={`room-status-pill ${statusClass}`}
-                        title={`Room ${num}: ${label}`}
-                      >
-                        <span className="room-status-dot" aria-hidden="true" />
-                        <span className="font-semibold">{num}</span>
-                        <span className="room-status-text">{label}</span>
-                      </span>
+                      <li key={feature} className="rc-amenity">
+                        <Icon size={15} strokeWidth={1.6} />
+                        {feature}
+                      </li>
                     );
                   })}
-                </div>
-                {card.type === 'Standard' && card.rooms.includes('108') && (
-                  <p className="text-[0.82rem] text-[--text-muted-token,#b7c0cb] italic mb-3">
-                    (Room 108 includes AC — additional charges apply)
-                  </p>
-                )}
-              </div>
+                </ul>
 
-              {/* View Details — outline pill, secondary action */}
-              <div className="room-card-actions">
+                <div className="rc-rooms">
+                  <p className="rc-rooms-label">
+                    Rooms
+                    {card.rooms.length > 0 && (
+                      <span>{availableCount} of {card.rooms.length} available</span>
+                    )}
+                  </p>
+                  {card.rooms.length > 0 ? (
+                    <ul className="rc-room-list">
+                      {card.rooms.map((num) => {
+                        const status = availability[num] ?? 'Available';
+                        const label = getStatusLabel(status);
+                        return (
+                          <li
+                            key={num}
+                            className={`rc-room ${getStatusClass(status)}`}
+                            title={`Room ${num}: ${label}`}
+                          >
+                            <span className="rc-room-no">{num}</span>
+                            <span className="rc-room-status">{label}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <p className="rc-rooms-empty">Live room status appears here once rooms are listed.</p>
+                  )}
+                  {card.type === 'Standard' && card.rooms.includes('108') && (
+                    <p className="rc-note">Room 108 includes AC. Additional charges apply.</p>
+                  )}
+                </div>
+
                 <button
                   type="button"
-                  className="room-card-view-btn"
+                  className="rc-cta"
                   onClick={() => handleBookRoom(card.type)}
                 >
-                  Book Room
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-                    strokeLinejoin="round" aria-hidden="true">
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                    <polyline points="12 5 19 12 12 19"/>
-                  </svg>
+                  <span>Book this room</span>
+                  <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
                 </button>
               </div>
-            </div>
-          </article>
-        ))}
+            </Reveal>
+          );
+        })}
       </div>
     </div>
   );

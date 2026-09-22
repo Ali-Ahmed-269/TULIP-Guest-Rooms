@@ -1,12 +1,19 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Playfair_Display, Inter, Manrope } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import PublicThemeWrapper from '@/components/PublicThemeWrapper';
+import { INTRO_BOOT_SCRIPT } from '@/utils/intro';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
+  display: 'swap',
+});
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  variable: '--font-manrope',
   display: 'swap',
 });
 
@@ -42,7 +49,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`${playfair.variable} ${inter.variable} ${manrope.variable}`}
+      suppressHydrationWarning /* data-intro is set by the boot script before hydration */
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT_SCRIPT }} />
+      </head>
       <body>
         <PublicThemeWrapper>
           <Navbar />
