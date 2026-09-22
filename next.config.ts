@@ -10,10 +10,31 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
+    // next/font/google self-hosts fonts at build time — no CDN font domains needed.
+    // images.unsplash.com is the only external image source (next/image remotePatterns).
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",   // Next.js injects inline bootstrap scripts
+      "style-src 'self' 'unsafe-inline'",    // Next.js injects critical CSS inline
+      "img-src 'self' data: https://images.unsplash.com",
+      "font-src 'self'",                     // fonts are self-hosted via next/font
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+      "frame-src 'none'",
+      "frame-ancestors 'none'",              // CSP equivalent of X-Frame-Options DENY
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "upgrade-insecure-requests",
+    ].join('; ');
+
     return [
       {
         source: '/(.*)',
         headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: csp,
+          },
           {
             key: 'X-Frame-Options',
             value: 'DENY',
