@@ -132,36 +132,36 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── About Section (Dark theme matching reference) ── */}
-      <section className="section-padding bg-[#0a1422]" id="about">
+      {/* ── About Section (Cream & Dark Green theme) ── */}
+      <section className="section-padding bg-[#f7f5f0]" id="about">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-center">
             
             {/* Left Column: Eyebrow, Typography & Learn More CTA */}
             <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-2 text-[--gold-400,#d4a853] font-bold text-[0.8rem] uppercase tracking-widest">
-                <span className="w-5 h-[2px] bg-[--gold-400,#d4a853]" />
+              <div className="flex items-center gap-2 text-[#1f4d3e] font-bold text-[0.8rem] uppercase tracking-widest">
+                <span className="w-5 h-[2px] bg-[#1f4d3e]" />
                 <span>ABOUT TULIP GUEST ROOMS</span>
               </div>
               
-              <h2 className="font-heading text-[2.4rem] sm:text-[2.8rem] font-bold leading-[1.15] text-white">
+              <h2 className="font-heading text-[2.4rem] sm:text-[2.8rem] font-bold leading-[1.15] text-[#1f4d3e]">
                 Simple Stays,<br />
-                <span className="italic font-serif text-[--gold-400,#d4a853]">Great Experiences</span>
+                <span className="italic font-serif text-[#1f4d3e]">Great Experiences</span>
               </h2>
               
-              <p className="text-[--text-muted-token,#cbd5e1] text-[0.95rem] leading-relaxed">
+              <p className="text-[#2d6650] text-[0.95rem] leading-relaxed font-medium">
                 Tulip Guest Rooms offers clean, comfortable and well-maintained rooms at an affordable price. Whether you&apos;re here for business, family visits, or travel, we ensure a pleasant stay with all essential amenities.
               </p>
 
               <div className="pt-2">
                 <Link
                   href="/rooms"
-                  className="inline-flex items-center gap-3 rounded-full text-[0.88rem] font-medium tracking-wide transition-all duration-300 hover:bg-[rgba(217,181,113,0.12)] hover:shadow-[0_0_15px_rgba(217,181,113,0.25)]"
+                  className="inline-flex items-center gap-3 rounded-full text-[0.88rem] font-medium tracking-wide transition-all duration-300 hover:bg-[#1f4d3e]/10 hover:shadow-[0_0_15px_rgba(31,77,62,0.15)]"
                   style={{
                     padding: '12px 28px',
-                    border: '1.5px solid var(--gold-400, #d4a853)',
+                    border: '1.5px solid #1f4d3e',
                     backgroundColor: 'transparent',
-                    color: 'var(--gold-400, #d4a853)',
+                    color: '#1f4d3e',
                   }}
                 >
                   <span>Learn More</span>
@@ -171,7 +171,7 @@ export default async function HomePage() {
             </div>
 
             {/* Middle Column: Room Image */}
-            <div className="overflow-hidden rounded-2xl border border-[rgba(217,181,113,0.25)] shadow-[0_12px_36px_rgba(0,0,0,0.5)]">
+            <div className="overflow-hidden rounded-2xl border border-[rgba(31,77,62,0.15)] shadow-[0_12px_36px_rgba(0,0,0,0.08)]">
               <img
                 src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800"
                 alt="Tulip Guest Rooms interior bedroom"
@@ -184,22 +184,20 @@ export default async function HomePage() {
               className="relative rounded-2xl flex flex-col gap-4 overflow-hidden"
               style={{
                 padding: '30px 32px',
-                background: 'rgba(16, 29, 45, 0.85)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: '1px solid rgba(217, 181, 113, 0.22)',
-                boxShadow: '0 15px 35px rgba(0, 0, 0, 0.45)',
+                background: '#ffffff',
+                border: '1px solid rgba(31, 77, 62, 0.15)',
+                boxShadow: '0 12px 35px rgba(0, 0, 0, 0.06)',
               }}
             >
-              {/* Card Heading (Plain text) */}
+              {/* Card Heading */}
               <div>
-                <h3 className="font-heading text-white text-[1.35rem] font-bold">
+                <h3 className="font-heading text-[#1f4d3e] text-[1.35rem] font-bold">
                   Why Choose Us?
                 </h3>
               </div>
 
-              {/* List with gold checkmarks matching room card amenity style */}
-              <ul className="flex flex-col text-[0.92rem] text-slate-200 mt-1">
+              {/* List with green checkmarks */}
+              <ul className="flex flex-col text-[0.92rem] text-[#1f4d3e] mt-1">
                 {[
                   'Clean & Comfortable Rooms',
                   'Friendly Staff',
@@ -209,7 +207,7 @@ export default async function HomePage() {
                   <li
                     key={item}
                     className={`flex items-center gap-4 py-3.5 ${
-                      idx !== arr.length - 1 ? 'border-b border-[rgba(255,255,255,0.08)]' : ''
+                      idx !== arr.length - 1 ? 'border-b border-[rgba(0,0,0,0.06)]' : ''
                     }`}
                   >
                     <svg
@@ -222,17 +220,17 @@ export default async function HomePage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       aria-hidden="true"
-                      className="text-[--gold-400,#d4a853] shrink-0"
+                      className="text-[#1f4d3e] shrink-0"
                     >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
-                    <span className="font-medium text-slate-200">{item}</span>
+                    <span className="font-semibold text-[#1f4d3e]">{item}</span>
                   </li>
                 ))}
               </ul>
 
               {/* Decorative Subtle Corner Accent */}
-              <div className="absolute -bottom-3 -right-2 pointer-events-none opacity-25 text-[--gold-400,#d4a853]">
+              <div className="absolute -bottom-3 -right-2 pointer-events-none opacity-15 text-[#1f4d3e]">
                 <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s-2-5-1-9 5-6 11-7c-1 6-3 10-7 11s-3 5-3 5z" />
                   <path d="M11 13c-2-2-4-2-7-1 1 3 3 5 6 5" />
@@ -245,12 +243,12 @@ export default async function HomePage() {
       </section>
 
       {/* ── Booking Section ── */}
-      <section className="section-padding bg-surface" id="booking">
+      <section className="section-padding bg-[#fdfcfa]" id="booking">
         <div className="container grid gap-6">
           <div className="grid gap-3 max-w-[680px]">
-            <span className="badge badge-red">Reservation</span>
-            <h2>Reserve your preferred room</h2>
-            <p className="text-muted">
+            <span className="badge badge-green">Reservation</span>
+            <h2 className="text-[#1f4d3e]">Reserve your preferred room</h2>
+            <p className="text-[#2d6650] font-medium">
               Select an available room, enter your check-in details, and secure the best
               rate with a confirmed booking reference.
             </p>

@@ -62,6 +62,341 @@
   --gold: var(--gold-400);
 }
 
+.public-theme {
+  --navy-950: #fdfcfa;
+  /* page background (cream) */
+  --navy-900: #f7f5f0;
+  /* nav, footer, section bands (cream-section) */
+  --navy-800: #ffffff;
+  /* cards, booking widget (white) */
+  --cream-50: #faf7f0;
+  /* light "About" section */
+  --gold-400: #1f4d3e;
+  /* primary accent / buttons (dark green) */
+  --gold-300: #2d6650;
+  /* hover state (medium green) */
+  --gold-600: #163a2e;
+  /* icons/checks/darker accent */
+  --text-white: #1a1a1a;
+  /* primary text — now dark on light */
+  --text-muted-token: #6b7280;
+  /* muted text */
+
+  --background: var(--navy-950);
+  --surface: var(--navy-800);
+  --primary: var(--gold-400);
+  --primary-dark: var(--gold-300);
+  --text-dark: #1a1a1a;
+  --muted: var(--text-muted-token);
+  --gold: var(--gold-400);
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+  background-color: var(--background);
+  color: var(--text-dark);
+}
+
+/* Green Navbar with White Text for Public Site */
+.public-theme .navbar,
+.public-theme .navbar.scrolled {
+  background-color: #1f4d3e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.public-theme .logo,
+.public-theme .navbar.scrolled .logo {
+  color: #ffffff !important;
+}
+
+.public-theme .nav-links a,
+.public-theme .navbar.scrolled .nav-links a {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.public-theme .nav-links a:hover,
+.public-theme .nav-links a.active,
+.public-theme .navbar.scrolled .nav-links a:hover,
+.public-theme .navbar.scrolled .nav-links a.active {
+  color: #ffffff !important;
+}
+
+.public-theme .nav-links a::after {
+  background-color: #ffffff;
+}
+
+.public-theme .hamburger-line {
+  background-color: #ffffff;
+}
+
+/* Dark Green Hero Text over Background Image */
+.public-theme .hero-eyebrow {
+  color: #1f4d3e;
+}
+
+.public-theme .hero-eyebrow-line {
+  background-color: #1f4d3e;
+}
+
+.public-theme .hero-headline {
+  color: #1f4d3e;
+}
+
+.public-theme .hero-headline .text-gold {
+  color: #1f4d3e;
+}
+
+.public-theme .hero-sub {
+  color: #1f4d3e;
+  font-weight: 500;
+}
+
+/* Public Section Headings, Subtitles, Feature Strip, and Rooms Header in Dark Green */
+.public-theme .feature-title {
+  color: #1f4d3e;
+}
+
+.public-theme .feature-desc {
+  color: #2d6650;
+}
+
+.public-theme .feature-icon-badge {
+  border-color: #1f4d3e;
+  color: #1f4d3e;
+  background-color: rgba(31, 77, 62, 0.06);
+}
+
+.public-theme .rooms-eyebrow {
+  color: #1f4d3e;
+}
+
+.public-theme .rooms-eyebrow-line {
+  background-color: #1f4d3e;
+}
+
+.public-theme .rooms-heading {
+  color: #1f4d3e;
+}
+
+.public-theme .rooms-subtext {
+  color: #2d6650;
+}
+
+.public-theme section h2,
+.public-theme section h3 {
+  color: #1f4d3e;
+}
+
+/* Public Theme Booking Form & Panel Styling */
+.public-theme .booking-form,
+.public-theme .panel {
+  background: var(--surface, #ffffff);
+  border: 1px solid rgba(31, 77, 62, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  color: var(--text-dark, #1a1a1a);
+}
+
+.public-theme .booking-fieldset-legend {
+  color: #1f4d3e;
+}
+
+.public-theme .booking-fieldset-legend::after {
+  background: rgba(31, 77, 62, 0.15);
+}
+
+/* ─── Public Theme: Page Heading (PageHeader component) ─────────────────── */
+.public-theme .page-heading h1,
+.public-theme .page-heading h2 {
+  color: #1f4d3e;
+}
+
+.public-theme .page-heading p {
+  color: #2d6650;
+}
+
+/* Eyebrow label (the gold pill/line above titles) */
+.public-theme .page-heading .text-\[\#d9b571\] {
+  color: #1f4d3e !important;
+}
+
+.public-theme .page-heading .bg-\[\#d9b571\] {
+  background-color: #1f4d3e !important;
+}
+
+/* The white h1 in PageHeader */
+.public-theme .page-heading .text-white {
+  color: #1f4d3e !important;
+}
+
+/* The muted description text */
+.public-theme .page-heading .text-\[\#b7c0cb\] {
+  color: #2d6650 !important;
+}
+
+/* ─── Public Theme: Form Labels & Inputs ────────────────────────────────── */
+.public-theme .form-field > label,
+.public-theme .form-field > .field-label,
+.public-theme .form-group label,
+.public-theme .form-group > span:first-child {
+  color: #1f4d3e;
+}
+
+.public-theme .form-field > .field-hint {
+  color: #2d6650;
+}
+
+/* Input / select / textarea text colour */
+.public-theme .form-control,
+.public-theme .form-field input,
+.public-theme .form-field select,
+.public-theme .form-field textarea {
+  color: #1a1a1a;
+  border-color: rgba(31, 77, 62, 0.25);
+  background-color: #ffffff;
+}
+
+.public-theme .form-control:focus,
+.public-theme .form-field input:focus,
+.public-theme .form-field select:focus,
+.public-theme .form-field textarea:focus {
+  border-color: #1f4d3e;
+  box-shadow: 0 0 0 3px rgba(31, 77, 62, 0.15);
+}
+
+/* Disabled state */
+.public-theme .form-control:disabled,
+.public-theme .form-field input:disabled,
+.public-theme .form-field select:disabled,
+.public-theme .form-field textarea:disabled {
+  background-color: #e8ede9;
+  color: #6b7280;
+}
+
+/* Action row divider (white in dark theme → green-tinted on cream) */
+.public-theme .booking-form [style*="border-top"] {
+  border-top-color: rgba(31, 77, 62, 0.15) !important;
+}
+
+/* Price summary box */
+.public-theme .booking-form .bg-background {
+  background-color: rgba(31, 77, 62, 0.05);
+  border-color: #1f4d3e;
+  color: #1f4d3e;
+}
+
+/* ─── Footer — Default (Dark / Admin) ──────────────────────────────────── */
+.footer {
+  background-color: #060e18;
+  color: #cbd5e1;
+}
+
+.footer-brand-name {
+  color: #ffffff;
+}
+
+.footer-divider {
+  background-color: var(--gold-400, #d4a853);
+}
+
+.footer-description {
+  color: #94a3b8;
+}
+
+.footer-copyright {
+  color: #64748b;
+}
+
+.footer-section-heading {
+  color: #ffffff;
+}
+
+.footer-list {
+  color: #cbd5e1;
+}
+
+.footer-icon {
+  color: var(--gold-400, #d4a853);
+}
+
+.footer-label {
+  color: #94a3b8;
+}
+
+.footer-value {
+  color: #ffffff;
+}
+
+.footer-link {
+  color: #ffffff;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--gold-400, #d4a853);
+}
+
+.footer-note-box {
+  color: var(--gold-400, #d4a853);
+  border: 1px solid rgba(217, 181, 113, 0.3);
+  background: rgba(217, 181, 113, 0.07);
+}
+
+/* ─── Footer — Public Theme (Cream / Green) ─────────────────────────────── */
+.public-theme .footer {
+  background-color: #1f4d3e;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.public-theme .footer-brand-name {
+  color: #ffffff;
+}
+
+.public-theme .footer-divider {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.public-theme .footer-description {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.public-theme .footer-copyright {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.public-theme .footer-section-heading {
+  color: #ffffff;
+}
+
+.public-theme .footer-list {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.public-theme .footer-icon {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.public-theme .footer-label {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.public-theme .footer-value {
+  color: #ffffff;
+}
+
+.public-theme .footer-link {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.public-theme .footer-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.public-theme .footer-note-box {
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 /**
  * WCAG AA Contrast Compliance
  * ─────────────────────────────
@@ -647,23 +982,7 @@ button {
 
 /* Gradient overlay: Narrow left-edge black shadow fading by 38% for maximum photo clarity */
 .hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg,
-      rgba(0, 0, 0, 0.90) 0%,
-      rgba(0, 0, 0, 0.75) 12%,
-      rgba(0, 0, 0, 0.25) 25%,
-      transparent 38%);
-  z-index: 1;
-}
-
-@media screen and (max-width: 767px) {
-  .hero-overlay {
-    background: linear-gradient(180deg,
-      rgba(10, 22, 38, 0.88) 0%,
-      rgba(10, 22, 38, 0.70) 50%,
-      rgba(14, 30, 51, 0.96) 100%);
-  }
+  display: none;
 }
 
 .hero-content {
@@ -719,19 +1038,19 @@ button {
   font-size: clamp(1.8rem, 6.5vw, 4rem);
   font-weight: 800;
   line-height: 1.1;
-  color: #ffffff;
+  color: var(--text-white, #1a1a1a);
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.65);
+  text-shadow: none;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 
 .hero-sub {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--text-muted-token, #6b7280);
   line-height: 1.7;
   max-width: 560px;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.60);
+  text-shadow: none;
 }
 
 /* ─── Hero Booking Availability Bar (Glass Card) ────────────────────────── */
@@ -745,13 +1064,13 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(22, 40, 63, 0.85);
+  background: var(--surface, #ffffff);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--radius);
-  padding: 14px 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-pill, 9999px);
+  padding: 10px 14px 10px 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   gap: 16px;
   flex-wrap: wrap;
 }
@@ -766,13 +1085,16 @@ button {
     align-items: stretch;
     gap: 10px;
     padding: 16px;
+    border-radius: var(--radius);
+    background: var(--surface, #ffffff);
+    border: 1px solid rgba(0, 0, 0, 0.08);
   }
   .hero-bar-group {
     width: 100%;
     padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.03);
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.06);
   }
   .hero-bar-btn {
     width: 100%;
@@ -814,14 +1136,14 @@ button {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-muted-token);
+  color: var(--text-muted-token, #6b7280);
 }
 
 .hero-bar-display {
-  color: #ffffff;
+  color: var(--text-white, #1a1a1a);
   font-family: var(--font-body);
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -838,29 +1160,29 @@ button {
   background: transparent;
   border: none;
   outline: none;
-  color: #ffffff;
+  color: var(--text-white, #1a1a1a);
   font-family: var(--font-body);
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   width: 100%;
   padding: 0;
 }
 
 .hero-bar-input::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+  filter: none;
   cursor: pointer;
 }
 
 .hero-bar-select option {
-  background-color: var(--navy-900);
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #1a1a1a;
 }
 
 .hero-bar-divider {
   width: 1px;
   height: 36px;
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
   display: none;
 }
@@ -877,7 +1199,7 @@ button {
   justify-content: center;
   gap: 8px;
   background-color: var(--gold-400);
-  color: var(--navy-950);
+  color: #ffffff;
   font-family: var(--font-body);
   font-weight: 700;
   font-size: 0.9rem;
@@ -892,9 +1214,9 @@ button {
 
 .hero-bar-btn:hover:not(:disabled) {
   background-color: var(--gold-300);
-  color: var(--navy-950);
+  color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(217, 181, 113, 0.35);
+  box-shadow: 0 4px 14px rgba(31, 77, 62, 0.35);
 }
 
 .hero-bar-btn:disabled {

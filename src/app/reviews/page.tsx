@@ -85,13 +85,13 @@ export default function ReviewsPage() {
                 reviews.map((review) => (
                   <article key={`${review.guest_name}-${review.created_at}`} className="panel">
                     <div className="flex justify-between items-center flex-wrap gap-2 mb-2">
-                      <strong className="text-white font-semibold">{review.guest_name}</strong>
-                      <span className="text-[--gold-400] text-sm">
+                      <strong className="text-[#1f4d3e] font-semibold">{review.guest_name}</strong>
+                      <span className="text-[#1f4d3e] text-sm">
                         {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
                       </span>
                     </div>
-                    <p className="text-slate-200 text-sm leading-relaxed mb-3">{review.review_text}</p>
-                    <small className="text-slate-400 text-xs">{new Date(review.created_at).toLocaleDateString()}</small>
+                    <p className="text-[#374151] text-sm leading-relaxed mb-3">{review.review_text}</p>
+                    <small className="text-[#6b7280] text-xs">{new Date(review.created_at).toLocaleDateString()}</small>
                   </article>
                 ))
               ) : (
@@ -101,7 +101,7 @@ export default function ReviewsPage() {
           </div>
 
           <aside className="lg:col-span-5 panel h-fit">
-            <h2 className="text-xl font-bold text-white mb-4">Submit a Review</h2>
+            <h2 className="text-xl font-bold text-[#1f4d3e] mb-4">Submit a Review</h2>
             <form onSubmit={handleSubmit} className="grid gap-4">
               <div className="form-field">
                 <label htmlFor="rev-booking-id">Booking ID</label>

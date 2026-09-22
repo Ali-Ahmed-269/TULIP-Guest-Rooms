@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import PublicThemeWrapper from '@/components/PublicThemeWrapper';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -43,10 +44,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body>
-        <Navbar />
-        <div className="min-h-screen flex flex-col">
-          {children}
-        </div>
+        <PublicThemeWrapper>
+          <Navbar />
+          <div className="min-h-screen flex flex-col">
+            {children}
+          </div>
+        </PublicThemeWrapper>
       </body>
     </html>
   );
