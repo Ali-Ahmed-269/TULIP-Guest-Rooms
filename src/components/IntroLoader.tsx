@@ -118,11 +118,11 @@ export default function IntroLoader() {
             </span>
           ))}
         </p>
+        <span className="intro-count" id="intro-count-el" ref={countRef}>00</span>
       </div>
 
       <div className="intro-meta">
         <span className="intro-tag">Guest rooms in Abbottabad</span>
-        <span className="intro-count" id="intro-count-el" ref={countRef}>00</span>
       </div>
     </div>
   );
