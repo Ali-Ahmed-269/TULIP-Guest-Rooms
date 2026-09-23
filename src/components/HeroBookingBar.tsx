@@ -1,21 +1,28 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { Calendar, User, ArrowRight } from 'lucide-react';
+import { ArrowRight, Minus, Plus, CalendarCheck, CalendarX, Users } from 'lucide-react';
 
-function formatDateForDisplay(dateStr: string, fallback: string) {
-  if (!dateStr) return fallback;
+function formatDate(dateStr: string) {
   const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return fallback;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  if (isNaN(d.getTime())) return 'Select date';
+  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
-export default function HeroBookingBar() {
-  const today    = new Date().toISOString().split('T')[0];
-  const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+function nightsBetween(a: string, b: string) {
+  const diff = (new Date(b).getTime() - new Date(a).getTime()) / 86400000;
+  return Number.isFinite(diff) && diff > 0 ? Math.round(diff) : 0;
+}
 
+const MAX_GUESTS = 10;
+
+export default function HeroBookingBar() {
+  // Lazy initialisers keep the clock read out of the render path
+  const [today]                 = useState(() => new Date().toISOString().split('T')[0]);
   const [checkIn, setCheckIn]   = useState(today);
-  const [checkOut, setCheckOut] = useState(tomorrow);
+  const [checkOut, setCheckOut] = useState(
+    () => new Date(new Date(today).getTime() + 86400000).toISOString().split('T')[0]
+  );
   const [guests, setGuests]     = useState(1);
   const [loading, setLoading]   = useState(false);
   const [message, setMessage]   = useState<string | null>(null);
@@ -23,13 +30,25 @@ export default function HeroBookingBar() {
   const checkInRef  = useRef<HTMLInputElement>(null);
   const checkOutRef = useRef<HTMLInputElement>(null);
 
+  const nights = nightsBetween(checkIn, checkOut);
+
   function openPicker(ref: React.RefObject<HTMLInputElement | null>) {
     try {
       ref.current?.showPicker();
     } catch {
+      ref.current?.focus();
       ref.current?.click();
     }
   }
+
+  const handleCheckInChange = (value: string) => {
+    setCheckIn(value);
+    // Keep check-out valid: push it one day past the new check-in if needed
+    if (value && checkOut && new Date(checkOut) <= new Date(value)) {
+      const next = new Date(new Date(value).getTime() + 86400000).toISOString().split('T')[0];
+      setCheckOut(next);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,95 +90,96 @@ export default function HeroBookingBar() {
   };
 
   return (
-    <div className="hero-booking-bar-wrapper">
-      <form onSubmit={handleSubmit} className="hero-booking-bar">
+    <div className="hb-wrap">
+      <form onSubmit={handleSubmit} className="hb" aria-label="Check room availability">
 
-        {/* Check In */}
-        <div
-          className="hero-bar-group"
-          style={{ cursor: 'pointer' }}
-          onClick={() => openPicker(checkInRef)}
-        >
-          <Calendar size={18} className="hero-bar-icon" />
-          <div className="hero-bar-fields">
-            <span className="hero-bar-label">Check In</span>
-            <div className="hero-bar-display">
-              {formatDateForDisplay(checkIn, 'Select date')}
-            </div>
+        {/* Check in */}
+        <div className="hb-field hb-field--date" onClick={() => openPicker(checkInRef)}>
+          <span className="hb-icon" aria-hidden="true"><CalendarCheck size={17} strokeWidth={1.6} /></span>
+          <div className="hb-text">
+            <label htmlFor="hero-checkin" className="hb-label">Check in</label>
+            <span className="hb-value">{formatDate(checkIn)}</span>
           </div>
-          {/* Visually hidden but accessible real input */}
           <input
             ref={checkInRef}
             id="hero-checkin"
             type="date"
             value={checkIn}
-            onChange={(e) => setCheckIn(e.target.value)}
+            min={today}
+            onChange={(e) => handleCheckInChange(e.target.value)}
             onClick={(e) => e.stopPropagation()}
-            style={{ position: 'absolute', opacity: 0, width: 0, height: 0, pointerEvents: 'none' }}
-            aria-label="Check-in date"
-            tabIndex={-1}
+            className="hb-native"
           />
         </div>
 
-        <div className="hero-bar-divider" />
+        <span className="hb-divider" aria-hidden="true" />
 
-        {/* Check Out */}
-        <div
-          className="hero-bar-group"
-          style={{ cursor: 'pointer' }}
-          onClick={() => openPicker(checkOutRef)}
-        >
-          <Calendar size={18} className="hero-bar-icon" />
-          <div className="hero-bar-fields">
-            <span className="hero-bar-label">Check Out</span>
-            <div className="hero-bar-display">
-              {formatDateForDisplay(checkOut, 'Select date')}
-            </div>
+        {/* Check out */}
+        <div className="hb-field hb-field--date" onClick={() => openPicker(checkOutRef)}>
+          <span className="hb-icon" aria-hidden="true"><CalendarX size={17} strokeWidth={1.6} /></span>
+          <div className="hb-text">
+            <label htmlFor="hero-checkout" className="hb-label">Check out</label>
+            <span className="hb-value">
+              {formatDate(checkOut)}
+              {nights > 0 && (
+                <span className="hb-nights" aria-live="polite">
+                  {nights} {nights === 1 ? 'night' : 'nights'}
+                </span>
+              )}
+            </span>
           </div>
           <input
             ref={checkOutRef}
             id="hero-checkout"
             type="date"
             value={checkOut}
+            min={checkIn || today}
             onChange={(e) => setCheckOut(e.target.value)}
             onClick={(e) => e.stopPropagation()}
-            min={checkIn || today}
-            style={{ position: 'absolute', opacity: 0, width: 0, height: 0, pointerEvents: 'none' }}
-            aria-label="Check-out date"
-            tabIndex={-1}
+            className="hb-native"
           />
         </div>
 
-        <div className="hero-bar-divider" />
+        <span className="hb-divider" aria-hidden="true" />
 
         {/* Guests */}
-        <div className="hero-bar-group">
-          <User size={18} className="hero-bar-icon" />
-          <div className="hero-bar-fields">
-            <label htmlFor="hero-guests" className="hero-bar-label">Guests</label>
-            <select
-              id="hero-guests"
-              value={guests}
-              onChange={(e) => setGuests(Number(e.target.value))}
-              className="hero-bar-input hero-bar-select"
-            >
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                <option key={num} value={num}>
-                  {num} {num === 1 ? 'Guest' : 'Guests'}
-                </option>
-              ))}
-            </select>
+        <div className="hb-field hb-field--guests">
+          <span className="hb-icon" aria-hidden="true"><Users size={17} strokeWidth={1.6} /></span>
+          <div className="hb-text">
+            <span className="hb-label" id="hero-guests-label">Guests</span>
+            <div className="hb-stepper" role="group" aria-labelledby="hero-guests-label">
+              <button
+                type="button"
+                className="hb-step"
+                onClick={() => setGuests((g) => Math.max(1, g - 1))}
+                disabled={guests <= 1}
+                aria-label="Remove a guest"
+              >
+                <Minus size={13} strokeWidth={2.25} />
+              </button>
+              <output className="hb-value hb-count" aria-live="polite">
+                {guests} {guests === 1 ? 'guest' : 'guests'}
+              </output>
+              <button
+                type="button"
+                className="hb-step"
+                onClick={() => setGuests((g) => Math.min(MAX_GUESTS, g + 1))}
+                disabled={guests >= MAX_GUESTS}
+                aria-label="Add a guest"
+              >
+                <Plus size={13} strokeWidth={2.25} />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Check Availability Button */}
-        <button type="submit" className="hero-bar-btn" disabled={loading}>
-          <span>{loading ? 'Checking...' : 'Check Availability'}</span>
-          <ArrowRight size={16} />
+        <button type="submit" className="hb-submit" disabled={loading}>
+          {loading ? 'Checking...' : 'Check availability'}
+          <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
         </button>
-
       </form>
-      {message && <p className="hero-bar-msg">{message}</p>}
+
+      {message && <p className="hb-msg" role="alert">{message}</p>}
     </div>
   );
 }

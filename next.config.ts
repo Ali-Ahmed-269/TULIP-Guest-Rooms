@@ -14,7 +14,10 @@ const nextConfig: NextConfig = {
     // images.unsplash.com is the only external image source (next/image remotePatterns).
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",   // Next.js injects inline bootstrap scripts
+      // Next.js injects inline bootstrap scripts; React dev tooling also needs eval (never in production)
+      process.env.NODE_ENV === 'development'
+        ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+        : "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",    // Next.js injects critical CSS inline
       "img-src 'self' data: https://images.unsplash.com",
       "font-src 'self'",                     // fonts are self-hosted via next/font

@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import IntroLoader from './IntroLoader';
 
 export default function PublicThemeWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -12,6 +13,7 @@ export default function PublicThemeWrapper({ children }: { children: React.React
 
   return (
     <div className="public-theme min-h-screen flex flex-col">
+      <IntroLoader />
       {children}
     </div>
   );
