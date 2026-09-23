@@ -9,65 +9,85 @@ const WORDS = ['Tulip', 'Guest', 'Rooms'];
 // Timeline (ms)
 const COUNT_START = 300;
 const COUNT_END   = 1800;
-const MIN_SHOW    = 1950;   // earliest moment the gold wipe may start
+const MIN_SHOW    = 2000;   // earliest moment the gold wipe may start
 const MAX_WAIT    = 6000;   // never hold the page longer than this
 const RELEASE_IN  = 500;    // after the wipe: loader slides up, hero entrance starts
 const REMOVE_IN   = 1350;   // after the wipe: unmount
 
 export default function IntroLoader() {
-  const rootRef  = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const countRef = useRef<HTMLSpanElement>(null);
   const [gone, setGone] = useState(false);
 
   useEffect(() => {
     const html = document.documentElement;
-    // Skipped or already released: CSS keeps the loader hidden
     if (html.getAttribute('data-intro') !== 'playing') return;
 
     try {
       sessionStorage.setItem(INTRO_KEY, '1');
     } catch {
-      // Private mode: intro simply plays again next time
+      // Private mode — intro plays again next session
     }
 
     let cancelled = false;
-    const timers: number[] = [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
-    // 00 -> 99 counter; the final 100 lands when the page is ready
-    let raf = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min(1, Math.max(0, (now - start - COUNT_START) / (COUNT_END - COUNT_START)));
-      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-      if (countRef.current) countRef.current.textContent = String(Math.round(eased * 99)).padStart(2, '0');
-      if (t < 1) raf = requestAnimationFrame(tick);
+    // ── Counter animation: 00 → 99, then 100 on finish ──────────────────────
+    const updateCount = (valStr: string) => {
+      if (countRef.current) {
+        countRef.current.textContent = valStr;
+      } else {
+        const el = document.getElementById('intro-count-el');
+        if (el) el.textContent = valStr;
+      }
     };
-    raf = requestAnimationFrame(tick);
 
-    // Leave only after the minimum show AND the page (hero photo included) has loaded
-    const minShown = new Promise<void>((resolve) => { timers.push(window.setTimeout(resolve, MIN_SHOW)); });
-    const pageLoaded = document.readyState === 'complete'
-      ? Promise.resolve()
-      : new Promise<void>((resolve) => window.addEventListener('load', () => resolve(), { once: true }));
-    const capped = new Promise<void>((resolve) => { timers.push(window.setTimeout(resolve, MAX_WAIT)); });
+    let rafId = 0;
+    const counterStart = performance.now();
+    const DURATION = 1700;
 
-    Promise.race([Promise.all([minShown, pageLoaded]), capped]).then(() => {
+    const tick = (now: number) => {
       if (cancelled) return;
-      cancelAnimationFrame(raf);
-      if (countRef.current) countRef.current.textContent = '100';
+      const elapsed = now - counterStart;
+      const t = Math.min(1, Math.max(0, elapsed / DURATION));
+      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      const val = Math.round(eased * 99);
+      updateCount(String(val).padStart(2, '0'));
+      if (t < 1) rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+
+    // ── Exit trigger ─────────────────────────────────────────────────────────
+    const minShown  = new Promise<void>((res) => { timers.push(setTimeout(res, MIN_SHOW)); });
+    const pageReady = document.readyState === 'complete'
+      ? Promise.resolve()
+      : new Promise<void>((res) => window.addEventListener('load', () => res(), { once: true }));
+    const capped    = new Promise<void>((res) => { timers.push(setTimeout(res, MAX_WAIT)); });
+
+    Promise.race([Promise.all([minShown, pageReady]), capped]).then(() => {
+      if (cancelled) return;
+      cancelAnimationFrame(rafId);
+
+      // Show 100 on finish
+      updateCount('100');
+
+      // Gold wipe in → slide up → unmount
       rootRef.current?.classList.add('is-exit');
       timers.push(
-        window.setTimeout(() => {
+        setTimeout(() => {
           rootRef.current?.classList.add('is-leaving');
           html.setAttribute('data-intro', 'done');
         }, RELEASE_IN),
-        window.setTimeout(() => setGone(true), REMOVE_IN),
+        setTimeout(() => {
+          if (!cancelled) setGone(true);
+        }, REMOVE_IN),
       );
     });
 
     return () => {
       cancelled = true;
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafId);
       timers.forEach(clearTimeout);
     };
   }, []);
@@ -102,7 +122,7 @@ export default function IntroLoader() {
 
       <div className="intro-meta">
         <span className="intro-tag">Guest rooms in Abbottabad</span>
-        <span className="intro-count" ref={countRef}>00</span>
+        <span className="intro-count" id="intro-count-el" ref={countRef}>00</span>
       </div>
     </div>
   );
