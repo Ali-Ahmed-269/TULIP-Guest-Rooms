@@ -33,13 +33,12 @@ export default function AdminLoginPage() {
   return (
     <div className="login-page">
       {/* Top Right Corner Home Button */}
-      <div className="fixed top-5 right-5 sm:top-8 sm:right-8 z-50">
+      <div className="absolute top-4 right-4 sm:fixed sm:top-8 sm:right-8 z-50">
         <Link
           href="/"
-          className="login-home-btn inline-flex items-center gap-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-xl transition-all duration-200 group"
-          style={{ padding: '12px 24px' }}
+          className="login-home-btn inline-flex items-center gap-2 rounded-xl text-xs sm:text-sm font-bold shadow-lg transition-all duration-200 group px-4 py-2 sm:px-6 sm:py-3"
         >
-          <Home size={18} className="login-home-icon group-hover:scale-110 transition-transform" />
+          <Home size={16} className="login-home-icon group-hover:scale-110 transition-transform" />
           <span className="tracking-wide">Home</span>
         </Link>
       </div>

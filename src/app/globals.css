@@ -1700,43 +1700,65 @@ button {
 @media screen and (max-width: 767px) {
   .hamburger {
     display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 1100;
   }
 
-  .nav-links {
+  .nav-links,
+  .public-theme .nav-links,
+  .public-theme .navbar .nav-links,
+  .public-theme .navbar.scrolled .nav-links {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: var(--navy-900);
+    background-color: #0b1f18 !important; /* Solid Forest Green */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    padding: 100px 20px 20px;
+    padding: 90px 20px 40px;
     z-index: 1050;
     overflow-y: auto;
   }
 
-  .nav-links.open {
-    display: flex;
+  .nav-links.open,
+  .public-theme .nav-links.open,
+  .public-theme .navbar .nav-links.open,
+  .public-theme .navbar.scrolled .nav-links.open {
+    display: flex !important;
     flex-direction: column;
     align-items: center;
   }
 
-  .nav-links ul {
+  .nav-links ul,
+  .public-theme .nav-links ul {
     flex-direction: column;
-    gap: 25px;
+    gap: 22px;
     width: 100%;
+    text-align: center;
   }
 
-  .nav-links a {
-    color: var(--text-muted-token) !important;
-    font-size: 1.2rem;
+  .nav-links a,
+  .public-theme .nav-links a,
+  .public-theme .navbar.scrolled .nav-links a {
+    color: #f5efe6 !important; /* High contrast cream white */
+    font-size: 1.25rem !important;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 8px 16px;
+    display: inline-block;
+    transition: color 0.2s ease, transform 0.2s ease;
   }
 
   .nav-links a:hover,
-  .nav-links a.active {
-    color: var(--gold-400) !important;
+  .nav-links a.active,
+  .public-theme .nav-links a:hover,
+  .public-theme .nav-links a.active,
+  .public-theme .navbar.scrolled .nav-links a:hover,
+  .public-theme .navbar.scrolled .nav-links a.active {
+    color: #d9b571 !important; /* Gold highlight */
+    transform: translateY(-1px);
   }
 
   .hamburger.active .hamburger-line:nth-child(1) {
@@ -2101,8 +2123,14 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 16px;
+  padding: 85px 16px 40px;
   z-index: 10;
+}
+
+@media (min-width: 640px) {
+  .login-page {
+    padding: 40px 16px;
+  }
 }
 
 .login-center {

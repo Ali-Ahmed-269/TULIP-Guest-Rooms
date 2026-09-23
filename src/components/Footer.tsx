@@ -1,6 +1,6 @@
 'use client';
 
-import { Phone, Mail, MapPin, Smartphone, CreditCard, Info } from 'lucide-react';
+import { Phone, Mail, MapPin, Smartphone, CreditCard } from 'lucide-react';
 
 interface FooterProps {
   settings?: Record<string, string>;
@@ -59,14 +59,6 @@ export default function Footer({ settings }: FooterProps) {
               </div>
             </li>
           </ul>
-
-          {/* Note Bordered Box */}
-          <div className="footer-note-box flex items-center justify-center gap-2.5 px-3.5 py-2.5 rounded-lg mt-2 text-[0.85rem] text-center">
-            <Info size={16} className="footer-icon shrink-0" />
-            <span>
-              Note: Accounts are registered under <strong>&ldquo;Tulip Guest Rooms&rdquo;</strong>
-            </span>
-          </div>
         </div>
 
         {/* ── Column 3: Contact Info ── */}
