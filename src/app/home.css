@@ -531,24 +531,47 @@ html[data-intro="playing"] .hero-enter {
   }
 }
 
-/* Phone: hero tweaks */
-@media (max-width: 639px) {
+/* Mobile viewports (below 768px): Fall back to cream background and dark green text */
+@media (max-width: 767px) {
+  .hero-media,
+  .hero-scrim {
+    display: none !important;
+  }
+
+  .hero {
+    background-color: var(--bg-body, #FBF9F4);
+    color: var(--ink, #15261f);
+    min-height: auto;
+  }
+
   .hero-inner {
+    min-height: auto;
     gap: 32px;
-    padding-top: 108px;
+    padding-top: 104px;
+    padding-bottom: 36px;
   }
 
   .hero-copy {
     gap: 16px;
   }
 
-  .hero-img {
-    object-position: 68% 50%;
+  .hero-kicker {
+    color: var(--forest, #1f4d3e);
+    background: rgba(31, 77, 62, 0.08);
+    border-color: rgba(31, 77, 62, 0.18);
   }
 
-  .hero-scrim {
-    background:
-      linear-gradient(180deg, rgba(8, 22, 17, 0.72) 0%, rgba(8, 22, 17, 0.25) 40%, rgba(8, 22, 17, 0.4) 60%, rgba(8, 22, 17, 0.9) 100%);
+  .hero-title {
+    color: var(--forest, #1f4d3e);
+    text-shadow: none;
+  }
+
+  .hero-title em {
+    color: var(--tg-gold-ink, #8a6828);
+  }
+
+  .hero-lede {
+    color: var(--ink-soft, #4d5e56);
   }
 
   .hb-value {
