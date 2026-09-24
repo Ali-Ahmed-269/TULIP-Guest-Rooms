@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import {
   Wifi, Snowflake, ShowerHead, Tv, BedDouble, Users, ArrowRight, Check,
@@ -33,9 +34,9 @@ const ROOM_BLURBS: Record<string, string> = {
 };
 
 const ROOM_IMAGES: Record<string, string> = {
-  'Standard':     'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1000&q=80&auto=format&fit=crop',
-  'Premium':      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1000&q=80&auto=format&fit=crop',
-  'Comfort Plus': 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1400&q=80&auto=format&fit=crop',
+  'Standard':     '/Standard-Room.png',
+  'Premium':      '/Premium-Room.png',
+  'Comfort Plus': '/Comfort-Plus.png',
 };
 
 const FEATURE_ICONS: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number }>> = {
@@ -165,11 +166,12 @@ export default function HomeRoomsSection({ initialRooms }: HomeRoomsSectionProps
               className="rc"
             >
               <div className="rc-media">
-                <img
+                <Image
                   src={card.image}
                   alt={`${name} at Tulip Guest Rooms`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="rc-img"
-                  loading="lazy"
                 />
               </div>
 

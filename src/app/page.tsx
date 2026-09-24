@@ -143,10 +143,12 @@ export default async function HomePage() {
               />
             </div>
             <div className="about-photo about-photo--inset">
-              <img
-                src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80&auto=format&fit=crop"
-                alt="A made-up bedroom at Tulip Guest Rooms"
-                loading="lazy"
+              <Image
+                src="/Comfort-Plus.png"
+                alt="Comfort Plus bedroom at Tulip Guest Rooms"
+                fill
+                sizes="(min-width: 1024px) 20vw, 40vw"
+                className="object-cover"
               />
             </div>
           </Reveal>
