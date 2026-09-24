@@ -14,8 +14,8 @@
     "test:rls:admin": "node scripts/test-rooms-admin-rls.mjs"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.106.2",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.117.0",
     "dotenv": "^17.4.2",
     "lucide-react": "^1.16.0",
     "next": "16.3.5",
